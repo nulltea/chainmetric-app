@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'model/asset_model.dart';
+import '../model/asset_model.dart';
 
 class AssetForm extends StatefulWidget {
   @override

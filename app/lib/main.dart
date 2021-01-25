@@ -1,4 +1,4 @@
-import 'home.dart';
+import 'pages/home.dart';
 
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class App extends StatelessWidget {
         primarySwatch: Colors.teal,
       ),
       darkTheme: ThemeData.dark(),
-      home: HomePage(title: 'IoT Blockchain'),
+      home: HomePage(),
     );
   }
 }
