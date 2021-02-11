@@ -6,6 +6,7 @@ class NavigationTabItem {
   CustomAppBarItem navBarItem;
   Widget tab;
   Icon buttonIcon;
+  Widget Function(BuildContext) pageAction;
 
-  NavigationTabItem({this.navBarItem, this.tab, this.buttonIcon});
+  NavigationTabItem({this.navBarItem, this.tab, this.buttonIcon, this.pageAction});
 }

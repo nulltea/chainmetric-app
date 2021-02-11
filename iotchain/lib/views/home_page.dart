@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'asset_form.dart';
 
 import 'components/bottom_app_bar.dart';
@@ -19,23 +18,27 @@ class _HomePageState extends State<HomePage> {
   List<NavigationTabItem> tabs = [
     NavigationTabItem(
         navBarItem: CustomAppBarItem(icon: Icons.home),
-        tab: Center(child: AssetsTab(key: GlobalKey())),
-        buttonIcon: Icon(Icons.qr_code)
+        tab: Center(child: AssetsTab()),
+        buttonIcon: Icon(Icons.qr_code),
+        pageAction: (ctx) => AssetForm()
     ),
     NavigationTabItem(
         navBarItem: CustomAppBarItem(icon: Icons.shopping_cart),
-        tab: Center(child: Text('Assets')),
-        buttonIcon: Icon(Icons.add)
+        tab: Center(child: AssetsTab()),
+        buttonIcon: Icon(Icons.add),
+        pageAction: (ctx) => AssetForm()
     ),
     NavigationTabItem(
         navBarItem: CustomAppBarItem(icon: Icons.list),
         tab: Center(child: Text('Requirements')),
-        buttonIcon: Icon(Icons.camera)
+        buttonIcon: Icon(Icons.camera),
+        pageAction: (ctx) => AssetForm()
     ),
     NavigationTabItem(
         navBarItem: CustomAppBarItem(icon: Icons.person),
         tab: Center(child: Text('Profile')),
-        buttonIcon: Icon(Icons.add)
+        buttonIcon: Icon(Icons.person),
+        pageAction: (ctx) => AssetForm()
     ),
   ];
 
@@ -49,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('IoT Blockchain')),
+        title: Center(child: Text('IoT Chain')),
       ),
       body: tabs[_currentIndex].tab,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -57,7 +60,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AssetForm())
+              MaterialPageRoute(builder: (context) => tabs[_currentIndex].pageAction(context))
           );
         },
         child: tabs[_currentIndex].buttonIcon,

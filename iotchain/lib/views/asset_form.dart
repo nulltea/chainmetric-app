@@ -11,6 +11,8 @@ class _AssetFormState extends State<AssetForm> {
   final _formKey = GlobalKey<FormState>();
   Asset asset;
 
+  Future<void> submitAsset() async {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,14 +24,15 @@ class _AssetFormState extends State<AssetForm> {
         child: Scrollbar(
           child: Align(
             alignment: Alignment.topCenter,
-            child: Card(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 400),
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 400),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ...[
                         TextFormField(
                           decoration: InputDecoration(
                             filled: true,
@@ -52,16 +55,18 @@ class _AssetFormState extends State<AssetForm> {
                           },
                           maxLines: 5,
                         ),
-                      ].expand(
-                            (widget) => [
-                          widget,
-                          SizedBox(
-                            height: 24,
-                          )
-                        ],
-                      )
-                  ),
-                ),
+                        ElevatedButton(
+                          onPressed: submitAsset,
+                          child: const Text("Submit asset",
+                              style: TextStyle(fontSize: 20)),
+                        ),
+                      ].expand((widget) => [
+                            widget,
+                            SizedBox(
+                              height: 24,
+                            )
+                          ])
+                    ]),
               ),
             ),
           ),

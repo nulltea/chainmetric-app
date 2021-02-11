@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
 
-
-
 class AssetsTab extends StatefulWidget {
   static const title = 'Assets';
   static const icon = Icon(Icons.music_note);
@@ -31,7 +29,6 @@ class _AssetsTabState extends State<AssetsTab> {
     _refreshData();
   }
 
-
   Future<void> _refreshData() {
     return fetchAssets().then((value) => setState(() => assets = value));
   }
@@ -43,52 +40,41 @@ class _AssetsTabState extends State<AssetsTab> {
       bottom: false,
       child: Hero(
         tag: index,
-        child: Card(
-          elevation: 5,
-          child: Padding(
-            padding: EdgeInsets.all(7),
-            child: Stack(children: <Widget>[
-              Align(
-                alignment: Alignment.centerRight,
-                child: Stack(
-                  children: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 5),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text(assets[index].name),
-                                Spacer(),
-                                Text(assets[index].description),
-                                SizedBox(
-                                  width: 35,
-                                ),
-                                Text(assets[index].owner),
-                                SizedBox(
-                                  width: 20,
-                                )
-                              ],
-                            ),
-                            Text(assets[index].description)
-                          ],
-                        ))
-                  ],
-                ),
-              )
-            ]),
-          ),
-        ),
+        child: _assetCard(assets[index]),
       ),
     );
   }
 
+  Widget _assetCard(Asset asset) => Card(
+        elevation: 5,
+        child: Container(
+          height: 100,
+          child: Padding(
+            padding: EdgeInsets.all(12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 5),
+                  child: Row(
+                    children: <Widget>[
+                      Text(asset.name,
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Spacer(),
+                      Text(asset.value),
+                      Spacer(),
+                      Text(asset.owner),
+                      SizedBox(
+                        width: 20,
+                      )
+                    ],
+                  )),
+            ),
+          ),
+        ),
+      );
+
   @override
-  Widget build(context) {
-    return RefreshIndicator(
+  Widget build(context) => RefreshIndicator(
         key: _refreshKey,
         onRefresh: _refreshData,
         child: ListView.builder(
@@ -97,8 +83,6 @@ class _AssetsTabState extends State<AssetsTab> {
           itemBuilder: _listBuilder,
         ),
       );
-  }
-
 
   Future<List<Asset>> fetchAssets() async {
     String data = await Blockchain.evaluateTransaction("assets", "ListAssets");
