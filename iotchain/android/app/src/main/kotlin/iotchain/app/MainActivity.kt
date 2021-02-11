@@ -23,7 +23,7 @@ class MainActivity: FlutterActivity() {
                 }
                 "auth_required" -> result.success(client.authRequired())
                 "auth_identity" -> try {
-                    client.authWallet(call.argument("orgID"), call.argument("key"), call.argument("cert"))
+                    client.authIdentity(call.argument("orgID"), call.argument("key"), call.argument("cert"))
                     result.success("Authenticated")
                 } catch (e: Exception) {
                     result.error("IoTChainClient_initWallet", e.message, null)

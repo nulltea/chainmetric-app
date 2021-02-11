@@ -26,7 +26,7 @@ func (c *IoTChainClient) InitWallet(path string) error {
 }
 
 func (c *IoTChainClient) AuthRequired() bool {
-	return c.wallet.Exists(userID)
+	return !c.wallet.Exists(userID)
 }
 
 func (c *IoTChainClient) AuthIdentity(orgID, key, cert string) error {

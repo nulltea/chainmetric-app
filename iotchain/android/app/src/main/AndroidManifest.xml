@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="iotchain.app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="iotchain.app">
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <application
         android:label="iotchain"
         android:icon="@mipmap/ic_launcher">

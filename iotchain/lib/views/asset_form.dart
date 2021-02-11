@@ -52,7 +52,14 @@ class _AssetFormState extends State<AssetForm> {
                           },
                           maxLines: 5,
                         ),
-                      ]
+                      ].expand(
+                            (widget) => [
+                          widget,
+                          SizedBox(
+                            height: 24,
+                          )
+                        ],
+                      )
                   ),
                 ),
               ),

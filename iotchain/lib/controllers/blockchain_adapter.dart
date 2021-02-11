@@ -30,8 +30,8 @@ class Blockchain {
     try {
       await nativeSDK.invokeMethod("auth_identity", {
         "orgID": credentials.organization,
-        "cert": await credentials.x509cert.readAsString(),
-        "key": await credentials.x509key.readAsString()
+        "cert": credentials.certificate,
+        "key": credentials.privateKey
       });
       return true;
     } on PlatformException catch (e) {
@@ -53,11 +53,11 @@ class Blockchain {
     return false;
   }
 
-  static Future<String> evaluateTransaction(String contract, String transaction) async {
+  static Future<String> evaluateTransaction(String contract, String method) async {
     try {
       return await nativeSDK.invokeMethod("transaction_evaluate", {
         "contract": contract,
-        "transaction": transaction
+        "method": method
       });
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");
