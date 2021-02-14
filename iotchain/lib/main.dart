@@ -1,13 +1,17 @@
+import 'package:dart_json_mapper/dart_json_mapper.dart';
 
+import 'main.reflectable.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/views/auth_page.dart';
 import 'package:iotchain/views/components/loading_splash.dart';
 
+import 'model/asset_model.dart';
+import 'model/organization_model.dart';
 import 'views/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  // initializeJsonMapper();
+  initJson();
   runApp(App());
 }
 
@@ -39,7 +43,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'IoTChain client app',
+      title: "IoTChain client app",
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
@@ -51,4 +55,16 @@ class _AppState extends State<App> {
               : HomePage(),
     );
   }
+}
+
+void initJson() {
+  initializeReflectable();
+  JsonMapper().useAdapter(JsonMapperAdapter(
+      valueDecorators: {
+        typeOf<List<String>>(): (value) => value.cast<String>(),
+        typeOf<List<Asset>>(): (value) => value.cast<Asset>(),
+        typeOf<List<Organization>>(): (value) => value.cast<Organization>(),
+        typeOf<List<AssetType>>(): (value) => value.cast<AssetType>()
+      })
+  );
 }
