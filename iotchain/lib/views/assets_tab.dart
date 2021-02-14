@@ -7,7 +7,7 @@ import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
 
 class AssetsTab extends StatefulWidget {
-  static const title = 'Assets';
+  static const title = "Assets";
   static const icon = Icon(Icons.music_note);
 
   const AssetsTab({Key key}) : super(key: key);
@@ -83,7 +83,12 @@ class _AssetsTabState extends State<AssetsTab> {
       );
 
   Future<List<Asset>> fetchAssets() async {
-    String data = await Blockchain.evaluateTransaction("assets", "ListAssets");
-    return JsonMapper.deserialize<List<Asset>>(data);
+    String data = await Blockchain.evaluateTransaction("assets", "List");
+    try {
+      return data.isNotEmpty ? JsonMapper.deserialize<List<Asset>>(data) : <Asset>[];
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    return <Asset>[];
   }
 }

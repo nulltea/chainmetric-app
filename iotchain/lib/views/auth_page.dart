@@ -13,8 +13,9 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  final _formKey = GlobalKey<FormState>();
   AuthCredentials credentials = AuthCredentials();
+
+  final _formKey = GlobalKey<FormState>();
 
   Future<void> submitIdentity() async {
     if (_formKey.currentState.validate()) {
@@ -67,6 +68,12 @@ class _AuthPageState extends State<AuthPage> {
                                         child: Text(org.name),
                                       ))
                               .toList(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "You must specify your organization in order to authenticate";
+                            }
+                            return null;
+                          },
                           onChanged: (value) {
                             setState(() => credentials.organization = value);
                           },
