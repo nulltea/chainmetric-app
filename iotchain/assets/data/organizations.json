@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Supplier",
+    "mspID": "supplierMSP"
+  },
+  {
+    "name": "Deliverer",
+    "mspID": "delivererMSP"
+  }
+]

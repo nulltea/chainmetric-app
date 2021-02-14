@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Tech",
+    "type": "tech",
+    "color": "teal"
+  },
+  {
+    "name": "Food",
+    "type": "food",
+    "color": "green"
+  },
+  {
+    "name": "Materials",
+    "type": "materials",
+    "color": "blue"
+  }
+]

@@ -1,10 +1,15 @@
+
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/views/auth_page.dart';
+import 'package:iotchain/views/components/loading_splash.dart';
 
 import 'views/home_page.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(App());
+void main() {
+  // initializeJsonMapper();
+  runApp(App());
+}
 
 class App extends StatefulWidget {
   @override
@@ -40,7 +45,7 @@ class _AppState extends State<App> {
       ),
       darkTheme: ThemeData.dark(),
       home: _isLoading
-          ? CircularProgressIndicator(backgroundColor: Colors.teal)
+          ? LoadingSplash()
           : _requireAuth
               ? AuthPage(submitAuth: initBackend,)
               : HomePage(),

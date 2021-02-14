@@ -1,17 +1,16 @@
 class Asset {
-  String uniqueID;
+  String id;
+  String sku;
   String name;
-  String description;
-  String value;
+  String type;
+  String info;
+  double cost;
   String owner;
-
-  static Asset fromJson(json) {
-    Asset asset = new Asset();
-    asset.name = json["name"];
-    asset.description = json["description"];
-    asset.value = json["value"];
-    asset.owner = json["owner"];
-    return asset;
-  }
+  List<String> tags;
 }
 
+class AssetType {
+  String name;
+  String type;
+  String color;
+}

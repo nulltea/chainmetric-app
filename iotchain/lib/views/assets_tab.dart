@@ -1,8 +1,6 @@
-// Copyright 2020 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 import 'dart:convert';
 
+import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
@@ -60,7 +58,7 @@ class _AssetsTabState extends State<AssetsTab> {
                       Text(asset.name,
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                       Spacer(),
-                      Text(asset.value),
+                      Text("${asset.cost}\$"),
                       Spacer(),
                       Text(asset.owner),
                       SizedBox(
@@ -86,9 +84,6 @@ class _AssetsTabState extends State<AssetsTab> {
 
   Future<List<Asset>> fetchAssets() async {
     String data = await Blockchain.evaluateTransaction("assets", "ListAssets");
-    List<Asset> assets = List<Asset>.from(
-        (json.decode(data) as List).map((model) => Asset.fromJson(model)));
-    return assets;
-    return <Asset>[];
+    return JsonMapper.deserialize<List<Asset>>(data);
   }
 }

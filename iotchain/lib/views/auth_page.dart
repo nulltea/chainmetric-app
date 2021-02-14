@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/model/auth_model.dart';
-
-import '../main.dart';
+import 'package:iotchain/model/organization_model.dart';
 
 class AuthPage extends StatefulWidget {
   final Function submitAuth;
@@ -17,21 +16,21 @@ class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
   AuthCredentials credentials = AuthCredentials();
 
-  @override
-  Widget build(BuildContext context) {
-    Future<void> submitIdentity() async {
-      if (_formKey.currentState.validate()) {
-        try {
-          if (await Blockchain.authenticate(credentials)) {
-            widget.submitAuth();
-          }
-        }  on Exception catch (e) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(e.toString())));
+  Future<void> submitIdentity() async {
+    if (_formKey.currentState.validate()) {
+      try {
+        if (await Blockchain.authenticate(credentials)) {
+          widget.submitAuth();
         }
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.teal,
       body: Form(
@@ -48,20 +47,26 @@ class _AuthPageState extends State<AuthPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...[
-                        Text("Sign In", style: TextStyle(fontSize: 36),),
-                        TextFormField(
+                        Text(
+                          "Sign In",
+                          style: TextStyle(fontSize: 36),
+                        ),
+                        DropdownButtonFormField(
                           decoration: InputDecoration(
                             filled: true,
-                            hintText: "Enter the organization",
+                            hintText: "Choose your organization",
                             labelText: "Organization",
                             fillColor: Colors.teal.shade600,
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please enter your organisation";
-                            }
-                            return null;
-                          },
+                          items: <Organization>{
+                            Organization(name: "Supplier", mspID: "supplierMSP"),
+                            Organization(name: "Deliverer", mspID: "delivererMSP")
+                          }.map<DropdownMenuItem<String>>(
+                                  (org) => DropdownMenuItem<String>(
+                                        value: org.mspID,
+                                        child: Text(org.name),
+                                      ))
+                              .toList(),
                           onChanged: (value) {
                             setState(() => credentials.organization = value);
                           },
