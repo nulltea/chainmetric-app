@@ -58,3 +58,9 @@ func (c *IoTChainClient) EvaluateTransaction(chaincode, transaction string, args
 	data, err := contract.EvaluateTransaction(transaction, args)
 	return string(data), errors.Wrap(err, "EvaluateTransaction: execute chaincode")
 }
+
+func (c *IoTChainClient) SubmitTransaction(chaincode, transaction string, args string) (string, error) {
+	contract := c.network.GetContract(chaincode)
+	data, err := contract.SubmitTransaction(transaction, args)
+	return string(data), errors.Wrap(err, "SubmitTransaction: execute chaincode")
+}
