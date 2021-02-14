@@ -53,11 +53,25 @@ class Blockchain {
     return false;
   }
 
-  static Future<String> evaluateTransaction(String contract, String method) async {
+  static Future<String> evaluateTransaction(String contract, String method, [String args]) async {
     try {
       return await nativeSDK.invokeMethod("transaction_evaluate", {
         "contract": contract,
-        "method": method
+        "method": method,
+        "args": args,
+      });
+    } on PlatformException catch (e) {
+      print("PlatformException: ${e.message}");
+    }
+    return null;
+  }
+
+  static Future<String> submitTransaction(String contract, String method, [String args]) async {
+    try {
+      return await nativeSDK.invokeMethod("transaction_submit", {
+        "contract": contract,
+        "method": method,
+        "args": args,
       });
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");

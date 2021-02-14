@@ -36,9 +36,14 @@ class MainActivity: FlutterActivity() {
                     result.error("IoTChainClient_initConnectionFor", e.message, null)
                 }
                 "transaction_evaluate" -> try {
-                    result.success(client.evaluateTransaction(call.argument("contract"), call.argument("method"), ""))
+                    result.success(client.evaluateTransaction(call.argument("contract"), call.argument("method"), call.argument("args")))
                 } catch (e: Exception) {
                     result.error("IoTChainClient_evaluateTransaction", e.message, null)
+                }
+                "transaction_submit" -> try {
+                    result.success(client.submitTransaction(call.argument("contract"), call.argument("method"), call.argument("args")))
+                } catch (e: Exception) {
+                    result.error("IoTChainClient_submitTransaction", e.message, null)
                 }
                 else -> throw IllegalStateException("Unexpected value: " + call.method)
             }
