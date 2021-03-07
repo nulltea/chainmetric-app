@@ -2,16 +2,16 @@
   {
     "name": "Tech",
     "type": "tech",
-    "colorHex": "#008B8B"
+    "color_hex": "#008B8B"
   },
   {
     "name": "Food",
     "type": "food",
-    "colorHex": "#00FF00"
+    "color_hex": "#00FF00"
   },
   {
     "name": "Materials",
     "type": "materials",
-    "colorHex": "#1E90FF"
+    "color_hex": "#1E90FF"
   }
 ]

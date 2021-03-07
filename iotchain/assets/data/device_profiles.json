@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Common",
+    "profile": "common",
+    "color_hex": "#008B8B"
+  },
+  {
+    "name": "Weather",
+    "profile": "weather",
+    "color_hex": "#1E90FF"
+  },
+  {
+    "name": "Medical",
+    "profile": "medical",
+    "color_hex": "#00FF00"
+  }
+]

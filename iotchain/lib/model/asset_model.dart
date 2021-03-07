@@ -11,7 +11,10 @@ class Asset {
   String type;
   String info;
   num cost;
+  int amount;
   String owner;
+  String state;
+  String location;
   List<String> tags = <String>[];
 }
 
@@ -19,14 +22,15 @@ class Asset {
 class AssetType {
   String name;
   String type;
+  @JsonProperty(name: "color_hex")
   String colorHex;
   Color get color => colorFromHex(colorHex);
 
   Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');
     if (hexColor.length == 6) {
-      hexColor = 'FF' + hexColor;
+      hexColor = "FF" + hexColor;
     }
-    return Color(int.parse('FF$hexCode', radix: 16));
+    return Color(int.parse("FF$hexCode", radix: 16));
   }
 }

@@ -1,5 +1,8 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:iotchain/model/device_model.dart';
+import 'package:iotchain/model/metric_model.dart';
 
+import 'controllers/references_adapter.dart';
 import 'main.reflectable.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/views/auth_page.dart';
@@ -31,6 +34,7 @@ class _AppState extends State<App> {
   }
 
   Future initBackend() async {
+    await References.init();
     await Blockchain.initWallet();
     if (await Blockchain.authRequired()) {
       setState(() => _isLoading = false);
@@ -64,7 +68,9 @@ void initJson() {
         typeOf<List<String>>(): (value) => value.cast<String>(),
         typeOf<List<Asset>>(): (value) => value.cast<Asset>(),
         typeOf<List<Organization>>(): (value) => value.cast<Organization>(),
-        typeOf<List<AssetType>>(): (value) => value.cast<AssetType>()
+        typeOf<List<AssetType>>(): (value) => value.cast<AssetType>(),
+        typeOf<List<DeviceProfile>>(): (value) => value.cast<DeviceProfile>(),
+        typeOf<List<Metric>>(): (value) => value.cast<Metric>()
       })
   );
 }

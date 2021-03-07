@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Temperature",
+    "metric": "temperature"
+  },
+  {
+    "name": "Humidity",
+    "metric": "humidity"
+  },
+  {
+    "name": "Luminosity",
+    "metric": "luminosity"
+  },
+  {
+    "name": "Magnetism",
+    "metric": "magnetism"
+  },
+  {
+    "name": "Pressure",
+    "metric": "pressure"
+  },
+  {
+    "name": "Altitude",
+    "metric": "altitude"
+  },
+  {
+    "name": "UVLight",
+    "metric": "uv_light"
+  },
+  {
+    "name": "VisibleLight",
+    "metric": "visible_light"
+  },
+  {
+    "name": "IRLight",
+    "metric": "ir_light"
+  },
+  {
+    "name": "Proximity",
+    "metric": "proximity"
+  },
+  {
+    "name": "AirCO2Concentration",
+    "metric": "air_co2_concentration"
+  },
+  {
+    "name": "AirTVOCsConcentration",
+    "metric": "air_tvoc_concentration"
+  },
+  {
+    "name": "AccelerationInG",
+    "metric": "acceleration_axes_g"
+  },
+  {
+    "name": "AccelerationInMS2",
+    "metric": "acceleration_axes_ms"
+  },
+  {
+    "name": "HeartRate",
+    "metric": "heart_rate"
+  },
+  {
+    "name": "BloodOxidation",
+    "metric": "blood_oxidation"
+  }
+]
