@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +5,6 @@ import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
 
 class AssetsTab extends StatefulWidget {
-  static const title = "Assets";
-  static const icon = Icon(Icons.music_note);
-
   const AssetsTab({Key key}) : super(key: key);
 
   @override

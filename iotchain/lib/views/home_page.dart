@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iotchain/views/devices_tab.dart';
+import 'package:iotchain/views/profile_tab.dart';
 import 'asset_form.dart';
 
 import 'components/bottom_app_bar.dart';
 import 'components/navigation_tab.dart';
 import 'assets_tab.dart';
+import 'device_form.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -30,13 +33,13 @@ class _HomePageState extends State<HomePage> {
     ),
     NavigationTabItem(
         navBarItem: CustomAppBarItem(icon: Icons.list),
-        tab: Center(child: Text('Requirements')),
-        buttonIcon: Icon(Icons.camera),
-        pageAction: (ctx) => AssetForm()
+        tab: Center(child: DevicesTab()),
+        buttonIcon: Icon(Icons.qr_code),
+        pageAction: (ctx) => DeviceForm()
     ),
     NavigationTabItem(
         navBarItem: CustomAppBarItem(icon: Icons.person),
-        tab: Center(child: Text('Profile')),
+        tab: Center(child: ProfileTab()),
         buttonIcon: Icon(Icons.person),
         pageAction: (ctx) => AssetForm()
     ),

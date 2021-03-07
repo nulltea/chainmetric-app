@@ -1,24 +1,29 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
-import 'package:iotchain/model/asset_model.dart';
+import 'package:iotchain/model/device_model.dart';
+import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
+import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 
-class AssetForm extends StatefulWidget {
+class DeviceForm extends StatefulWidget {
   @override
-  _AssetFormState createState() => _AssetFormState();
+  _DeviceFormState createState() => _DeviceFormState();
 }
 
-class _AssetFormState extends State<AssetForm> {
-  Asset asset = Asset();
+class _DeviceFormState extends State<DeviceForm> {
+  Device device = Device();
 
   final _formKey = GlobalKey<FormState>();
 
   Future<void> submitAsset() async {
     if (_formKey.currentState.validate()) {
       try {
-        var jsonData = JsonMapper.serialize(asset);
-        await Blockchain.submitTransaction("assets", "Insert", jsonData);
+        var jsonData = JsonMapper.serialize(device);
+        await Blockchain.submitTransaction("device", "Insert", jsonData);
         Navigator.pop(context);
       } on Exception catch (e) {
         ScaffoldMessenger.of(context)
@@ -36,7 +41,7 @@ class _AssetFormState extends State<AssetForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Input Asset"),
+        title: Text("Register device"),
       ),
       body: Form(
         key: _formKey,
@@ -55,90 +60,86 @@ class _AssetFormState extends State<AssetForm> {
                         TextFormField(
                           decoration: InputDecoration(
                             filled: true,
-                            hintText: "Enter an asset name",
+                            hintText: "Enter an device name",
                             labelText: "Name",
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "Please provide name for new asset";
+                              return "Please provide name for the device";
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            setState(() => asset.name = value);
+                            setState(() => device.name = value);
                           },
                         ),
                         TextFormField(
                           decoration: InputDecoration(
                             filled: true,
-                            hintText: "Enter an SKU code",
-                            labelText: "SKU code",
+                            hintText: "Enter a device URL",
+                            labelText: "URL",
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "Please provide SKU code for new asset";
+                              return "Please provide URL for the device";
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            setState(() => asset.sku = value);
+                            setState(() => device.url = value);
                           },
                         ),
                         DropdownButtonFormField(
                           decoration: InputDecoration(
                             filled: true,
-                            hintText: "Choose asset type",
-                            labelText: "Asset type",
+                            hintText: "Choose device profile",
+                            labelText: "Profile",
                           ),
-                          items: References.assetTypes
+                          items: References.deviceProfiles
                               .map<DropdownMenuItem<String>>(
-                                  (type) => DropdownMenuItem<String>(
-                                        value: type.type,
-                                        child: Text(type.name, style: TextStyle(backgroundColor: type.color),),
+                                  (profile) => DropdownMenuItem<String>(
+                                        value: profile.profile,
+                                        child: Text(profile.name),
                                       ))
                               .toList(),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please choose an asset type";
-                            }
-                            return null;
-                          },
                           onChanged: (value) {
-                            setState(() => asset.type = value);
+                            setState(() => device.profile = value);
                           },
                         ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            hintText: "Enter an cost",
-                            labelText: "Cost",
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please provide cost for new asset";
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() => asset.cost = double.parse(value));
+                        MultiSelectBottomSheetField(
+                          title: Text("Supports metrics"),
+                          buttonText: Text("Selected supported metrics"),
+                          listType: MultiSelectListType.CHIP,
+                          chipColor: Colors.teal.shade800,
+                          selectedColor: Colors.teal,
+                          selectedItemsTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                          items: References.metrics
+                              .map((metric) => MultiSelectItem(
+                                    metric.metric,
+                                    metric.name,
+                                  ))
+                              .toList(),
+                          onSelectionChanged: (value) {
+                            setState(() => device.supports = value);
                           },
                         ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Enter asset description",
-                            labelText: "Description",
-                            filled: true,
-                          ),
-                          onChanged: (value) {
-                            setState(() => asset.info = value);
+                        MultiSelectChipDisplay(
+                          chipColor: Colors.teal,
+                          textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          items: device.supports
+                              .map((metric) => MultiSelectItem(
+                                    metric,
+                                    References.metricsMap[metric]?.name ?? "",
+                                  ))
+                              .toList(),
+                          onTap: (value) {
+                            setState(() => device.supports.remove(value));
                           },
-                          maxLines: 5,
                         ),
                         DropdownButtonFormField(
                           decoration: InputDecoration(
-                            hintText: "Choose the owner organization",
-                            labelText: "Owned by",
+                            hintText: "Choose the holder organization",
+                            labelText: "Hold by",
                             filled: true,
                           ),
                           items: References.organizations
@@ -150,25 +151,27 @@ class _AssetFormState extends State<AssetForm> {
                               .toList(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Please choose an owner organization";
+                              return "Please choose an holder organization";
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            setState(() => asset.owner = value);
+                            setState(() => device.holder = value);
                           },
                         ),
                         SizedBox(
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                          onPressed: submitAsset,
-                          child: const Text("Submit asset",
-                              style: TextStyle(fontSize: 20)),
-                        )),
+                              onPressed: submitAsset,
+                              child: const Text("Submit asset",
+                                  style: TextStyle(fontSize: 20)),
+                            )),
                       ].expand((widget) => [
                             widget,
-                            SizedBox(height: 24,)
+                            SizedBox(
+                              height: 24,
+                            )
                           ])
                     ]),
               ),
