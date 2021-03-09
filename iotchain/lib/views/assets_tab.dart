@@ -2,6 +2,7 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
+import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
 
 class AssetsTab extends StatefulWidget {
@@ -40,6 +41,7 @@ class _AssetsTabState extends State<AssetsTab> {
 
   Widget _assetCard(Asset asset) => Card(
         elevation: 5,
+        color: References.assetTypesMap[asset.type].color,
         child: Container(
           height: 100,
           child: Padding(
@@ -55,7 +57,7 @@ class _AssetsTabState extends State<AssetsTab> {
                       Spacer(),
                       Text("${asset.cost}\$"),
                       Spacer(),
-                      Text(asset.owner),
+                      Text(asset.holder),
                       SizedBox(
                         width: 20,
                       )

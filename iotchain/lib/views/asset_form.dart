@@ -3,6 +3,9 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
+import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class AssetForm extends StatefulWidget {
   @override
@@ -18,8 +21,9 @@ class _AssetFormState extends State<AssetForm> {
     if (_formKey.currentState.validate()) {
       try {
         var jsonData = JsonMapper.serialize(asset);
-        await Blockchain.submitTransaction("assets", "Insert", jsonData);
-        Navigator.pop(context);
+        if (await Blockchain.submitTransaction("assets", "Insert", jsonData) != null) {
+          Navigator.pop(context);
+        }
       } on Exception catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -94,7 +98,7 @@ class _AssetFormState extends State<AssetForm> {
                               .map<DropdownMenuItem<String>>(
                                   (type) => DropdownMenuItem<String>(
                                         value: type.type,
-                                        child: Text(type.name, style: TextStyle(backgroundColor: type.color),),
+                                        child: Text(type.name),
                                       ))
                               .toList(),
                           validator: (value) {
@@ -121,9 +125,33 @@ class _AssetFormState extends State<AssetForm> {
                           },
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                            setState(() => asset.cost = double.parse(value));
+                            setState(() => asset.cost = num.parse(value));
                           },
                         ),
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              boxShadow: kElevationToShadow[1],
+                              borderRadius: BorderRadius.circular(2.0),
+                            ),
+                            padding: EdgeInsets.only(left: 10, top: 10),
+                            child: Stack(children: [
+                              Text("Amount",
+                                  style: TextStyle(
+                                      color: Theme.of(context).hintColor,
+                                      fontSize: 16)),
+                              Row(children: [
+                                NumberPicker.horizontal(
+                                  initialValue: asset.amount ?? 1,
+                                  minValue: 1,
+                                  maxValue: 100,
+                                  haptics: true,
+                                  highlightSelectedValue: true,
+                                  onChanged: (value) =>
+                                      setState(() => asset.amount = value),
+                                )
+                              ], mainAxisAlignment: MainAxisAlignment.center)
+                            ])),
                         TextFormField(
                           decoration: InputDecoration(
                             hintText: "Enter asset description",
@@ -155,20 +183,83 @@ class _AssetFormState extends State<AssetForm> {
                             return null;
                           },
                           onChanged: (value) {
-                            setState(() => asset.owner = value);
+                            setState(() => asset.holder = value);
                           },
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            filled: true,
+                            hintText: "Enter the device location",
+                            labelText: "Location",
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return "Please specify the device location";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() => asset.location = value);
+                          },
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    hintText: "Separate tags with Space",
+                                    labelText: "Tags",
+                                  ),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return "Please specify the device location";
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    setState(() {
+                                      if (value.trim().isEmpty) {
+                                        asset.tags = [];
+                                        return;
+                                      }
+                                      asset.tags = value.trim().split(' ');
+                                    });
+                                  }),
+                              MultiSelectChipDisplay(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                ),
+                                chipColor: Colors.teal,
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                items: asset.tags
+                                    .map((tag) => MultiSelectItem(
+                                          tag,
+                                          "#$tag",
+                                        ))
+                                    .toList(),
+                                onTap: (value) {
+                                  setState(() => asset.tags.remove(value));
+                                },
+                              )
+                            ],
+                          ),
                         ),
                         SizedBox(
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                          onPressed: submitAsset,
-                          child: const Text("Submit asset",
-                              style: TextStyle(fontSize: 20)),
-                        )),
+                              onPressed: submitAsset,
+                              child: const Text("Submit asset",
+                                  style: TextStyle(fontSize: 20)),
+                            )),
                       ].expand((widget) => [
                             widget,
-                            SizedBox(height: 24,)
+                            SizedBox(
+                              height: 24,
+                            )
                           ])
                     ]),
               ),
