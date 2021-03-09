@@ -1,66 +1,66 @@
 [
   {
     "name": "Temperature",
-    "metric": "temperature"
+    "metric": "temp"
   },
   {
     "name": "Humidity",
-    "metric": "humidity"
+    "metric": "hdt"
   },
   {
     "name": "Luminosity",
-    "metric": "luminosity"
+    "metric": "lux"
   },
   {
     "name": "Magnetism",
-    "metric": "magnetism"
+    "metric": "hall"
   },
   {
     "name": "Pressure",
-    "metric": "pressure"
+    "metric": "bar"
   },
   {
     "name": "Altitude",
-    "metric": "altitude"
+    "metric": "alt"
   },
   {
     "name": "UVLight",
-    "metric": "uv_light"
+    "metric": "uv"
   },
   {
     "name": "VisibleLight",
-    "metric": "visible_light"
+    "metric": "vis"
   },
   {
     "name": "IRLight",
-    "metric": "ir_light"
+    "metric": "ir"
   },
   {
     "name": "Proximity",
-    "metric": "proximity"
+    "metric": "prx"
   },
   {
     "name": "AirCO2Concentration",
-    "metric": "air_co2_concentration"
+    "metric": "co2"
   },
   {
     "name": "AirTVOCsConcentration",
-    "metric": "air_tvoc_concentration"
+    "metric": "tvoc"
   },
   {
     "name": "AccelerationInG",
-    "metric": "acceleration_axes_g"
+    "metric": "axg"
   },
   {
     "name": "AccelerationInMS2",
-    "metric": "acceleration_axes_ms"
+    "metric": "axms"
   },
   {
     "name": "HeartRate",
-    "metric": "heart_rate"
+    "metric": "hrt"
   },
   {
     "name": "BloodOxidation",
-    "metric": "blood_oxidation"
+    "metric": "blo"
   }
 ]

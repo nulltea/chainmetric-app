@@ -2,11 +2,13 @@ import 'dart:ui';
 
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
-@jsonProperty
+@jsonSerializable
 class Device {
   String id;
-  String url;
+  String ip;
+  String mac;
   String name;
+  String hostname;
   String profile;
   List<String> supports = <String>[];
   String holder;

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iotchain/views/devices_tab.dart';
 import 'package:iotchain/views/profile_tab.dart';

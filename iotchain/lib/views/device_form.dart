@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
@@ -8,6 +9,7 @@ import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_fiel
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class DeviceForm extends StatefulWidget {
   @override
@@ -15,7 +17,10 @@ class DeviceForm extends StatefulWidget {
 }
 
 class _DeviceFormState extends State<DeviceForm> {
-  Device device = Device();
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController controller;
+  Device device;
+  String scannerMsg = "Scan a code";
 
   final _formKey = GlobalKey<FormState>();
 
@@ -23,8 +28,9 @@ class _DeviceFormState extends State<DeviceForm> {
     if (_formKey.currentState.validate()) {
       try {
         var jsonData = JsonMapper.serialize(device);
-        await Blockchain.submitTransaction("device", "Insert", jsonData);
-        Navigator.pop(context);
+        if (await Blockchain.submitTransaction("devices", "Insert", jsonData) != null) {
+          Navigator.pop(context);
+        }
       } on Exception catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -39,6 +45,12 @@ class _DeviceFormState extends State<DeviceForm> {
 
   @override
   Widget build(BuildContext context) {
+    return device == null
+      ? buildScanner(context)
+      : buildForm(context);
+  }
+
+  Widget buildForm(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register device"),
@@ -58,6 +70,7 @@ class _DeviceFormState extends State<DeviceForm> {
                     children: [
                       ...[
                         TextFormField(
+                          initialValue: device.name,
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an device name",
@@ -74,80 +87,94 @@ class _DeviceFormState extends State<DeviceForm> {
                           },
                         ),
                         TextFormField(
+                          initialValue: device.hostname,
                           decoration: InputDecoration(
                             filled: true,
-                            hintText: "Enter a device URL",
-                            labelText: "URL",
+                            hintText: "Enter the device hostname",
+                            labelText: "Hostname",
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return "Please provide URL for the device";
+                              return "Please provide device hostname";
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            setState(() => device.url = value);
+                            setState(() => device.hostname = value);
                           },
                         ),
                         DropdownButtonFormField(
+                          value: device.profile,
                           decoration: InputDecoration(
                             filled: true,
-                            hintText: "Choose device profile",
+                            hintText: "Choose the device profile",
                             labelText: "Profile",
                           ),
                           items: References.deviceProfiles
                               .map<DropdownMenuItem<String>>(
                                   (profile) => DropdownMenuItem<String>(
-                                        value: profile.profile,
-                                        child: Text(profile.name),
-                                      ))
+                                value: profile.profile,
+                                child: Text(profile.name),
+                              ))
                               .toList(),
                           onChanged: (value) {
                             setState(() => device.profile = value);
                           },
                         ),
-                        MultiSelectBottomSheetField(
-                          title: Text("Supports metrics"),
-                          buttonText: Text("Selected supported metrics"),
-                          listType: MultiSelectListType.CHIP,
-                          chipColor: Colors.teal.shade800,
-                          selectedColor: Colors.teal,
-                          selectedItemsTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                          items: References.metrics
-                              .map((metric) => MultiSelectItem(
-                                    metric.metric,
-                                    metric.name,
-                                  ))
-                              .toList(),
-                          onSelectionChanged: (value) {
-                            setState(() => device.supports = value);
-                          },
-                        ),
-                        MultiSelectChipDisplay(
-                          chipColor: Colors.teal,
-                          textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                          items: device.supports
-                              .map((metric) => MultiSelectItem(
-                                    metric,
-                                    References.metricsMap[metric]?.name ?? "",
-                                  ))
-                              .toList(),
-                          onTap: (value) {
-                            setState(() => device.supports.remove(value));
-                          },
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            boxShadow: kElevationToShadow[1],
+                            borderRadius: BorderRadius.circular(2.0),
+                          ),
+                          child: Column(children: [
+                            MultiSelectBottomSheetField(
+                              initialValue: device.supports,
+                              title: Text("Supports metrics"),
+                              buttonText: Text("Selected supported metrics"),
+                              listType: MultiSelectListType.CHIP,
+                              chipColor: Colors.teal.shade800,
+                              selectedColor: Colors.teal,
+                              selectedItemsTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                              buttonIcon: Icon(Icons.arrow_drop_down),
+                              items: References.metrics
+                                  .map((metric) => MultiSelectItem(
+                                metric.metric,
+                                metric.name,
+                              ))
+                                  .toList(),
+                              onSelectionChanged: (value) {
+                                setState(() => device.supports = value);
+                              },
+                            ),
+                            MultiSelectChipDisplay(
+                              chipColor: Colors.teal,
+                              textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              items: device.supports
+                                  .map((metric) => MultiSelectItem(
+                                metric,
+                                References.metricsMap[metric]?.name ?? "",
+                              ))
+                                  .toList(),
+                              onTap: (value) {
+                                setState(() => device.supports.remove(value));
+                              },
+                            )
+                          ],),
                         ),
                         DropdownButtonFormField(
+                          value: device.holder,
                           decoration: InputDecoration(
                             hintText: "Choose the holder organization",
-                            labelText: "Hold by",
+                            labelText: "Holder",
                             filled: true,
                           ),
                           items: References.organizations
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
-                                        value: org.mspID,
-                                        child: Text(org.name),
-                                      ))
+                                value: org.mspID,
+                                child: Text(org.name),
+                              ))
                               .toList(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -159,20 +186,37 @@ class _DeviceFormState extends State<DeviceForm> {
                             setState(() => device.holder = value);
                           },
                         ),
+                        TextFormField(
+                          initialValue: device.location,
+                          decoration: InputDecoration(
+                            filled: true,
+                            hintText: "Enter the device location",
+                            labelText: "Location",
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return "Please specify the device location";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() => device.location = value);
+                          },
+                        ),
                         SizedBox(
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
                               onPressed: submitAsset,
-                              child: const Text("Submit asset",
+                              child: const Text("Register device",
                                   style: TextStyle(fontSize: 20)),
                             )),
                       ].expand((widget) => [
-                            widget,
-                            SizedBox(
-                              height: 24,
-                            )
-                          ])
+                        widget,
+                        SizedBox(
+                          height: 24,
+                        )
+                      ])
                     ]),
               ),
             ),
@@ -180,5 +224,68 @@ class _DeviceFormState extends State<DeviceForm> {
         ),
       ),
     );
+  }
+
+  Widget buildScanner(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 5,
+            child: QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Text(scannerMsg),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      if (scanData != null) {
+        Device dev;
+        try {
+          dev = JsonMapper.deserialize<Device>(scanData.code);
+          dev.name = dev.hostname;
+          dev.profile = "common";
+          dev.state = "active";
+          dev.location = "warehouse"; // TODO: location determination via GPS
+          dev.holder = "supplierMSP"; // TODO: holder determination via user identity
+        } on Exception {
+          setState(() => scannerMsg = "QR is invalid. Please try again");
+          return;
+        }
+        controller?.dispose();
+        setState(() => device = dev);
+      } else {
+        setState(() => scannerMsg = "Scan a code");
+      }
+
+    });
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller.resumeCamera();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 }

@@ -53,8 +53,6 @@ class _DevicesTabState extends State<DevicesTab> {
                   Text(device.name,
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Spacer(),
-                  Text(device.state),
-                  Spacer(),
                   Text(device.location),
                   SizedBox(
                     width: 20,

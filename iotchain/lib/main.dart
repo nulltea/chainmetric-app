@@ -67,6 +67,7 @@ void initJson() {
       valueDecorators: {
         typeOf<List<String>>(): (value) => value.cast<String>(),
         typeOf<List<Asset>>(): (value) => value.cast<Asset>(),
+        typeOf<List<Device>>(): (value) => value.cast<Device>(),
         typeOf<List<Organization>>(): (value) => value.cast<Organization>(),
         typeOf<List<AssetType>>(): (value) => value.cast<AssetType>(),
         typeOf<List<DeviceProfile>>(): (value) => value.cast<DeviceProfile>(),
