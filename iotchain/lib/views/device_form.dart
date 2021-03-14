@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _DeviceFormState extends State<DeviceForm> {
     if (_formKey.currentState.validate()) {
       try {
         var jsonData = JsonMapper.serialize(device);
-        if (await Blockchain.submitTransaction("devices", "Insert", jsonData) != null) {
+        if (await Blockchain.submitTransaction("devices", "Upsert", jsonData) != null) {
           Navigator.pop(context);
         }
       } on Exception catch (e) {
@@ -250,18 +251,24 @@ class _DeviceFormState extends State<DeviceForm> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
+    Timer timer;
+
     controller.scannedDataStream.listen((scanData) {
       if (scanData != null) {
         Device dev;
         try {
-          dev = JsonMapper.deserialize<Device>(scanData.code);
+          dev = parseQRCode(scanData.code);
           dev.name = dev.hostname;
           dev.profile = "common";
           dev.state = "active";
           dev.location = "warehouse"; // TODO: location determination via GPS
           dev.holder = "supplierMSP"; // TODO: holder determination via user identity
-        } on Exception {
-          setState(() => scannerMsg = "QR is invalid. Please try again");
+        } on Exception catch (e)  {
+          setState(() => scannerMsg = "QR is invalid: ${e.toString()}");
+          if (timer != null) timer.cancel();
+          timer = Timer(Duration(seconds: 5), () {
+            setState(() => scannerMsg = "Scan a code");
+          });
           return;
         }
         controller?.dispose();
@@ -287,5 +294,29 @@ class _DeviceFormState extends State<DeviceForm> {
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+  Device parseQRCode(String code) {
+    var exp = RegExp(r"\$\{(.+?)\}");
+    var match = exp.firstMatch(code);
+    if (match == null) throw Exception("expected pattern does not match");
+
+    var data = match.group(1);
+    var parts = data.split(';');
+    if (parts.length != 3) throw Exception("coded data is not valid");
+
+    Device dev = Device();
+
+    dev.hostname = parts[0];
+    dev.ip = parts[1];
+
+    var metrics = parts[2].split(',');
+    if (metrics.isEmpty || metrics.length == 1 && metrics[0].isEmpty) {
+      throw Exception("device must support at least one metric");
+    }
+
+    dev.supports = metrics;
+
+    return dev;
   }
 }
