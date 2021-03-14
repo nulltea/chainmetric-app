@@ -31,3 +31,4 @@ flutter:
     - assets/data/asset_types.json
     - assets/data/device_profiles.json
     - assets/data/metrics.json
+    - assets/data/default_requirements.json
