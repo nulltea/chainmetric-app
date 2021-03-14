@@ -4,15 +4,18 @@ import 'package:iotchain/model/asset_model.dart';
 import 'package:iotchain/model/device_model.dart';
 import 'package:iotchain/model/metric_model.dart';
 import 'package:iotchain/model/organization_model.dart';
+import 'package:iotchain/model/requirements_model.dart';
 
 class References {
   static List<Organization> organizations = <Organization>[];
   static List<AssetType> assetTypes = <AssetType>[];
   static List<DeviceProfile> deviceProfiles = <DeviceProfile>[];
   static List<Metric> metrics = <Metric>[];
+  static Map<String, Requirement> defaultRequirements;
 
-  static Map<String, AssetType> assetTypesMap;
+  static Map<String,AssetType> assetTypesMap;
   static Map<String,Metric> metricsMap;
+  static Map<String,Organization> organizationsMap;
 
   static Future init() async {
     organizations = JsonMapper.deserialize<List<Organization>>(
@@ -27,8 +30,12 @@ class References {
     metrics = JsonMapper.deserialize<List<Metric>>(
         await rootBundle.loadString("assets/data/metrics.json")
     );
+    defaultRequirements = JsonMapper.deserialize<Map<String, Requirement>>(
+        await rootBundle.loadString("assets/data/default_requirements.json")
+    );
 
     assetTypesMap = Map.fromIterable(assetTypes, key: (at) => at.type, value: (at) => at);
     metricsMap = Map.fromIterable(metrics, key: (m) => m.metric, value: (m) => m);
+    organizationsMap = Map.fromIterable(organizations, key: (m) => m.mspID, value: (m) => m);
   }
 }

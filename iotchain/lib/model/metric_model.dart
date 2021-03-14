@@ -4,4 +4,5 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 class Metric {
   String name;
   String metric;
+  String unit;
 }

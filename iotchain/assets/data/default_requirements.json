@@ -1,0 +1,66 @@
+{
+  "temp": {
+    "min_limit": -10,
+    "max_limit": 50
+  },
+  "hdt": {
+    "min_limit": 30,
+    "max_limit": 50
+  },
+  "lux": {
+    "min_limit": 0,
+    "max_limit": 100
+  },
+  "mgn": {
+    "min_limit": 0,
+    "max_limit": 10
+  },
+  "bar": {
+    "min_limit": 5,
+    "max_limit": 150
+  },
+  "alt": {
+    "min_limit": 0,
+    "max_limit": 10000
+  },
+  "uv": {
+    "min_limit": 0,
+    "max_limit": 6
+  },
+  "vis": {
+    "min_limit": 0,
+    "max_limit": 100
+  },
+  "ir": {
+    "min_limit": 0,
+    "max_limit": 10
+  },
+  "prx": {
+    "min_limit": 1,
+    "max_limit": 25
+  },
+  "co2": {
+    "min_limit": 400,
+    "max_limit": 4500
+  },
+  "tvoc": {
+    "min_limit": 120,
+    "max_limit": 1200
+  },
+  "axg": {
+    "min_limit": 0,
+    "max_limit": 9
+  },
+  "axms": {
+    "min_limit": 0,
+    "max_limit": 88
+  },
+  "hrt": {
+    "min_limit": 50,
+    "max_limit": 220
+  },
+  "blo": {
+    "min_limit": 88,
+    "max_limit": 100
+  }
+}

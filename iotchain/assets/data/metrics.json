@@ -1,66 +1,87 @@
 [
   {
     "name": "Temperature",
-    "metric": "temp"
+    "metric": "temp",
+    "unit": "°C"
   },
   {
     "name": "Humidity",
-    "metric": "hdt"
+    "metric": "hdt",
+    "unit": "% RH"
   },
   {
     "name": "Luminosity",
-    "metric": "lux"
+    "metric": "lux",
+    "unit": "Lux"
   },
   {
     "name": "Magnetism",
-    "metric": "hall"
+    "metric": "mgn",
+    "unit": "Gauss"
   },
   {
     "name": "Pressure",
-    "metric": "bar"
+    "metric": "bar",
+    "unit": "PSI"
   },
   {
     "name": "Altitude",
-    "metric": "alt"
+    "metric": "alt",
+    "unit":"m"
   },
   {
-    "name": "UVLight",
-    "metric": "uv"
+    "name": "UV index",
+    "metric": "uv",
+    "unit": "Index"
   },
   {
-    "name": "VisibleLight",
-    "metric": "vis"
+    "name": "Visible light",
+    "metric": "vis",
+    "unit": "lux"
   },
   {
-    "name": "IRLight",
-    "metric": "ir"
+    "name": "IR light",
+    "metric": "ir",
+    "unit": "lux"
   },
   {
     "name": "Proximity",
-    "metric": "prx"
+    "metric": "prx",
+    "unit": "m"
   },
   {
-    "name": "AirCO2Concentration",
-    "metric": "co2"
+    "name": "CO2 concentration",
+    "metric": "co2",
+    "unit": "ppm"
   },
   {
-    "name": "AirTVOCsConcentration",
-    "metric": "tvoc"
+    "name": "TVOCs concentration",
+    "metric": "tvoc",
+    "unit": "ppb"
   },
   {
-    "name": "AccelerationInG",
-    "metric": "axg"
+    "name": "Acceleration (G)",
+    "metric": "axg",
+    "unit": "G"
   },
   {
-    "name": "AccelerationInMS2",
-    "metric": "axms"
+    "name": "Acceleration (M/S^2)",
+    "metric": "axms",
+    "unit": "m/s^2"
   },
   {
-    "name": "HeartRate",
-    "metric": "hrt"
+    "name": "Heart rate",
+    "metric": "hrt",
+    "unit": "bpm"
   },
   {
-    "name": "BloodOxidation",
-    "metric": "blo"
+    "name": "Blood oxidation",
+    "metric": "blo",
+    "unit": "%"
+  },
+  {
+    "name": "Noise level",
+    "metric": "nse",
+    "unit": "dBA"
   }
 ]

@@ -14,5 +14,5 @@ class Requirements {
   String type;
   @JsonProperty(name: "asset_id")
   String assetID;
-  Map<String, Requirement> metrics;
+  Map<String, Requirement> metrics = Map<String, Requirement>();
 }
