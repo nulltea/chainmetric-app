@@ -18,7 +18,7 @@ class DeviceForm extends StatefulWidget {
 }
 
 class _DeviceFormState extends State<DeviceForm> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey qrKey = GlobalKey(debugLabel: "QR");
   QRViewController controller;
   Device device;
   String scannerMsg = "Scan a code";
@@ -29,7 +29,7 @@ class _DeviceFormState extends State<DeviceForm> {
     if (_formKey.currentState.validate()) {
       try {
         var jsonData = JsonMapper.serialize(device);
-        if (await Blockchain.submitTransaction("devices", "Upsert", jsonData) != null) {
+        if (await Blockchain.submitTransaction("devices", "Register", jsonData) != null) {
           Navigator.pop(context);
         }
       } on Exception catch (e) {
@@ -132,7 +132,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             MultiSelectBottomSheetField(
                               initialValue: device.supports,
                               title: Text("Supports metrics"),
-                              buttonText: Text("Selected supported metrics"),
+                              buttonText: Text("Select supported metrics"),
                               listType: MultiSelectListType.CHIP,
                               chipColor: Colors.teal.shade800,
                               selectedColor: Colors.teal,

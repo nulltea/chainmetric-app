@@ -40,7 +40,7 @@ class _AssetFormState extends State<AssetForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Input Asset"),
+        title: Text("Input asset"),
       ),
       body: Form(
         key: _formKey,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
+import 'package:iotchain/views/requirements_form.dart';
 
 class AssetsTab extends StatefulWidget {
   const AssetsTab({Key key}) : super(key: key);
@@ -34,7 +35,22 @@ class _AssetsTabState extends State<AssetsTab> {
       bottom: false,
       child: Hero(
         tag: index,
-        child: _assetCard(assets[index]),
+        child: GestureDetector(
+          child: _assetCard(assets[index]),
+          onLongPress: () => showMenu(
+            items: <PopupMenuEntry>[
+              PopupMenuItem<Function>(
+                value: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RequirementsForm())
+                ),
+                child: Text("Assign requirements"),
+              ),
+            ],
+            context: context,
+            position: RelativeRect.fromLTRB(100, 100, 100, 100),
+           ).then((action) => action()),
+        ),
       ),
     );
   }
@@ -57,7 +73,7 @@ class _AssetsTabState extends State<AssetsTab> {
                       Spacer(),
                       Text("${asset.cost}\$"),
                       Spacer(),
-                      Text(asset.holder),
+                      Text(References.organizationsMap[asset.holder].name),
                       SizedBox(
                         width: 20,
                       )
