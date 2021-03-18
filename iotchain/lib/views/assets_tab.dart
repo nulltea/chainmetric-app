@@ -42,7 +42,7 @@ class _AssetsTabState extends State<AssetsTab> {
               PopupMenuItem<Function>(
                 value: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RequirementsForm())
+                    MaterialPageRoute(builder: (context) => RequirementsForm(assets[index].id))
                 ),
                 child: Text("Assign requirements"),
               ),
@@ -96,7 +96,7 @@ class _AssetsTabState extends State<AssetsTab> {
       );
 
   Future<List<Asset>> fetchAssets() async {
-    String data = await Blockchain.evaluateTransaction("assets", "List");
+    String data = await Blockchain.evaluateTransaction("assets", "All");
     try {
       return data.isNotEmpty ? JsonMapper.deserialize<List<Asset>>(data) : <Asset>[];
     } on Exception catch (e) {

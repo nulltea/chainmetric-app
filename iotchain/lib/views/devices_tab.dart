@@ -76,7 +76,7 @@ class _DevicesTabState extends State<DevicesTab> {
   );
 
   Future<List<Device>> fetchDevices() async {
-    String data = await Blockchain.evaluateTransaction("devices", "List");
+    String data = await Blockchain.evaluateTransaction("devices", "All");
     try {
       return data.isNotEmpty ? JsonMapper.deserialize<List<Device>>(data) : <Device>[];
     } on Exception catch (e) {
