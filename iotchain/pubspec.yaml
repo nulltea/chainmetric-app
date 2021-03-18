@@ -17,6 +17,7 @@ dependencies:
   multi_select_flutter: ^2.1.0
   numberpicker: any
   qr_code_scanner: ^0.3.5
+  modal_bottom_sheet: ^2.0.0
 
 dev_dependencies:
   flutter_test:
