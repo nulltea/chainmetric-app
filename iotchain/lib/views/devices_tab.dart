@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/model/device_model.dart';
 
+import 'components/modal_menu.dart';
+
 class DevicesTab extends StatefulWidget {
   const DevicesTab({Key key}) : super(key: key);
 
@@ -38,30 +40,37 @@ class _DevicesTabState extends State<DevicesTab> {
     );
   }
 
-  Widget _deviceCard(Device device) => Card(
-    elevation: 5,
-    child: Container(
-      height: 100,
-      child: Padding(
-        padding: EdgeInsets.all(12),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-              padding: const EdgeInsets.only(left: 10, top: 5),
-              child: Row(
-                children: <Widget>[
-                  Text(device.name,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Spacer(),
-                  Text(device.location),
-                  SizedBox(
-                    width: 20,
-                  )
-                ],
-              )),
+  Widget _deviceCard(Device device) => InkWell(
+    child: Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Container(
+        height: 100,
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.memory, size: 85),
+              title: Text(device.name),
+              subtitle: Text(device.ip),
+              trailing: SizedBox(
+                width: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(Icons.circle, color: Colors.green.withAlpha(200)),
+                    SizedBox(width: 5),
+                    Text("Active", style: TextStyle(color: Theme.of(context).hintColor))
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     ),
+    onLongPress: () => showDeviceMenu(context, device),
   );
 
   @override
@@ -83,5 +92,25 @@ class _DevicesTabState extends State<DevicesTab> {
       print(e.toString());
     }
     return <Device>[];
+  }
+
+  void showDeviceMenu(BuildContext context, Device device) {
+    showModalMenu(context: context, options: [
+      ModalMenuOption(
+          title: "Transfer device",
+          icon: Icons.local_shipping,
+          action: () => print("Transfer asset")
+      ),
+      ModalMenuOption(
+          title: "Edit asset",
+          icon: Icons.edit,
+          action: () => print("Edit device")
+      ),
+      ModalMenuOption(
+          title: "Delete asset",
+          icon: Icons.delete_forever,
+          action: () => print("Delete device")
+      ),
+    ]);
   }
 }
