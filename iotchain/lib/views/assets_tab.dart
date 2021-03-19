@@ -3,13 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:iotchain/controllers/assets_controller.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
 import 'package:iotchain/shared/utils.dart';
+import 'package:iotchain/shared/extensions.dart';
+import 'package:iotchain/views/asset_form.dart';
 import 'package:iotchain/views/components/modal_menu.dart';
 import 'package:iotchain/views/requirements_form.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 
 class AssetsTab extends StatefulWidget {
   const AssetsTab({Key key}) : super(key: key);
@@ -148,27 +151,37 @@ class _AssetsTabState extends State<AssetsTab> {
               : "Edit requirements",
           icon: Icons.fact_check,
           action: () => openPage(
-              context, RequirementsForm(model: asset.getRequirements()))),
+              context, RequirementsForm(model: asset.getRequirements()))
+      ),
       ModalMenuOption(
           title: "Transfer asset",
           icon: Icons.local_shipping,
-          action: () => print("Transfer asset")),
+          action: () => print("Transfer asset")
+      ),
       ModalMenuOption(
           title: "History",
           icon: Icons.history,
-          action: () => print("History")),
+          action: () => print("History")
+      ),
       ModalMenuOption(
           title: "Watch asset",
           icon: Icons.visibility,
-          action: () => print("Watch asset")),
+          action: () => print("Watch asset")
+      ),
       ModalMenuOption(
           title: "Edit asset",
           icon: Icons.edit,
-          action: () => print("Edit asset")),
+          action: () => openPage(context, AssetForm(model: asset))
+      ),
       ModalMenuOption(
           title: "Delete asset",
           icon: Icons.delete_forever,
-          action: () => print("Delete asset")),
+          action: () => showYesNoDialog(context,
+              title: "Delete ${asset.sku}",
+              message: "Are you sure?",
+              onYes: () => AssetsController.deleteAsset(asset.id),
+              onNo: () => print("close modal"))
+      ),
     ]);
   }
 }

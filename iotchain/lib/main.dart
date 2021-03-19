@@ -2,6 +2,7 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:iotchain/model/device_model.dart';
 import 'package:iotchain/model/metric_model.dart';
 import 'package:iotchain/model/requirements_model.dart';
+import 'package:overlay_screen/overlay_screen.dart';
 
 import 'controllers/references_adapter.dart';
 import 'main.reflectable.dart';
@@ -32,6 +33,11 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     initBackend();
+    OverlayScreen().saveScreens({
+      "modal": CustomOverlayScreen(
+        backgroundColor: ThemeData.dark().primaryColor.withAlpha(225),
+        content: Center(),
+      )});
   }
 
   Future initBackend() async {

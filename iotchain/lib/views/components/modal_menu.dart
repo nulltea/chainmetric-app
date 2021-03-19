@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:overlay_screen/overlay_screen.dart';
 
 class ModalMenuOption extends StatelessWidget {
   final Function() action;
@@ -34,9 +35,10 @@ class ModalMenuOption extends StatelessWidget {
 }
 
 void showModalMenu({BuildContext context, List<ModalMenuOption> options}) {
+  OverlayScreen().show(context, identifier: "modal");
   showMaterialModalBottomSheet(
     context: context,
-    backgroundColor: Theme.of(context).primaryColor.withAlpha(225),
+    backgroundColor: Theme.of(context).primaryColor.withAlpha(0),
     builder: (context) => Container(
         alignment: Alignment.bottomCenter,
         child: Padding(
@@ -46,5 +48,5 @@ void showModalMenu({BuildContext context, List<ModalMenuOption> options}) {
             children: options,
           ),
         )),
-  );
+  ).whenComplete(() => OverlayScreen().pop());
 }

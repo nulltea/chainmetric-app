@@ -8,14 +8,21 @@ import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class AssetForm extends StatefulWidget {
+  final Asset model;
+
+  AssetForm({this.model});
+
   @override
-  _AssetFormState createState() => _AssetFormState();
+  _AssetFormState createState() => _AssetFormState(model);
 }
 
 class _AssetFormState extends State<AssetForm> {
+  final _formKey = GlobalKey<FormState>();
   Asset asset = Asset();
 
-  final _formKey = GlobalKey<FormState>();
+  _AssetFormState(Asset model) {
+    this.asset = model ?? Asset();
+  }
 
   Future<void> submitAsset() async {
     if (_formKey.currentState.validate()) {
@@ -57,6 +64,7 @@ class _AssetFormState extends State<AssetForm> {
                     children: [
                       ...[
                         TextFormField(
+                          initialValue: asset.name,
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an asset name",
@@ -73,6 +81,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         TextFormField(
+                          initialValue: asset.sku,
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an SKU code",
@@ -89,6 +98,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         DropdownButtonFormField(
+                          value: asset.type,
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Choose asset type",
@@ -112,6 +122,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         TextFormField(
+                          initialValue: asset.cost.toString(),
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an cost",
@@ -153,6 +164,7 @@ class _AssetFormState extends State<AssetForm> {
                               ], mainAxisAlignment: MainAxisAlignment.center)
                             ])),
                         TextFormField(
+                          initialValue: asset.info,
                           decoration: InputDecoration(
                             hintText: "Enter asset description",
                             labelText: "Description",
@@ -164,6 +176,7 @@ class _AssetFormState extends State<AssetForm> {
                           maxLines: 5,
                         ),
                         DropdownButtonFormField(
+                          value: asset.holder,
                           decoration: InputDecoration(
                             hintText: "Choose the owner organization",
                             labelText: "Owned by",
@@ -187,6 +200,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         TextFormField(
+                          initialValue: asset.location,
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter the device location",
@@ -206,6 +220,7 @@ class _AssetFormState extends State<AssetForm> {
                           child: Column(
                             children: [
                               TextFormField(
+                                  initialValue: asset.tags.join(' '),
                                   decoration: InputDecoration(
                                     filled: true,
                                     hintText: "Separate tags with Space",
@@ -252,7 +267,7 @@ class _AssetFormState extends State<AssetForm> {
                             height: 45,
                             child: ElevatedButton(
                               onPressed: submitAsset,
-                              child: const Text("Submit asset",
+                              child: const Text("SUBMIT ASSET",
                                   style: TextStyle(fontSize: 20)),
                             )),
                       ].expand((widget) => [
