@@ -9,22 +9,24 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
-import 'package:numberpicker/numberpicker.dart';
 
 class RequirementsForm extends StatefulWidget {
-  String assetID;
+  final Requirements model;
 
-  RequirementsForm(String assetID) {
-    this.assetID = assetID;
-  }
+  const RequirementsForm({this.model});
 
   @override
-  _RequirementsFormState createState() => _RequirementsFormState();
+  _RequirementsFormState createState() => _RequirementsFormState(model);
 }
 
 class _RequirementsFormState extends State<RequirementsForm> {
-  Requirements requirements = Requirements();
+  Requirements requirements;
   ScrollController _controller = new ScrollController();
+  final _formKey = GlobalKey<FormState>();
+
+  _RequirementsFormState(Requirements state) {
+    this.requirements = state;
+  }
 
   String get periodStr =>
       "${requirements.periodDuration.inHours}h ${requirements.periodDuration
@@ -32,12 +34,11 @@ class _RequirementsFormState extends State<RequirementsForm> {
           .periodDuration.inSeconds -
           requirements.periodDuration.inMinutes * 60}s";
 
-  final _formKey = GlobalKey<FormState>();
+
 
   Future<void> submit() async {
     if (_formKey.currentState.validate()) {
       try {
-        requirements.assetID = widget.assetID;
         var jsonData = JsonMapper.serialize(requirements);
         if (await Blockchain.submitTransaction(
             "requirements", "Assign", jsonData) !=

@@ -17,4 +17,7 @@ class Requirements {
   int period;
   Duration get periodDuration => Duration(seconds: period ?? 0);
   Map<String, Requirement> metrics = Map<String, Requirement>();
+
+  Requirements();
+  Requirements.forAsset({this.assetID});
 }
