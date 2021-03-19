@@ -1,10 +1,15 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
+import 'package:iotchain/shared/utils.dart';
+import 'package:iotchain/views/components/modal_menu.dart';
 import 'package:iotchain/views/requirements_form.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AssetsTab extends StatefulWidget {
   const AssetsTab({Key key}) : super(key: key);
@@ -16,7 +21,8 @@ class AssetsTab extends StatefulWidget {
 class _AssetsTabState extends State<AssetsTab> {
   static const _itemsLength = 50;
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
-  List<Asset> assets = [];
+  List<AssetResponseItem> assets = [];
+  String scrollID;
 
   @override
   void initState() {
@@ -25,7 +31,10 @@ class _AssetsTabState extends State<AssetsTab> {
   }
 
   Future<void> _refreshData() {
-    return fetchAssets().then((value) => setState(() => assets = value));
+    return fetchAssets().then((value) => setState(() {
+          assets = value.items;
+          scrollID = value.scrollID;
+        }));
   }
 
   Widget _listBuilder(BuildContext context, int index) {
@@ -35,53 +44,75 @@ class _AssetsTabState extends State<AssetsTab> {
       bottom: false,
       child: Hero(
         tag: index,
-        child: GestureDetector(
-          child: _assetCard(assets[index]),
-          onLongPress: () => showMenu(
-            items: <PopupMenuEntry>[
-              PopupMenuItem<Function>(
-                value: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RequirementsForm(assets[index].id))
-                ),
-                child: Text("Assign requirements"),
-              ),
-            ],
-            context: context,
-            position: RelativeRect.fromLTRB(100, 100, 100, 100),
-           ).then((action) => action()),
-        ),
+        child: _assetCard(assets[index]),
       ),
     );
   }
 
-  Widget _assetCard(Asset asset) => Card(
-        elevation: 5,
-        color: References.assetTypesMap[asset.type].color,
-        child: Container(
-          height: 100,
+  Widget _assetCard(AssetResponseItem asset) => InkWell(
+        child: Card(
+          elevation: 5,
+          color: References.assetTypesMap[asset.type].color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
           child: Padding(
-            padding: EdgeInsets.all(12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 5),
-                  child: Row(
-                    children: <Widget>[
-                      Text(asset.name,
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      Spacer(),
-                      Text("${asset.cost}\$"),
-                      Spacer(),
-                      Text(References.organizationsMap[asset.holder].name),
-                      SizedBox(
-                        width: 20,
-                      )
-                    ],
-                  )),
-            ),
+            padding: const EdgeInsets.all(8),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Icon(Icons.photo, size: 90),
+              SizedBox(width: 10),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                SizedBox(height: 8),
+                Text(asset.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                Text(asset.sku,
+                    style: TextStyle(
+                        fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400))
+              ]),
+              Spacer(),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.corporate_fare,
+                        color: Theme.of(context).hintColor),
+                    SizedBox(width: 5),
+                    Text(References.organizationsMap[asset.holder].name,
+                        style:
+                            TextStyle(color: Theme.of(context).hintColor))
+                  ],
+                ),
+                SizedBox(height: 3),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.location_on,
+                        color: Theme.of(context).hintColor),
+                    SizedBox(width: 5),
+                    Text(asset.location.toSentenceCase,
+                        style:
+                        TextStyle(color: Theme.of(context).hintColor))
+                  ],
+                ),
+                SizedBox(height: 3),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.fact_check,
+                        color: Theme.of(context).hintColor),
+                    SizedBox(width: 5),
+                    Text(asset.requirements != null
+                        ? "Assigned (${asset.requirements.metrics.length})"
+                        : "Not assigned",
+                        style:
+                        TextStyle(color: Theme.of(context).hintColor))
+                  ],
+                )
+              ]),
+            ]),
           ),
         ),
+        onLongPress: () => showAssetMenu(context, asset),
       );
 
   @override
@@ -95,13 +126,49 @@ class _AssetsTabState extends State<AssetsTab> {
         ),
       );
 
-  Future<List<Asset>> fetchAssets() async {
-    String data = await Blockchain.evaluateTransaction("assets", "All");
+  Future<AssetsResponse> fetchAssets() async {
+    var query = AssetQuery(limit: _itemsLength, scrollID: scrollID);
+    String data = await Blockchain.evaluateTransaction(
+        "assets", "Query", JsonMapper.serialize(query));
     try {
-      return data.isNotEmpty ? JsonMapper.deserialize<List<Asset>>(data) : <Asset>[];
+      return data.isNotEmpty
+          ? JsonMapper.deserialize<AssetsResponse>(data)
+          : AssetsResponse();
     } on Exception catch (e) {
       print(e.toString());
     }
-    return <Asset>[];
+    return AssetsResponse();
+  }
+
+  void showAssetMenu(BuildContext context, AssetResponseItem asset) {
+    showModalMenu(context: context, options: [
+      ModalMenuOption(
+          title: asset.requirements == null
+              ? "Assign requirements"
+              : "Edit requirements",
+          icon: Icons.fact_check,
+          action: () => openPage(
+              context, RequirementsForm(model: asset.getRequirements()))),
+      ModalMenuOption(
+          title: "Transfer asset",
+          icon: Icons.local_shipping,
+          action: () => print("Transfer asset")),
+      ModalMenuOption(
+          title: "History",
+          icon: Icons.history,
+          action: () => print("History")),
+      ModalMenuOption(
+          title: "Watch asset",
+          icon: Icons.visibility,
+          action: () => print("Watch asset")),
+      ModalMenuOption(
+          title: "Edit asset",
+          icon: Icons.edit,
+          action: () => print("Edit asset")),
+      ModalMenuOption(
+          title: "Delete asset",
+          icon: Icons.delete_forever,
+          action: () => print("Delete asset")),
+    ]);
   }
 }

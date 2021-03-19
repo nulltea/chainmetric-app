@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
+import 'package:iotchain/model/requirements_model.dart';
 
 @jsonSerializable
 class Asset {
@@ -16,6 +17,38 @@ class Asset {
   String state = "active";
   String location;
   List<String> tags = <String>[];
+}
+
+@jsonSerializable
+class AssetQuery {
+  String type;
+  String holder;
+  String state;
+  String location;
+  String tag;
+  int limit;
+  @JsonProperty(name: "scroll_id")
+  String scrollID;
+
+  AssetQuery({
+    this.limit,
+    this.scrollID,
+  });
+}
+
+@jsonSerializable
+class AssetsResponse {
+  List<AssetResponseItem> items = <AssetResponseItem>[];
+  @JsonProperty(name: "scroll_id")
+  String scrollID;
+}
+
+@jsonSerializable
+class AssetResponseItem extends Asset {
+  Requirements requirements;
+  Requirements getRequirements() {
+    return requirements ?? Requirements.forAsset(assetID: id);
+  }
 }
 
 @jsonSerializable
