@@ -79,6 +79,20 @@ class Blockchain {
     return null;
   }
 
+  static Future<bool> trySubmitTransaction(String contract, String method, [String args]) async {
+    try {
+      await nativeSDK.invokeMethod("transaction_submit", {
+        "contract": contract,
+        "method": method,
+        "args": args,
+      });
+      return true;
+    } on PlatformException catch (e) {
+      print("PlatformException: ${e.message}");
+    }
+    return false;
+  }
+
   static Future<String> getConfig() async {
     final dir = await getApplicationDocumentsDirectory();
     return """
