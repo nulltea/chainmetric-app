@@ -3,10 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'bottom_app_bar.dart';
 
 class NavigationTabItem {
+  String title;
   CustomAppBarItem navBarItem;
   Widget tab;
   Icon buttonIcon;
-  Widget Function(BuildContext) pageAction;
+  void Function(BuildContext) pageAction;
 
-  NavigationTabItem({this.navBarItem, this.tab, this.buttonIcon, this.pageAction});
+  NavigationTabItem({
+    this.title,
+    this.navBarItem,
+    this.tab,
+    this.buttonIcon,
+    this.pageAction
+  });
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iotchain/shared/utils.dart';
 import 'package:iotchain/views/devices_tab.dart';
+import 'package:iotchain/views/home_tab.dart';
 import 'package:iotchain/views/profile_tab.dart';
 import 'asset_form.dart';
 
@@ -8,39 +10,42 @@ import 'components/navigation_tab.dart';
 import 'assets_tab.dart';
 import 'device_form.dart';
 
-
-class HomePage extends StatefulWidget {
+class MainPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
   List<NavigationTabItem> tabs = [
     NavigationTabItem(
+        title: "IoT Chain",
         navBarItem: CustomAppBarItem(icon: Icons.home),
-        tab: Center(child: AssetsTab()),
-        buttonIcon: Icon(Icons.qr_code),
-        pageAction: (ctx) => AssetForm()
+        tab: Center(child: HomeTab()),
+        buttonIcon: Icon(Icons.cached),
+        pageAction: (ctx) => print("Home")
     ),
     NavigationTabItem(
+        title: "Assets",
         navBarItem: CustomAppBarItem(icon: Icons.shopping_cart),
         tab: Center(child: AssetsTab()),
         buttonIcon: Icon(Icons.add),
-        pageAction: (ctx) => AssetForm()
+        pageAction: (ctx) => openPage(ctx, AssetForm())
     ),
     NavigationTabItem(
-        navBarItem: CustomAppBarItem(icon: Icons.list),
+        title: "Devices",
+        navBarItem: CustomAppBarItem(icon: Icons.memory),
         tab: Center(child: DevicesTab()),
-        buttonIcon: Icon(Icons.qr_code),
-        pageAction: (ctx) => DeviceForm()
+        buttonIcon: Icon(Icons.qr_code_scanner),
+        pageAction: (ctx) => openPage(ctx, DeviceForm())
     ),
     NavigationTabItem(
+        title: "Profile",
         navBarItem: CustomAppBarItem(icon: Icons.person),
         tab: Center(child: ProfileTab()),
         buttonIcon: Icon(Icons.person),
-        pageAction: (ctx) => AssetForm()
+        pageAction: (ctx) => openPage(ctx, AssetForm())
     ),
   ];
 
@@ -54,17 +59,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("IoT Chain")),
+        title: Center(child: Text(tabs[_currentIndex].title)),
       ),
       body: tabs[_currentIndex].tab,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => tabs[_currentIndex].pageAction(context))
-          );
-        },
+        onPressed: () => tabs[_currentIndex].pageAction(context),
         child: tabs[_currentIndex].buttonIcon,
       ),
       bottomNavigationBar: CustomBottomAppBar(
@@ -73,4 +73,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
 }

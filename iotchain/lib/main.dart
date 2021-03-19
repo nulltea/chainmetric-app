@@ -11,7 +11,7 @@ import 'package:iotchain/views/components/loading_splash.dart';
 
 import 'model/asset_model.dart';
 import 'model/organization_model.dart';
-import 'views/home_page.dart';
+import 'views/main_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -57,7 +57,7 @@ class _AppState extends State<App> {
           ? LoadingSplash()
           : _requireAuth
               ? AuthPage(submitAuth: initBackend,)
-              : HomePage(),
+              : MainPage(),
     );
   }
 }
@@ -68,6 +68,7 @@ void initJson() {
       valueDecorators: {
         typeOf<List<String>>(): (value) => value.cast<String>(),
         typeOf<List<Asset>>(): (value) => value.cast<Asset>(),
+        typeOf<List<AssetResponseItem>>(): (value) => value.cast<AssetResponseItem>(),
         typeOf<List<Device>>(): (value) => value.cast<Device>(),
         typeOf<List<Organization>>(): (value) => value.cast<Organization>(),
         typeOf<List<AssetType>>(): (value) => value.cast<AssetType>(),
