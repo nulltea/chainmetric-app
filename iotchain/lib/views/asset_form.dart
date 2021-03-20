@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:iotchain/controllers/assets_controller.dart';
-import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
