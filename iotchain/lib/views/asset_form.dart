@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:iotchain/controllers/assets_controller.dart';
 import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
@@ -22,20 +23,6 @@ class _AssetFormState extends State<AssetForm> {
 
   _AssetFormState(Asset model) {
     this.asset = model ?? Asset();
-  }
-
-  Future<void> submitAsset() async {
-    if (_formKey.currentState.validate()) {
-      try {
-        var jsonData = JsonMapper.serialize(asset);
-        if (await Blockchain.submitTransaction("assets", "Upsert", jsonData) != null) {
-          Navigator.pop(context);
-        }
-      } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
   }
 
   @override
@@ -283,5 +270,18 @@ class _AssetFormState extends State<AssetForm> {
         ),
       ),
     );
+  }
+
+  Future<void> submitAsset() async {
+    if (_formKey.currentState.validate()) {
+      try {
+        if (await AssetsController.upsertAsset(asset)) {
+          Navigator.pop(context);
+        }
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
   }
 }

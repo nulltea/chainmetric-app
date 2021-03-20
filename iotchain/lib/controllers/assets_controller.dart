@@ -18,8 +18,9 @@ class AssetsController {
     return AssetsResponse();
   }
 
-  static Future<bool> upsertAsset(String id) async {
-    return await Blockchain.trySubmitTransaction("assets", "Insert", id);
+  static Future<bool> upsertAsset(Asset asset) async {
+    var jsonData = JsonMapper.serialize(asset);
+    return await Blockchain.trySubmitTransaction("assets", "Upsert", jsonData);
   }
 
   static Future<bool> deleteAsset(String id) async {
