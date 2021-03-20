@@ -17,14 +17,14 @@ class _ProfileTabState extends State<ProfileTab> {
     _loadData();
   }
 
-  Future<void> _loadData() {
-    return null;
-  }
-
   @override
   Widget build(context) => RefreshIndicator(
     key: _refreshKey,
     onRefresh: _loadData,
     child: Center(child: Text("Profile"),),
   );
+
+  Future<void> _loadData() {
+    return null;
+  }
 }

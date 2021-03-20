@@ -22,10 +22,11 @@ class AssetsTab extends StatefulWidget {
 }
 
 class _AssetsTabState extends State<AssetsTab> {
-  static const _itemsLength = 50;
-  final _refreshKey = GlobalKey<RefreshIndicatorState>();
   List<AssetResponseItem> assets = [];
   String scrollID;
+
+  static const _itemsLength = 50;
+  final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _AssetsTabState extends State<AssetsTab> {
 
   Future<void> _refreshData() {
     _refreshKey.currentState?.show();
-    return fetchAssets().then((value) => setState(() {
+    return _fetchAssets().then((value) => setState(() {
           assets = value.items;
           scrollID = value.scrollID;
         }));
@@ -127,10 +128,10 @@ class _AssetsTabState extends State<AssetsTab> {
             ]),
           ),
         ),
-        onLongPress: () => showAssetMenu(context, asset),
+        onLongPress: () => _showAssetMenu(context, asset),
       );
 
-  Future<AssetsResponse> fetchAssets() async {
+  Future<AssetsResponse> _fetchAssets() async {
     var query = AssetQuery(limit: _itemsLength, scrollID: scrollID);
     String data = await Blockchain.evaluateTransaction(
         "assets", "Query", JsonMapper.serialize(query));
@@ -144,7 +145,7 @@ class _AssetsTabState extends State<AssetsTab> {
     return AssetsResponse();
   }
 
-  void showAssetMenu(BuildContext context, AssetResponseItem asset) {
+  void _showAssetMenu(BuildContext context, AssetResponseItem asset) {
     showModalMenu(context: context, options: [
       ModalMenuOption(
           title: asset.requirements == null

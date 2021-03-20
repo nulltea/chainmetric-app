@@ -18,26 +18,13 @@ class DeviceForm extends StatefulWidget {
 }
 
 class _DeviceFormState extends State<DeviceForm> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: "QR");
-  QRViewController controller;
   Device device;
+  QRViewController controller;
   String scannerMsg = "Scan a code";
 
+  final GlobalKey _qrKey = GlobalKey(debugLabel: "QR");
   final _formKey = GlobalKey<FormState>();
 
-  Future<void> submitAsset() async {
-    if (_formKey.currentState.validate()) {
-      try {
-        var jsonData = JsonMapper.serialize(device);
-        if (await Blockchain.submitTransaction("devices", "Register", jsonData) != null) {
-          Navigator.pop(context);
-        }
-      } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
-  }
 
   @override
   void initState() {
@@ -47,11 +34,27 @@ class _DeviceFormState extends State<DeviceForm> {
   @override
   Widget build(BuildContext context) {
     return device == null
-      ? buildScanner(context)
-      : buildForm(context);
+      ? _buildScanner(context)
+      : _buildForm(context);
   }
 
-  Widget buildForm(BuildContext context) {
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller.resumeCamera();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  Widget _buildForm(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register device"),
@@ -208,7 +211,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: submitAsset,
+                              onPressed: _submitAsset,
                               child: const Text("Register device",
                                   style: TextStyle(fontSize: 20)),
                             )),
@@ -227,14 +230,14 @@ class _DeviceFormState extends State<DeviceForm> {
     );
   }
 
-  Widget buildScanner(BuildContext context) {
+  Widget _buildScanner(BuildContext context) {
     return Scaffold(
       body: Column(
         children: <Widget>[
           Expanded(
             flex: 5,
             child: QRView(
-              key: qrKey,
+              key: _qrKey,
               onQRViewCreated: _onQRViewCreated,
             ),
           ),
@@ -257,7 +260,7 @@ class _DeviceFormState extends State<DeviceForm> {
       if (scanData != null) {
         Device dev;
         try {
-          dev = parseQRCode(scanData.code);
+          dev = _parseQRCode(scanData.code);
           dev.name = dev.hostname;
           dev.profile = "common";
           dev.state = "active";
@@ -280,23 +283,7 @@ class _DeviceFormState extends State<DeviceForm> {
     });
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller.resumeCamera();
-    }
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-
-  Device parseQRCode(String code) {
+  Device _parseQRCode(String code) {
     var exp = RegExp(r"\$\{(.+?)\}");
     var match = exp.firstMatch(code);
     if (match == null) throw Exception("expected pattern does not match");
@@ -318,5 +305,19 @@ class _DeviceFormState extends State<DeviceForm> {
     dev.supports = metrics;
 
     return dev;
+  }
+
+  Future<void> _submitAsset() async {
+    if (_formKey.currentState.validate()) {
+      try {
+        var jsonData = JsonMapper.serialize(device);
+        if (await Blockchain.submitTransaction("devices", "Register", jsonData) != null) {
+          Navigator.pop(context);
+        }
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
   }
 }

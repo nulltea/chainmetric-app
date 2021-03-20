@@ -251,7 +251,7 @@ class _AssetFormState extends State<AssetForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: submitAsset,
+                              onPressed: _submitAsset,
                               child: const Text("SUBMIT ASSET",
                                   style: TextStyle(fontSize: 20)),
                             )),
@@ -270,7 +270,7 @@ class _AssetFormState extends State<AssetForm> {
     );
   }
 
-  Future<void> submitAsset() async {
+  Future<void> _submitAsset() async {
     if (_formKey.currentState.validate()) {
       try {
         if (await AssetsController.upsertAsset(asset)) {

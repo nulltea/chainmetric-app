@@ -17,14 +17,14 @@ class _HomeTabState extends State<HomeTab> {
     _loadData();
   }
 
-  Future<void> _loadData() {
-    return null;
-  }
-
   @override
   Widget build(context) => RefreshIndicator(
     key: _refreshKey,
     onRefresh: _loadData,
     child: Center(child: Text("Home"),),
   );
+
+  Future<void> _loadData() {
+    return null;
+  }
 }

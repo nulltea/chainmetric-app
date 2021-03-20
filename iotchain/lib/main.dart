@@ -32,23 +32,12 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    initBackend();
+    _initBackend();
     OverlayScreen().saveScreens({
       "modal": CustomOverlayScreen(
         backgroundColor: ThemeData.dark().primaryColor.withAlpha(225),
         content: Center(),
       )});
-  }
-
-  Future initBackend() async {
-    await References.init();
-    await Blockchain.initWallet();
-    if (await Blockchain.authRequired()) {
-      setState(() => _isLoading = false);
-      return;
-    }
-    await Blockchain.initConnection("supply-channel");
-    setState(() => _requireAuth = _isLoading = false);
   }
 
   @override
@@ -62,9 +51,20 @@ class _AppState extends State<App> {
       home: _isLoading
           ? LoadingSplash()
           : _requireAuth
-              ? AuthPage(submitAuth: initBackend,)
+              ? AuthPage(submitAuth: _initBackend,)
               : MainPage(),
     );
+  }
+
+  Future _initBackend() async {
+    await References.init();
+    await Blockchain.initWallet();
+    if (await Blockchain.authRequired()) {
+      setState(() => _isLoading = false);
+      return;
+    }
+    await Blockchain.initConnection("supply-channel");
+    setState(() => _requireAuth = _isLoading = false);
   }
 }
 

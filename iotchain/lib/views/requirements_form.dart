@@ -34,24 +34,6 @@ class _RequirementsFormState extends State<RequirementsForm> {
           .periodDuration.inSeconds -
           requirements.periodDuration.inMinutes * 60}s";
 
-
-
-  Future<void> submit() async {
-    if (_formKey.currentState.validate()) {
-      try {
-        var jsonData = JsonMapper.serialize(requirements);
-        if (await Blockchain.submitTransaction(
-            "requirements", "Assign", jsonData) !=
-            null) {
-          Navigator.pop(context);
-        }
-      } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -155,7 +137,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: submit,
+                              onPressed: _submit,
                               child: const Text("SUBMIT REQUIREMENTS",
                                   style: TextStyle(fontSize: 20)),
                             )),
@@ -237,7 +219,22 @@ class _RequirementsFormState extends State<RequirementsForm> {
                   setState(() => requirements.period = value.inSeconds),
             ),
           ),
-
     );
+  }
+
+  Future<void> _submit() async {
+    if (_formKey.currentState.validate()) {
+      try {
+        var jsonData = JsonMapper.serialize(requirements);
+        if (await Blockchain.submitTransaction(
+            "requirements", "Assign", jsonData) !=
+            null) {
+          Navigator.pop(context);
+        }
+      } on Exception catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
   }
 }
