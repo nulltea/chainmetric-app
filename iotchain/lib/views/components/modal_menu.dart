@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:iotchain/shared/utils.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
 class ModalMenuOption extends StatelessWidget {
   final Function() action;
   final String title;
-  IconData icon;
+  final IconData icon;
 
   ModalMenuOption({
     this.title,
@@ -18,9 +19,9 @@ class ModalMenuOption extends StatelessWidget {
       width: double.infinity,
       height: 55,
       child: InkWell(
-          onTap: () => action(),
+          onTap: _decorateWithDismiss(context, action),
           child: ListTile(
-              leading: Icon(icon, color: Colors.teal, size: 30,),
+              leading: Icon(icon, color: Colors.teal, size: 30),
               title: Text(title,
                 style: TextStyle(
                     fontSize: 18,
@@ -32,6 +33,12 @@ class ModalMenuOption extends StatelessWidget {
           )
       )
   );
+
+  Function _decorateWithDismiss(BuildContext context, Function action) => () {
+    dismissDialog(context);
+    OverlayScreen().pop();
+    action();
+  };
 }
 
 void showModalMenu({BuildContext context, List<ModalMenuOption> options}) {
@@ -48,5 +55,5 @@ void showModalMenu({BuildContext context, List<ModalMenuOption> options}) {
             children: options,
           ),
         )),
-  ).whenComplete(() => OverlayScreen().pop());
+  ).whenComplete(dismissOverlay);
 }

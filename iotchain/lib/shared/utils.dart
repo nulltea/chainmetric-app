@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_screen/overlay_screen.dart';
 
 void openPage(BuildContext context, Widget page) => Navigator.push(
     context,
@@ -28,10 +29,13 @@ Future showYesNoDialog(BuildContext context, {
     ),
   );
 
-void dismissDialog(BuildContext context) =>
-    Navigator.of(context, rootNavigator: true).pop();
+void dismissDialog(BuildContext context) => Navigator.of(context, rootNavigator: true).pop();
 
 Function _decorateWithDismiss(BuildContext context, Function action) => () {
-    action();
     dismissDialog(context);
+    action();
   };
+
+void dismissOverlay() {
+  if (OverlayScreen().state == Screen.showing) OverlayScreen().pop();
+}

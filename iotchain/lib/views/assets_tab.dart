@@ -33,7 +33,19 @@ class _AssetsTabState extends State<AssetsTab> {
     _refreshData();
   }
 
+  @override
+  Widget build(context) => RefreshIndicator(
+    key: _refreshKey,
+    onRefresh: _refreshData,
+    child: ListView.builder(
+      itemCount: assets.length,
+      padding: EdgeInsets.symmetric(vertical: 12),
+      itemBuilder: _listBuilder,
+    ),
+  );
+
   Future<void> _refreshData() {
+    _refreshKey.currentState?.show();
     return fetchAssets().then((value) => setState(() {
           assets = value.items;
           scrollID = value.scrollID;
@@ -118,17 +130,6 @@ class _AssetsTabState extends State<AssetsTab> {
         onLongPress: () => showAssetMenu(context, asset),
       );
 
-  @override
-  Widget build(context) => RefreshIndicator(
-        key: _refreshKey,
-        onRefresh: _refreshData,
-        child: ListView.builder(
-          itemCount: assets.length,
-          padding: EdgeInsets.symmetric(vertical: 12),
-          itemBuilder: _listBuilder,
-        ),
-      );
-
   Future<AssetsResponse> fetchAssets() async {
     var query = AssetQuery(limit: _itemsLength, scrollID: scrollID);
     String data = await Blockchain.evaluateTransaction(
@@ -161,7 +162,7 @@ class _AssetsTabState extends State<AssetsTab> {
       ModalMenuOption(
           title: "History",
           icon: Icons.history,
-          action: () => print("History")
+          action: () => print("View history")
       ),
       ModalMenuOption(
           title: "Watch asset",

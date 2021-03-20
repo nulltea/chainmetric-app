@@ -28,7 +28,7 @@ class _AssetFormState extends State<AssetForm> {
     if (_formKey.currentState.validate()) {
       try {
         var jsonData = JsonMapper.serialize(asset);
-        if (await Blockchain.submitTransaction("assets", "Insert", jsonData) != null) {
+        if (await Blockchain.submitTransaction("assets", "Upsert", jsonData) != null) {
           Navigator.pop(context);
         }
       } on Exception catch (e) {
