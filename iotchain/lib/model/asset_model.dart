@@ -14,7 +14,7 @@ class Asset {
   num cost;
   int amount;
   String holder;
-  String state = "active";
+  String state;
   String location;
   List<String> tags = <String>[];
 }

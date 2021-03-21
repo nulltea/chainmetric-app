@@ -1,10 +1,7 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:iotchain/controllers/assets_controller.dart';
-import 'package:iotchain/controllers/blockchain_adapter.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/asset_model.dart';
 import 'package:iotchain/shared/utils.dart';
@@ -105,7 +102,7 @@ class _AssetsTabState extends State<AssetsTab> {
                     Icon(Icons.location_on,
                         color: Theme.of(context).hintColor),
                     SizedBox(width: 5),
-                    Text(asset.location.toSentenceCase,
+                    Text(asset.location.toSentenceCase(),
                         style:
                         TextStyle(color: Theme.of(context).hintColor))
                   ],
@@ -131,19 +128,8 @@ class _AssetsTabState extends State<AssetsTab> {
         onLongPress: () => _showAssetMenu(context, asset),
       );
 
-  Future<AssetsResponse> _fetchAssets() async {
-    var query = AssetQuery(limit: _itemsLength, scrollID: scrollID);
-    String data = await Blockchain.evaluateTransaction(
-        "assets", "Query", JsonMapper.serialize(query));
-    try {
-      return data.isNotEmpty
-          ? JsonMapper.deserialize<AssetsResponse>(data)
-          : AssetsResponse();
-    } on Exception catch (e) {
-      print(e.toString());
-    }
-    return AssetsResponse();
-  }
+  Future<AssetsResponse> _fetchAssets() async =>
+      await AssetsController.getAssets(limit: _itemsLength, scrollID: scrollID);
 
   void _showAssetMenu(BuildContext context, AssetResponseItem asset) {
     showModalMenu(context: context, options: [
