@@ -2,14 +2,15 @@ import 'package:flutter/services.dart';
 import 'package:iotchain/model/auth_model.dart';
 import 'package:path_provider/path_provider.dart';
 
-const CHANNEL = "iotchain.app/sdk-go";
-final nativeSDK = MethodChannel(CHANNEL);
+const BLOCKCHAIN_CHANNEL = "iotchain.app.blockchain-native-sdk";
 
 class Blockchain {
+  static final _nativeSDK = MethodChannel(BLOCKCHAIN_CHANNEL);
+
   static Future<void> initWallet() async {
     final dir = await getApplicationDocumentsDirectory();
     try {
-      await nativeSDK.invokeMethod("wallet_init", {
+      await _nativeSDK.invokeMethod("wallet_init", {
         "path": "${dir.path}/wallet"
       });
     } on PlatformException catch (e) {
@@ -19,7 +20,7 @@ class Blockchain {
 
   static Future<bool> authRequired() async {
     try {
-      return await nativeSDK.invokeMethod("auth_required");
+      return await _nativeSDK.invokeMethod("auth_required");
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");
     }
@@ -28,7 +29,7 @@ class Blockchain {
 
   static Future<bool> authenticate(AuthCredentials credentials) async {
     try {
-      await nativeSDK.invokeMethod("auth_identity", {
+      await _nativeSDK.invokeMethod("auth_identity", {
         "orgID": credentials.organization,
         "cert": credentials.certificate,
         "key": credentials.privateKey
@@ -42,7 +43,7 @@ class Blockchain {
 
   static Future<bool> initConnection(String channel) async {
     try {
-      await nativeSDK.invokeMethod("connection_init", {
+      await _nativeSDK.invokeMethod("connection_init", {
         "config": await getConfig(),
         "channel": channel
       });
@@ -55,7 +56,7 @@ class Blockchain {
 
   static Future<String> evaluateTransaction(String contract, String method, [String args]) async {
     try {
-      return await nativeSDK.invokeMethod("transaction_evaluate", {
+      return await _nativeSDK.invokeMethod("transaction_evaluate", {
         "contract": contract,
         "method": method,
         "args": args,
@@ -68,7 +69,7 @@ class Blockchain {
 
   static Future<String> submitTransaction(String contract, String method, [String args]) async {
     try {
-      return await nativeSDK.invokeMethod("transaction_submit", {
+      return await _nativeSDK.invokeMethod("transaction_submit", {
         "contract": contract,
         "method": method,
         "args": args,
@@ -81,7 +82,7 @@ class Blockchain {
 
   static Future<bool> trySubmitTransaction(String contract, String method, [String args]) async {
     try {
-      await nativeSDK.invokeMethod("transaction_submit", {
+      await _nativeSDK.invokeMethod("transaction_submit", {
         "contract": contract,
         "method": method,
         "args": args,

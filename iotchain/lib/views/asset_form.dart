@@ -5,6 +5,7 @@ import 'package:iotchain/model/asset_model.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:overlay_screen/overlay_screen.dart';
 
 class AssetForm extends StatefulWidget {
   final Asset model;
@@ -272,11 +273,14 @@ class _AssetFormState extends State<AssetForm> {
 
   Future<void> _submitAsset() async {
     if (_formKey.currentState.validate()) {
+      OverlayScreen().show(context);
       try {
         if (await AssetsController.upsertAsset(asset)) {
+          OverlayScreen().pop();
           Navigator.pop(context);
         }
       } on Exception catch (e) {
+        OverlayScreen().pop();
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }

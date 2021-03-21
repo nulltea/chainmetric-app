@@ -364,13 +364,19 @@ class _DeviceFormState extends State<DeviceForm> {
     return dev;
   }
 
-  void _submitDevice() {
+  Future<void> _submitDevice() async {
     if (_formKey.currentState.validate()) {
       OverlayScreen().show(context);
-      DevicesController.registerDevice(device).then((value) {
+      try {
+        if (await DevicesController.registerDevice(device)) {
+          OverlayScreen().pop();
+          Navigator.pop(context);
+        }
+      } on Exception catch (e) {
         OverlayScreen().pop();
-        Navigator.pop(context);
-      });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     }
   }
 }
