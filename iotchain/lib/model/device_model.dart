@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:iotchain/shared/extensions.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 @jsonSerializable
@@ -14,6 +16,21 @@ class Device {
   String holder;
   String state;
   String location;
+
+  String get stateView => state?.toSentenceCase() ?? "Unknown";
+  Icon get stateIcon {
+    switch (state) {
+      case "online":
+        return Icon(Icons.circle, color: Colors.green.withAlpha(200));
+        break;
+      case "offline":
+        return Icon(Icons.circle, color: Colors.red.withAlpha(200));
+        break;
+      default:
+        return Icon(Icons.help, color: Colors.grey.withAlpha(200));
+        break;
+    }
+  }
 }
 
 @jsonSerializable

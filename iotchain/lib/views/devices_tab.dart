@@ -1,13 +1,14 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:iotchain/controllers/blockchain_adapter.dart';
+import 'package:iotchain/controllers/devices_controller.dart';
 import 'package:iotchain/model/device_model.dart';
+import 'package:iotchain/shared/utils.dart';
+import 'package:iotchain/views/device_form.dart';
 
 import 'components/modal_menu.dart';
 
 class DevicesTab extends StatefulWidget {
-  const DevicesTab({Key key}) : super(key: key);
+  DevicesTab({Key key}) : super(key: key);
 
   @override
   _DevicesTabState createState() => _DevicesTabState();
@@ -24,8 +25,19 @@ class _DevicesTabState extends State<DevicesTab> {
     _refreshData();
   }
 
+  @override
+  Widget build(context) => RefreshIndicator(
+    key: _refreshKey,
+    onRefresh: _refreshData,
+    child: ListView.builder(
+      itemCount: devices.length,
+      padding: EdgeInsets.symmetric(vertical: 12),
+      itemBuilder: _listBuilder,
+    ),
+  );
+
   Future<void> _refreshData() {
-    return fetchDevices().then((value) => setState(() => devices = value));
+    return _fetchDevices().then((value) => setState(() => devices = value));
   }
 
   Widget _listBuilder(BuildContext context, int index) {
@@ -46,55 +58,41 @@ class _DevicesTabState extends State<DevicesTab> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      child: Container(
-        height: 100,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.memory, size: 85),
-              title: Text(device.name),
-              subtitle: Text(device.ip),
-              trailing: SizedBox(
-                width: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(Icons.circle, color: Colors.green.withAlpha(200)),
-                    SizedBox(width: 5),
-                    Text("Active", style: TextStyle(color: Theme.of(context).hintColor))
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Icon(Icons.memory, size: 90),
+          SizedBox(width: 10),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(height: 8),
+            Text(device.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(device.ip,
+                style: TextStyle(
+                    fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400))
+          ]),
+          Spacer(),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                device.stateIcon,
+                SizedBox(width: 5),
+                Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor))
+              ],
+            )
+          ]),
+        ]),
       ),
     ),
-    onLongPress: () => showDeviceMenu(context, device),
+    onLongPress: () => _showDeviceMenu(context, device),
   );
 
-  @override
-  Widget build(context) => RefreshIndicator(
-    key: _refreshKey,
-    onRefresh: _refreshData,
-    child: ListView.builder(
-      itemCount: devices.length,
-      padding: EdgeInsets.symmetric(vertical: 12),
-      itemBuilder: _listBuilder,
-    ),
-  );
 
-  Future<List<Device>> fetchDevices() async {
-    String data = await Blockchain.evaluateTransaction("devices", "All");
-    try {
-      return data.isNotEmpty ? JsonMapper.deserialize<List<Device>>(data) : <Device>[];
-    } on Exception catch (e) {
-      print(e.toString());
-    }
-    return <Device>[];
-  }
+  Future<List<Device>> _fetchDevices() async =>
+      await DevicesController.getDevices();
 
-  void showDeviceMenu(BuildContext context, Device device) {
+  void _showDeviceMenu(BuildContext context, Device device) {
     showModalMenu(context: context, options: [
       ModalMenuOption(
           title: "Transfer device",
@@ -102,14 +100,18 @@ class _DevicesTabState extends State<DevicesTab> {
           action: () => print("Transfer asset")
       ),
       ModalMenuOption(
-          title: "Edit asset",
-          icon: Icons.edit,
-          action: () => print("Edit device")
+          title: "Configure device",
+          icon: Icons.phonelink_setup,
+          action: () => openPage(context, DeviceForm(model: device))
       ),
       ModalMenuOption(
-          title: "Delete asset",
-          icon: Icons.delete_forever,
-          action: () => print("Delete device")
+          title: "Unbind device",
+          icon: Icons.link_off,
+          action: () => showYesNoDialog(context,
+            title: "Unbind ${device.name}",
+            message: "This action will reset the device and remove it from the network. Are you sure?",
+            onYes: () => DevicesController.unbindDevice(device.id),
+            onNo: () => print("close modal"))
       ),
     ]);
   }

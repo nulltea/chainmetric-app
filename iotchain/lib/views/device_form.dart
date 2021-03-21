@@ -1,30 +1,43 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:iotchain/controllers/blockchain_adapter.dart';
+import 'package:iotchain/controllers/devices_controller.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/device_model.dart';
+import 'package:iotchain/shared/exceptions.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:overlay_screen/overlay_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class DeviceForm extends StatefulWidget {
+  final Device model;
+
+  DeviceForm({this.model});
+
   @override
-  _DeviceFormState createState() => _DeviceFormState();
+  _DeviceFormState createState() => _DeviceFormState(model);
 }
 
 class _DeviceFormState extends State<DeviceForm> {
   Device device;
   QRViewController controller;
-  String scannerMsg = "Scan a code";
+  String scannerTitle = defaultScannerTitle;
+  String scannerSubtitle = defaultScannerSubtitle;
+  bool flashOn = false;
 
+  static const defaultScannerTitle = "Scan the device QR code";
+  static const defaultScannerSubtitle = "The near by device will automatically display QR code with it's specification";
   final GlobalKey _qrKey = GlobalKey(debugLabel: "QR");
   final _formKey = GlobalKey<FormState>();
 
+  _DeviceFormState(Device device) {
+    this.device = device;
+  }
 
   @override
   void initState() {
@@ -33,18 +46,16 @@ class _DeviceFormState extends State<DeviceForm> {
 
   @override
   Widget build(BuildContext context) {
-    return device == null
-      ? _buildScanner(context)
-      : _buildForm(context);
+    return device == null ? _buildScanner(context) : _buildForm(context);
   }
 
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller.pauseCamera();
+      controller?.pauseCamera();
     } else if (Platform.isIOS) {
-      controller.resumeCamera();
+      controller?.resumeCamera();
     }
   }
 
@@ -117,9 +128,9 @@ class _DeviceFormState extends State<DeviceForm> {
                           items: References.deviceProfiles
                               .map<DropdownMenuItem<String>>(
                                   (profile) => DropdownMenuItem<String>(
-                                value: profile.profile,
-                                child: Text(profile.name),
-                              ))
+                                        value: profile.profile,
+                                        child: Text(profile.name),
+                                      ))
                               .toList(),
                           onChanged: (value) {
                             setState(() => device.profile = value);
@@ -131,40 +142,46 @@ class _DeviceFormState extends State<DeviceForm> {
                             boxShadow: kElevationToShadow[1],
                             borderRadius: BorderRadius.circular(2.0),
                           ),
-                          child: Column(children: [
-                            MultiSelectBottomSheetField(
-                              initialValue: device.supports,
-                              title: Text("Supports metrics"),
-                              buttonText: Text("Select supported metrics"),
-                              listType: MultiSelectListType.CHIP,
-                              chipColor: Colors.teal.shade800,
-                              selectedColor: Colors.teal,
-                              selectedItemsTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                              buttonIcon: Icon(Icons.arrow_drop_down),
-                              items: References.metrics
-                                  .map((metric) => MultiSelectItem(
-                                metric.metric,
-                                metric.name,
-                              ))
-                                  .toList(),
-                              onSelectionChanged: (value) {
-                                setState(() => device.supports = value);
-                              },
-                            ),
-                            MultiSelectChipDisplay(
-                              chipColor: Colors.teal,
-                              textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                              items: device.supports
-                                  .map((metric) => MultiSelectItem(
-                                metric,
-                                References.metricsMap[metric]?.name ?? "",
-                              ))
-                                  .toList(),
-                              onTap: (value) {
-                                setState(() => device.supports.remove(value));
-                              },
-                            )
-                          ],),
+                          child: Column(
+                            children: [
+                              MultiSelectBottomSheetField(
+                                initialValue: device.supports,
+                                title: Text("Supports metrics"),
+                                buttonText: Text("Select supported metrics"),
+                                listType: MultiSelectListType.CHIP,
+                                chipColor: Colors.teal.shade800,
+                                selectedColor: Colors.teal,
+                                selectedItemsTextStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                buttonIcon: Icon(Icons.arrow_drop_down),
+                                items: References.metrics
+                                    .map((metric) => MultiSelectItem(
+                                          metric.metric,
+                                          metric.name,
+                                        ))
+                                    .toList(),
+                                onSelectionChanged: (value) {
+                                  setState(() => device.supports = value);
+                                },
+                              ),
+                              MultiSelectChipDisplay(
+                                chipColor: Colors.teal,
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                items: device.supports
+                                    .map((metric) => MultiSelectItem(
+                                          metric,
+                                          References.metricsMap[metric]?.name ?? "",
+                                        ))
+                                    .toList(),
+                                onTap: (value) {
+                                  setState(() => device.supports.remove(value));
+                                },
+                              )
+                            ],
+                          ),
                         ),
                         DropdownButtonFormField(
                           value: device.holder,
@@ -176,9 +193,9 @@ class _DeviceFormState extends State<DeviceForm> {
                           items: References.organizations
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
-                                value: org.mspID,
-                                child: Text(org.name),
-                              ))
+                                        value: org.mspID,
+                                        child: Text(org.name),
+                                      ))
                               .toList(),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -211,16 +228,16 @@ class _DeviceFormState extends State<DeviceForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: _submitAsset,
+                              onPressed: _submitDevice,
                               child: const Text("Register device",
                                   style: TextStyle(fontSize: 20)),
                             )),
                       ].expand((widget) => [
-                        widget,
-                        SizedBox(
-                          height: 24,
-                        )
-                      ])
+                            widget,
+                            SizedBox(
+                              height: 24,
+                            )
+                          ])
                     ]),
               ),
             ),
@@ -232,20 +249,55 @@ class _DeviceFormState extends State<DeviceForm> {
 
   Widget _buildScanner(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(
-              key: _qrKey,
-              onQRViewCreated: _onQRViewCreated,
+          QRView(
+            key: _qrKey,
+            onQRViewCreated: _onQRViewCreated,
+            overlay: QrScannerOverlayShape(
+              borderColor: Colors.teal,
             ),
           ),
-          Expanded(
-            flex: 1,
+          Positioned.fill(
+            top: 25,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                  icon: Icon(Icons.arrow_back, size: 30),
+                  onPressed: () => Navigator.pop(context)
+              )
+            )
+          ),
+          Positioned.fill(
+              top: 25,
+              child: Align(
+                alignment: Alignment.topRight,
+                  child: IconButton(
+                      icon: Icon(flashOn ? Icons.flash_off : Icons.flash_on, size: 30),
+                      onPressed: () {
+                        controller.toggleFlash();
+                        setState(() => flashOn = !flashOn);
+                      }
+                  )
+              )
+          ),
+          Positioned.fill(
+            top: -350,
             child: Center(
-              child: Text(scannerMsg),
-            ),
+              child: Text(scannerTitle,
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center
+              )
+            )
+          ),
+          Positioned.fill(
+            top: 350,
+            child: Center(
+              child: Text(scannerSubtitle,
+                style: TextStyle(fontSize: 15),
+                textAlign: TextAlign.center
+              )
+            )
           )
         ],
       ),
@@ -263,34 +315,36 @@ class _DeviceFormState extends State<DeviceForm> {
           dev = _parseQRCode(scanData.code);
           dev.name = dev.hostname;
           dev.profile = "common";
-          dev.state = "active";
           dev.location = "warehouse"; // TODO: location determination via GPS
           dev.holder = "supplierMSP"; // TODO: holder determination via user identity
-        } on Exception catch (e)  {
-          setState(() => scannerMsg = "QR is invalid: ${e.toString()}");
+        } on QRScanException catch (e) {
+          setState(() {
+            scannerTitle = e.problem;
+            scannerSubtitle = e.cause;
+          });
           if (timer != null) timer.cancel();
           timer = Timer(Duration(seconds: 5), () {
-            setState(() => scannerMsg = "Scan a code");
+            setState(() {
+              scannerTitle = defaultScannerTitle;
+              scannerSubtitle = defaultScannerSubtitle;
+            });
           });
           return;
         }
         controller?.dispose();
         setState(() => device = dev);
-      } else {
-        setState(() => scannerMsg = "Scan a code");
       }
-
     });
   }
 
   Device _parseQRCode(String code) {
     var exp = RegExp(r"\$\{(.+?)\}");
     var match = exp.firstMatch(code);
-    if (match == null) throw Exception("expected pattern does not match");
+    if (match == null) throw QRScanException(cause: "Expected pattern does not match");
 
     var data = match.group(1);
     var parts = data.split(';');
-    if (parts.length != 3) throw Exception("coded data is not valid");
+    if (parts.length != 3) throw QRScanException(cause: "Coded data is not valid");
 
     Device dev = Device();
 
@@ -299,7 +353,10 @@ class _DeviceFormState extends State<DeviceForm> {
 
     var metrics = parts[2].split(',');
     if (metrics.isEmpty || metrics.length == 1 && metrics[0].isEmpty) {
-      throw Exception("device must support at least one metric");
+      throw QRScanException(
+        problem: "Device is invalid",
+        cause: "Device must support at least one metric"
+      );
     }
 
     dev.supports = metrics;
@@ -307,17 +364,13 @@ class _DeviceFormState extends State<DeviceForm> {
     return dev;
   }
 
-  Future<void> _submitAsset() async {
+  void _submitDevice() {
     if (_formKey.currentState.validate()) {
-      try {
-        var jsonData = JsonMapper.serialize(device);
-        if (await Blockchain.submitTransaction("devices", "Register", jsonData) != null) {
-          Navigator.pop(context);
-        }
-      } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
+      OverlayScreen().show(context);
+      DevicesController.registerDevice(device).then((value) {
+        OverlayScreen().pop();
+        Navigator.pop(context);
+      });
     }
   }
 }
