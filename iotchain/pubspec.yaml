@@ -19,6 +19,8 @@ dependencies:
   qr_code_scanner: ^0.3.5
   modal_bottom_sheet: ^2.0.0
   overlay_screen: ^1.2.0+1
+  loading_animations: ^2.1.0
+  flutter_svg: ^0.19.3
 
 dev_dependencies:
   flutter_test:
@@ -29,8 +31,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/data/organizations.json
-    - assets/data/asset_types.json
-    - assets/data/device_profiles.json
-    - assets/data/metrics.json
-    - assets/data/default_requirements.json
+    - assets/data/
+    - assets/icons/
