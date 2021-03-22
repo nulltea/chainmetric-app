@@ -1,17 +1,26 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/devices_controller.dart';
 import 'package:iotchain/model/device_model.dart';
 import 'package:iotchain/shared/utils.dart';
+import 'package:iotchain/shared/extensions.dart';
+import 'package:iotchain/views/components/svg_icon.dart';
 import 'package:iotchain/views/device_form.dart';
 
 import 'components/modal_menu.dart';
+import 'components/navigation_tab.dart';
 
-class DevicesTab extends StatefulWidget {
-  DevicesTab({Key key}) : super(key: key);
+class DevicesTab extends NavigationTab {
+  DevicesTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+
+  _DevicesTabState get _currentState =>
+      (key as GlobalKey)?.currentState as _DevicesTabState;
 
   @override
   _DevicesTabState createState() => _DevicesTabState();
+
+  @override
+  Future refreshData() => _currentState._refreshData();
 }
 
 class _DevicesTabState extends State<DevicesTab> {
@@ -60,29 +69,46 @@ class _DevicesTabState extends State<DevicesTab> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(Icons.memory, size: 90),
-          SizedBox(width: 10),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SizedBox(height: 8),
-            Text(device.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            Text(device.ip,
-                style: TextStyle(
-                    fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400))
-          ]),
-          Spacer(),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                device.stateIcon,
-                SizedBox(width: 5),
-                Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor))
-              ],
+        child: Container(
+          height: 90,
+          child: Stack(children: [
+            Icon(Icons.memory, size: 90),
+            Positioned.fill(
+              left: 100,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                SizedBox(height: 8),
+                Text(device.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                Text(device.ip,
+                    style: TextStyle(
+                        fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400)),
+              ]),
+            ),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  device.stateIcon,
+                  SizedBox(width: 5),
+                  Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor))
+                ],
+              )
+            ]),
+            Positioned.fill(
+              left: 100,
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Row(
+                  children: [
+                    SvgIcon("sensors", color: Theme.of(context).hintColor),
+                    SizedBox(width: 5),
+                    Text("${device.supports.length} metrics supported", style: TextStyle(color: Theme.of(context).hintColor))
+                  ],
+                ),
+              ),
             )
           ]),
-        ]),
+        ),
       ),
     ),
     onLongPress: () => _showDeviceMenu(context, device),
@@ -102,7 +128,10 @@ class _DevicesTabState extends State<DevicesTab> {
       ModalMenuOption(
           title: "Configure device",
           icon: Icons.phonelink_setup,
-          action: () => openPage(context, DeviceForm(model: device))
+          action: () => openPage(
+              context, DeviceForm(model: device),
+              then: _refreshData
+          )
       ),
       ModalMenuOption(
           title: "Unbind device",
@@ -110,7 +139,8 @@ class _DevicesTabState extends State<DevicesTab> {
           action: () => showYesNoDialog(context,
             title: "Unbind ${device.name}",
             message: "This action will reset the device and remove it from the network. Are you sure?",
-            onYes: () => DevicesController.unbindDevice(device.id),
+            onYes: decorateWithLoading(context, () => DevicesController.unbindDevice(device.id)
+                .whenComplete(_refreshData)),
             onNo: () => print("close modal"))
       ),
     ]);

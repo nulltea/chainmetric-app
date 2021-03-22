@@ -5,9 +5,9 @@ import 'bottom_app_bar.dart';
 class NavigationTabItem {
   String title;
   CustomAppBarItem navBarItem;
-  Widget tab;
-  Icon buttonIcon;
-  void Function(BuildContext) pageAction;
+  NavigationTab tab;
+  Widget buttonIcon;
+  void Function(State) pageAction;
 
   NavigationTabItem({
     this.title,
@@ -16,4 +16,10 @@ class NavigationTabItem {
     this.buttonIcon,
     this.pageAction
   });
+}
+
+abstract class NavigationTab extends StatefulWidget {
+  const NavigationTab({Key key}) : super(key: key);
+
+  Future refreshData();
 }

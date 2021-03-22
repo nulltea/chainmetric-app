@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
-void openPage(BuildContext context, Widget page) => Navigator.push(
+void openPage(BuildContext context, Widget page, {Function() then}) => Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => page)
-);
+).whenComplete(() => then?.call());
 
 Future showYesNoDialog(BuildContext context, {
   String title,
@@ -29,6 +29,13 @@ Future showYesNoDialog(BuildContext context, {
     ),
   );
 
+void loading(BuildContext context) => OverlayScreen().show(context, identifier: "loading");
+
+Function decorateWithLoading(BuildContext context, Future Function() fn) => () {
+  loading(context);
+  fn().whenComplete(dismissOverlay);
+};
+
 void dismissDialog(BuildContext context) => Navigator.of(context, rootNavigator: true).pop();
 
 Function _decorateWithDismiss(BuildContext context, Function action) => () {
@@ -39,3 +46,4 @@ Function _decorateWithDismiss(BuildContext context, Function action) => () {
 void dismissOverlay() {
   if (OverlayScreen().state == Screen.showing) OverlayScreen().pop();
 }
+

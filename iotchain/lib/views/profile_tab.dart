@@ -1,11 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class ProfileTab extends StatefulWidget {
-  const ProfileTab({Key key}) : super(key: key);
+import 'components/navigation_tab.dart';
+
+class ProfileTab extends NavigationTab {
+  ProfileTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+
+  _ProfileTabState get _currentState =>
+      (key as GlobalKey)?.currentState as _ProfileTabState;
 
   @override
   _ProfileTabState createState() => _ProfileTabState();
+
+  @override
+  Future refreshData() => _currentState._refreshData();
 }
 
 class _ProfileTabState extends State<ProfileTab> {
@@ -14,17 +22,17 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _refreshData();
   }
 
   @override
   Widget build(context) => RefreshIndicator(
     key: _refreshKey,
-    onRefresh: _loadData,
+    onRefresh: _refreshData,
     child: Center(child: Text("Profile"),),
   );
 
-  Future<void> _loadData() {
+  Future _refreshData() {
     return null;
   }
 }

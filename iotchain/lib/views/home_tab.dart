@@ -1,11 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:iotchain/views/components/navigation_tab.dart';
 
-class HomeTab extends StatefulWidget {
-  const HomeTab({Key key}) : super(key: key);
+class HomeTab extends NavigationTab {
+  HomeTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+
+  _HomeTabState get _currentState =>
+      (key as GlobalKey)?.currentState as _HomeTabState;
 
   @override
   _HomeTabState createState() => _HomeTabState();
+
+  @override
+  Future refreshData() => _currentState._loadData();
 }
 
 class _HomeTabState extends State<HomeTab> {

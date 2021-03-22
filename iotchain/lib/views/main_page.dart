@@ -22,38 +22,46 @@ class _MainPageState extends State<MainPage> {
     NavigationTabItem(
         title: "IoT Chain",
         navBarItem: CustomAppBarItem(icon: Icons.home),
-        tab: Center(child: HomeTab()),
+        tab: HomeTab(),
         buttonIcon: Icon(Icons.cached),
         pageAction: (ctx) => print("Home")
     ),
     NavigationTabItem(
         title: "Assets",
         navBarItem: CustomAppBarItem(icon: Icons.shopping_cart),
-        tab: Center(child: AssetsTab()),
+        tab: AssetsTab(key: GlobalKey()),
         buttonIcon: Icon(Icons.add),
-        pageAction: (ctx) => openPage(ctx, AssetForm())
+        pageAction: (state) => openPage(
+          state.context, AssetForm(),
+            then: (state as _MainPageState).currentTab().refreshData
+        )
     ),
     NavigationTabItem(
         title: "Devices",
         navBarItem: CustomAppBarItem(icon: Icons.memory),
-        tab: Center(child: DevicesTab()),
+        tab: DevicesTab(key: GlobalKey()),
         buttonIcon: Icon(Icons.qr_code_scanner),
-        pageAction: (ctx) => openPage(ctx, DeviceForm())
+        pageAction: (state) => openPage(
+            state.context, DeviceForm(),
+            then: (state as _MainPageState).currentTab().refreshData
+        )
     ),
     NavigationTabItem(
         title: "Profile",
         navBarItem: CustomAppBarItem(icon: Icons.person),
-        tab: Center(child: ProfileTab()),
+        tab: ProfileTab(),
         buttonIcon: Icon(Icons.person),
-        pageAction: (ctx) => openPage(ctx, AssetForm())
+        pageAction: (ctx) => print("Profile")
     ),
   ];
 
-  void _selectedTab(int index) {
+  void selectedTab(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
+
+  NavigationTab currentTab() => tabs[_currentIndex].tab;
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +72,11 @@ class _MainPageState extends State<MainPage> {
       body: tabs[_currentIndex].tab,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => tabs[_currentIndex].pageAction(context),
+        onPressed: () => tabs[_currentIndex].pageAction(this),
         child: tabs[_currentIndex].buttonIcon,
       ),
       bottomNavigationBar: CustomBottomAppBar(
-        onTabSelected: _selectedTab,
+        onTabSelected: selectedTab,
         items: List.generate(tabs.length, (index) => tabs[index].navBarItem),
       ),
     );

@@ -10,12 +10,20 @@ import 'package:iotchain/views/asset_form.dart';
 import 'package:iotchain/views/components/modal_menu.dart';
 import 'package:iotchain/views/requirements_form.dart';
 
+import 'components/navigation_tab.dart';
 
-class AssetsTab extends StatefulWidget {
-  const AssetsTab({Key key}) : super(key: key);
+
+class AssetsTab extends NavigationTab {
+  AssetsTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+
+  _AssetsTabState get _currentState =>
+      (key as GlobalKey)?.currentState as _AssetsTabState;
 
   @override
   _AssetsTabState createState() => _AssetsTabState();
+
+  @override
+  Future refreshData() => _currentState._refreshData();
 }
 
 class _AssetsTabState extends State<AssetsTab> {
@@ -139,7 +147,9 @@ class _AssetsTabState extends State<AssetsTab> {
               : "Edit requirements",
           icon: Icons.fact_check,
           action: () => openPage(
-              context, RequirementsForm(model: asset.getRequirements()))
+              context, RequirementsForm(model: asset.getRequirements()),
+              then: _refreshData
+          ),
       ),
       ModalMenuOption(
           title: "Transfer asset",
@@ -159,7 +169,10 @@ class _AssetsTabState extends State<AssetsTab> {
       ModalMenuOption(
           title: "Edit asset",
           icon: Icons.edit,
-          action: () => openPage(context, AssetForm(model: asset))
+          action: () => openPage(
+              context, AssetForm(model: asset),
+              then: _refreshData
+          )
       ),
       ModalMenuOption(
           title: "Delete asset",
@@ -167,7 +180,8 @@ class _AssetsTabState extends State<AssetsTab> {
           action: () => showYesNoDialog(context,
               title: "Delete ${asset.sku}",
               message: "Are you sure?",
-              onYes: () => AssetsController.deleteAsset(asset.id),
+              onYes: () => decorateWithLoading(context, () => AssetsController.deleteAsset(asset.id)
+                  .whenComplete(_refreshData)),
               onNo: () => print("close modal"))
       ),
     ]);

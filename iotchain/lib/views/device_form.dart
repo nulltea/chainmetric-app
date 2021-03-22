@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:iotchain/controllers/devices_controller.dart';
 import 'package:iotchain/controllers/references_adapter.dart';
 import 'package:iotchain/model/device_model.dart';
 import 'package:iotchain/shared/exceptions.dart';
+import 'package:iotchain/shared/utils.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -228,7 +228,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: _submitDevice,
+                              onPressed: decorateWithLoading(context, _submitDevice),
                               child: const Text("Register device",
                                   style: TextStyle(fontSize: 20)),
                             )),
@@ -366,14 +366,11 @@ class _DeviceFormState extends State<DeviceForm> {
 
   Future<void> _submitDevice() async {
     if (_formKey.currentState.validate()) {
-      OverlayScreen().show(context);
       try {
         if (await DevicesController.registerDevice(device)) {
-          OverlayScreen().pop();
           Navigator.pop(context);
         }
       } on Exception catch (e) {
-        OverlayScreen().pop();
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }

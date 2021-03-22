@@ -2,6 +2,7 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:iotchain/model/device_model.dart';
 import 'package:iotchain/model/metric_model.dart';
 import 'package:iotchain/model/requirements_model.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
 import 'controllers/references_adapter.dart';
@@ -15,8 +16,11 @@ import 'model/organization_model.dart';
 import 'views/main_page.dart';
 import 'package:flutter/material.dart';
 
+
 void main() {
-  initJson();
+  _initJson();
+  _initOverlay();
+
   runApp(App());
 }
 
@@ -33,11 +37,6 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     _initBackend();
-    OverlayScreen().saveScreens({
-      "modal": CustomOverlayScreen(
-        backgroundColor: ThemeData.dark().primaryColor.withAlpha(225),
-        content: Center(),
-      )});
   }
 
   @override
@@ -68,7 +67,7 @@ class _AppState extends State<App> {
   }
 }
 
-void initJson() {
+void _initJson() {
   initializeReflectable();
   JsonMapper().useAdapter(JsonMapperAdapter(
       valueDecorators: {
@@ -83,4 +82,21 @@ void initJson() {
         typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value),
       })
   );
+}
+
+void _initOverlay() {
+  OverlayScreen().saveScreens({
+    "modal": CustomOverlayScreen(
+      backgroundColor: ThemeData.dark().primaryColor.withAlpha(225),
+      content: Center(),
+    ),
+    "loading": CustomOverlayScreen(
+      backgroundColor: ThemeData.dark().primaryColor.withAlpha(225),
+      content: LoadingBouncingGrid.square(
+          size: 75,
+          backgroundColor: Colors.teal.shade600,
+          borderColor: Colors.black54
+      ),
+    ),
+  });
 }
