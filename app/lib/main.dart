@@ -1,3 +1,4 @@
+import 'package:chainmetric/model/readings_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:chainmetric/model/device_model.dart';
 import 'package:chainmetric/model/metric_model.dart';
@@ -119,6 +120,8 @@ void _initJson() {
         typeOf<List<DeviceProfile>>(): (value) => value.cast<DeviceProfile>(),
         typeOf<List<Metric>>(): (value) => value.cast<Metric>(),
         typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value),
+        typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value),
+        typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
       })
   );
 }

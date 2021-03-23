@@ -114,7 +114,6 @@ class _DevicesTabState extends State<DevicesTab> {
     onLongPress: () => _showDeviceMenu(context, device),
   );
 
-
   Future<List<Device>> _fetchDevices() async =>
       await DevicesController.getDevices();
 

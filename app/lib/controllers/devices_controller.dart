@@ -7,7 +7,8 @@ class DevicesController {
   static Future<List<Device>> getDevices() async {
     String data = await Blockchain.evaluateTransaction("devices", "All");
     try {
-      return data.isNotEmpty ? JsonMapper.deserialize<List<Device>>(data) : <Device>[];
+      return data.isNotEmpty ? JsonMapper.deserialize<List<Device>>(data) : <
+          Device>[];
     } on Exception catch (e) {
       print(e.toString());
     }
