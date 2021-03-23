@@ -152,6 +152,15 @@ class _AssetsTabState extends State<AssetsTab> {
           ),
       ),
       ModalMenuOption(
+        title: "Remove requirements",
+        icon: Icons.fact_check,
+        action: () => openPage(
+            context, RequirementsForm(model: asset.getRequirements()),
+            then: _refreshData
+        ),
+        enabled: asset.requirements != null,
+      ),
+      ModalMenuOption(
           title: "Transfer asset",
           icon: Icons.local_shipping,
           action: () => print("Transfer asset")

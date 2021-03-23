@@ -7,11 +7,13 @@ class ModalMenuOption extends StatelessWidget {
   final Function() action;
   final String title;
   final IconData icon;
+  final bool enabled;
 
   ModalMenuOption({
     this.title,
     this.icon,
-    this.action
+    this.action,
+    this.enabled = true
   });
 
   @override
@@ -52,7 +54,7 @@ void showModalMenu({BuildContext context, List<ModalMenuOption> options}) {
           padding: EdgeInsets.only(bottom: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: options,
+            children: options.where((o) => o.enabled).toList(),
           ),
         )),
   ).whenComplete(dismissOverlay);
