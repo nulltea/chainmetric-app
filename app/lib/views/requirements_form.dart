@@ -1,3 +1,4 @@
+import 'package:chainmetric/controllers/requirements_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
@@ -226,10 +227,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
   Future<void> _submit() async {
     if (_formKey.currentState.validate()) {
       try {
-        var jsonData = JsonMapper.serialize(requirements);
-        if (await Blockchain.submitTransaction(
-            "requirements", "Assign", jsonData) !=
-            null) {
+        if (await RequirementsController.assignRequirements(requirements)) {
           Navigator.pop(context);
         }
       } on Exception catch (e) {

@@ -6,7 +6,6 @@ import 'package:chainmetric/shared/utils.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:overlay_screen/overlay_screen.dart';
 
 class AssetForm extends StatefulWidget {
   final Asset model;

@@ -1,3 +1,5 @@
+import 'package:chainmetric/controllers/requirements_controller.dart';
+import 'package:chainmetric/views/readings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:chainmetric/controllers/assets_controller.dart';
@@ -151,12 +153,11 @@ class _AssetsTabState extends State<AssetsTab> {
           ),
       ),
       ModalMenuOption(
-        title: "Remove requirements",
+        title: "Revoke requirements",
         icon: Icons.delete_sweep,
-        action: () => openPage(
-            context, RequirementsForm(model: asset.getRequirements()),
-            then: _refreshData
-        ),
+        action: () => decorateWithLoading(context, () => RequirementsController
+              .revokeRequirements(asset.requirements.id)
+            .whenComplete(_refreshData)),
         enabled: asset.requirements != null,
       ),
       ModalMenuOption(
@@ -172,7 +173,7 @@ class _AssetsTabState extends State<AssetsTab> {
       ModalMenuOption(
           title: "Watch asset",
           icon: Icons.visibility,
-          action: () => print("Watch asset")
+          action: () => openPage(context, ReadingsPage(assetID: asset.id))
       ),
       ModalMenuOption(
           title: "Edit asset",
