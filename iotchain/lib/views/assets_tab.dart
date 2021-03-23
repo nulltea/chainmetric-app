@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:iotchain/controllers/assets_controller.dart';
-import 'package:iotchain/controllers/references_adapter.dart';
-import 'package:iotchain/model/asset_model.dart';
-import 'package:iotchain/shared/utils.dart';
-import 'package:iotchain/shared/extensions.dart';
-import 'package:iotchain/views/asset_form.dart';
-import 'package:iotchain/views/components/modal_menu.dart';
-import 'package:iotchain/views/requirements_form.dart';
+import 'package:chainmetric/controllers/assets_controller.dart';
+import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/model/asset_model.dart';
+import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/shared/extensions.dart';
+import 'package:chainmetric/views/asset_form.dart';
+import 'package:chainmetric/views/components/modal_menu.dart';
+import 'package:chainmetric/views/requirements_form.dart';
 
 import 'components/navigation_tab.dart';
 

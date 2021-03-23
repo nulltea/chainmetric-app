@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iotchain/controllers/blockchain_adapter.dart';
-import 'package:iotchain/model/auth_model.dart';
-import 'package:iotchain/model/organization_model.dart';
+import 'package:chainmetric/controllers/blockchain_adapter.dart';
+import 'package:chainmetric/model/auth_model.dart';
+import 'package:chainmetric/model/organization_model.dart';
 
 class AuthPage extends StatefulWidget {
   final Function submitAuth;

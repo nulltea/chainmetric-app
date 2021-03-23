@@ -1,5 +1,5 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:iotchain/model/asset_model.dart';
+import 'package:chainmetric/model/asset_model.dart';
 
 import 'blockchain_adapter.dart';
 

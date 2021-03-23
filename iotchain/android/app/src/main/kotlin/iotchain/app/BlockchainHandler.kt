@@ -1,4 +1,4 @@
-package iotchain.app
+package chainmetric.app
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel

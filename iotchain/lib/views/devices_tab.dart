@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:iotchain/controllers/devices_controller.dart';
-import 'package:iotchain/model/device_model.dart';
-import 'package:iotchain/shared/utils.dart';
-import 'package:iotchain/shared/extensions.dart';
-import 'package:iotchain/views/components/svg_icon.dart';
-import 'package:iotchain/views/device_form.dart';
+import 'package:chainmetric/controllers/devices_controller.dart';
+import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/shared/extensions.dart';
+import 'package:chainmetric/views/components/svg_icon.dart';
+import 'package:chainmetric/views/device_form.dart';
 
 import 'components/modal_menu.dart';
 import 'components/navigation_tab.dart';

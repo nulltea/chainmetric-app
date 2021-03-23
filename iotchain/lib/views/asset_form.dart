@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:iotchain/controllers/assets_controller.dart';
-import 'package:iotchain/controllers/references_adapter.dart';
-import 'package:iotchain/model/asset_model.dart';
-import 'package:iotchain/shared/utils.dart';
+import 'package:chainmetric/controllers/assets_controller.dart';
+import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/model/asset_model.dart';
+import 'package:chainmetric/shared/utils.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:numberpicker/numberpicker.dart';

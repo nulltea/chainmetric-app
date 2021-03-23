@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iotchain/shared/utils.dart';
+import 'package:chainmetric/shared/utils.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 

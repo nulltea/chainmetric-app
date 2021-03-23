@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:iotchain/controllers/devices_controller.dart';
-import 'package:iotchain/controllers/references_adapter.dart';
-import 'package:iotchain/model/device_model.dart';
-import 'package:iotchain/shared/exceptions.dart';
-import 'package:iotchain/shared/utils.dart';
+import 'package:chainmetric/controllers/devices_controller.dart';
+import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/shared/exceptions.dart';
+import 'package:chainmetric/shared/utils.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';

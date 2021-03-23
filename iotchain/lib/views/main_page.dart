@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:iotchain/shared/utils.dart';
-import 'package:iotchain/views/devices_tab.dart';
-import 'package:iotchain/views/home_tab.dart';
-import 'package:iotchain/views/profile_tab.dart';
+import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/views/devices_tab.dart';
+import 'package:chainmetric/views/home_tab.dart';
+import 'package:chainmetric/views/profile_tab.dart';
 import 'asset_form.dart';
 
 import 'components/bottom_app_bar.dart';
@@ -23,14 +23,14 @@ class _MainPageState extends State<MainPage> {
         title: "IoT Chain",
         navBarItem: CustomAppBarItem(icon: Icons.home),
         tab: HomeTab(),
-        buttonIcon: Icon(Icons.cached),
+        buttonIcon: Icon(Icons.cached, color: Colors.black),
         pageAction: (ctx) => print("Home")
     ),
     NavigationTabItem(
         title: "Assets",
         navBarItem: CustomAppBarItem(icon: Icons.shopping_cart),
         tab: AssetsTab(key: GlobalKey()),
-        buttonIcon: Icon(Icons.add),
+        buttonIcon: Icon(Icons.add, color: Colors.black),
         pageAction: (state) => openPage(
           state.context, AssetForm(),
             then: (state as _MainPageState).currentTab().refreshData
@@ -40,7 +40,7 @@ class _MainPageState extends State<MainPage> {
         title: "Devices",
         navBarItem: CustomAppBarItem(icon: Icons.memory),
         tab: DevicesTab(key: GlobalKey()),
-        buttonIcon: Icon(Icons.qr_code_scanner),
+        buttonIcon: Icon(Icons.qr_code_scanner, color: Colors.black),
         pageAction: (state) => openPage(
             state.context, DeviceForm(),
             then: (state as _MainPageState).currentTab().refreshData
@@ -50,7 +50,7 @@ class _MainPageState extends State<MainPage> {
         title: "Profile",
         navBarItem: CustomAppBarItem(icon: Icons.person),
         tab: ProfileTab(),
-        buttonIcon: Icon(Icons.person),
+        buttonIcon: Icon(Icons.person, color: Colors.black),
         pageAction: (ctx) => print("Profile")
     ),
   ];

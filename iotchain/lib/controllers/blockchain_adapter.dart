@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
-import 'package:iotchain/model/auth_model.dart';
+import 'package:chainmetric/model/auth_model.dart';
 import 'package:path_provider/path_provider.dart';
 
-const BLOCKCHAIN_CHANNEL = "iotchain.app.blockchain-native-sdk";
+const BLOCKCHAIN_CHANNEL = "chainmetric.app.blockchain-native-sdk";
 
 class Blockchain {
   static final _nativeSDK = MethodChannel(BLOCKCHAIN_CHANNEL);

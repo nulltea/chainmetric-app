@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:iotchain/controllers/blockchain_adapter.dart';
-import 'package:iotchain/controllers/references_adapter.dart';
-import 'package:iotchain/model/metric_model.dart';
-import 'package:iotchain/model/requirements_model.dart';
+import 'package:chainmetric/controllers/blockchain_adapter.dart';
+import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/model/metric_model.dart';
+import 'package:chainmetric/model/requirements_model.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';

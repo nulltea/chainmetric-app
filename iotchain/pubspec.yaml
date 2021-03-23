@@ -1,4 +1,4 @@
-name: iotchain
+name: chainmetric
 description: Mobile client application for the IoT enabled blockchain supply chain controlled by sensor requirements system.
 publish_to: 'none'
 version: 1.0.0+1
