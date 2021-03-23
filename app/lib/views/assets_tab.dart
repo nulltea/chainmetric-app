@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:chainmetric/controllers/assets_controller.dart';
@@ -153,7 +152,7 @@ class _AssetsTabState extends State<AssetsTab> {
       ),
       ModalMenuOption(
         title: "Remove requirements",
-        icon: Icons.fact_check,
+        icon: Icons.delete_sweep,
         action: () => openPage(
             context, RequirementsForm(model: asset.getRequirements()),
             then: _refreshData
