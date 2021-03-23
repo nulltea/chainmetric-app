@@ -5,6 +5,7 @@ import 'package:chainmetric/controllers/blockchain_adapter.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:chainmetric/model/metric_model.dart';
 import 'package:chainmetric/model/requirements_model.dart';
+import 'package:chainmetric/shared/utils.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -137,7 +138,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: _submit,
+                              onPressed: decorateWithLoading(context, _submit),
                               child: const Text("SUBMIT REQUIREMENTS",
                                   style: TextStyle(fontSize: 20)),
                             )),
