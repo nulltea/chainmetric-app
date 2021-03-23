@@ -182,7 +182,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                           decoration: InputDecoration(
                               filled: true,
                               labelText: "Min",
-                              suffixText: metric.unit),
+                              suffixText: metric.unit.trim()),
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
                             setState(() => req.minLimit = num.parse(value));

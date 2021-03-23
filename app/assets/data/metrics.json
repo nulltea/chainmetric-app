@@ -12,67 +12,67 @@
   {
     "name": "Luminosity",
     "metric": "lux",
-    "unit": "Lux"
+    "unit": " lux"
   },
   {
     "name": "Magnetism",
     "metric": "mgn",
-    "unit": "Gauss"
+    "unit": " Gauss"
   },
   {
     "name": "Pressure",
     "metric": "bar",
-    "unit": "PSI"
+    "unit": " PSI"
   },
   {
     "name": "Altitude",
     "metric": "alt",
-    "unit":"m"
+    "unit":" m"
   },
   {
     "name": "UV index",
     "metric": "uv",
-    "unit": "Index"
+    "unit": " (I)"
   },
   {
     "name": "Visible light",
     "metric": "vis",
-    "unit": "lux"
+    "unit": " lux"
   },
   {
     "name": "IR light",
     "metric": "ir",
-    "unit": "lux"
+    "unit": " lux"
   },
   {
     "name": "Proximity",
     "metric": "prx",
-    "unit": "m"
+    "unit": " m"
   },
   {
     "name": "CO2 concentration",
     "metric": "co2",
-    "unit": "ppm"
+    "unit": " ppm"
   },
   {
     "name": "TVOCs concentration",
     "metric": "tvoc",
-    "unit": "ppb"
+    "unit": " ppb"
   },
   {
     "name": "Acceleration (G)",
     "metric": "axg",
-    "unit": "G"
+    "unit": " G"
   },
   {
     "name": "Acceleration (M/S^2)",
     "metric": "axms",
-    "unit": "m/s^2"
+    "unit": " m/s^2"
   },
   {
     "name": "Heart rate",
     "metric": "hrt",
-    "unit": "bpm"
+    "unit": " bpm"
   },
   {
     "name": "Blood oxidation",
@@ -82,6 +82,6 @@
   {
     "name": "Noise level",
     "metric": "nse",
-    "unit": "dBA"
+    "unit": " dBA"
   }
 ]

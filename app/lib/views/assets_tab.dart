@@ -173,7 +173,7 @@ class _AssetsTabState extends State<AssetsTab> {
       ModalMenuOption(
           title: "Watch asset",
           icon: Icons.visibility,
-          action: () => openPage(context, ReadingsPage(assetID: asset.id))
+          action: () => openPage(context, ReadingsPage(asset: asset, requirements: asset.requirements))
       ),
       ModalMenuOption(
           title: "Edit asset",

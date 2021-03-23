@@ -40,11 +40,11 @@
     "max_limit": 25
   },
   "co2": {
-    "min_limit": 400,
+    "min_limit": 0,
     "max_limit": 4500
   },
   "tvoc": {
-    "min_limit": 120,
+    "min_limit": 0,
     "max_limit": 1200
   },
   "axg": {
