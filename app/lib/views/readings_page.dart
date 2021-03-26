@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:chainmetric/model/asset_model.dart';
 import 'package:chainmetric/model/requirements_model.dart';
 import 'package:chainmetric/shared/utils.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chainmetric/shared/extensions.dart';
+import 'package:chainmetric/views/components/svg_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/readings_controller.dart';
 import 'package:chainmetric/model/metric_model.dart';
@@ -34,7 +37,8 @@ class ReadingsPage extends StatefulWidget {
 abstract class _ReadingsState extends State<ReadingsPage> {
   MetricReadings readings = MetricReadings();
 
-  final _refreshKey = GlobalKey<RefreshIndicatorState>();
+  final viewportPoints = VIEWPORT_POINTS;
+  final refreshKey = GlobalKey<RefreshIndicatorState>();
   get requirements => widget.requirements.metrics;
 
   @override
@@ -48,74 +52,15 @@ abstract class _ReadingsState extends State<ReadingsPage> {
   }
 
   @protected
-  Widget buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(_fromReadingsStream(metric, stream),
-      animate: true,
-      primaryMeasureAxis: charts.NumericAxisSpec(
-          showAxisLine: false,
-          renderSpec: charts.GridlineRendererSpec(
-            labelStyle: charts.TextStyleSpec(
-              fontSize: 10,
-              color: toChartColor(Theme.of(context).hintColor),
-            ),
-            lineStyle: charts.LineStyleSpec(
-              thickness: 0,
-              color: toChartColor(Theme.of(context).hintColor),
-            ),
-          ),
-          tickFormatterSpec: charts.BasicNumericTickFormatterSpec((v) => "$v${metric.unit}")
-      ),
-      domainAxis: charts.DateTimeAxisSpec(
-          showAxisLine: false,
-          viewport: timeViewport(stream),
-          renderSpec: charts.GridlineRendererSpec(
-              labelStyle: charts.TextStyleSpec(
-                fontSize: 10,
-                color: toChartColor(Theme.of(context).hintColor),
-              ),
-              lineStyle: charts.LineStyleSpec(
-                thickness: 0,
-                color: toChartColor(Theme.of(context).hintColor),
-              )
-          )
-      ),
-      defaultRenderer: charts.LineRendererConfig(
-        includePoints: true,
-        includeArea: true,
-        areaOpacity: 0.1,
-        strokeWidthPx: 2,
-        radiusPx: 4,
-        roundEndCaps: true,
-      ),
-      behaviors: [
-        charts.PanAndZoomBehavior(),
-        charts.SlidingViewport(),
-        charts.SelectNearest(),
-        charts.DomainHighlighter(),
-        charts.RangeAnnotation([
-          charts.RangeAnnotationSegment(
-              requirements[metric.metric].minLimit,
-              requirements[metric.metric].maxLimit,
-              charts.RangeAnnotationAxisType.measure,
-              startLabel: "Min (${requirements[metric.metric].minLimit}${metric.unit})",
-              endLabel: "Max (${requirements[metric.metric].maxLimit}${metric.unit})",
-              labelStyleSpec: charts.TextStyleSpec(
-                color: toChartColor(Theme.of(context).hintColor),
-              ),
-              labelAnchor: charts.AnnotationLabelAnchor.end,
-              color: charts.Color(r: 12, g: 110, b: 76, a: 100)),
-        ], defaultLabelPosition: charts.AnnotationLabelPosition.auto),
-      ]
-  );
-
-  @protected
   Future refreshData() {
-    _refreshKey.currentState?.show();
+    refreshKey.currentState?.show();
     return ReadingsController.getReadings(widget.asset.id).then((value) =>
         setState(() => readings = value)
     );
   }
 
-  List<charts.Series<MetricReadingPoint, DateTime>> _fromReadingsStream(Metric metric, MetricReadingsStream stream) {
+  @protected
+  List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(Metric metric, MetricReadingsStream stream) {
     return [
       charts.Series<MetricReadingPoint, DateTime>(
         id: metric.metric,
@@ -136,7 +81,7 @@ abstract class _ReadingsState extends State<ReadingsPage> {
 
   @protected
   charts.DateTimeExtents timeViewport(MetricReadingsStream stream) {
-    var start = stream.last.timestamp.subtract(widget.requirements.periodDuration * VIEWPORT_POINTS);
+    var start = stream.last.timestamp.subtract(widget.requirements.periodDuration * viewportPoints);
     if (start.isBefore(stream.first.timestamp)) start = stream.first.timestamp;
     return charts.DateTimeExtents(
         start: start,
@@ -151,22 +96,27 @@ abstract class _ReadingsState extends State<ReadingsPage> {
 
 class _ReadingsListViewState extends _ReadingsState {
   @override
-  Widget build(context) => Scaffold(
-      appBar: AppBar(
-        title: Text("Metric readings"),
-      ),
-      body: RefreshIndicator(
-        key: _refreshKey,
-        onRefresh: refreshData,
-        child: _chartsListView(context),
-      ));
+  int get viewportPoints => 50;
+
+  @override
+  Widget build(context) =>
+      Scaffold(
+          appBar: AppBar(
+            title: Text("Metric readings"),
+          ),
+          body: RefreshIndicator(
+            key: refreshKey,
+            onRefresh: refreshData,
+            child: _chartsListView(context),
+          ));
 
 
-  Widget _chartsListView(BuildContext context) => ListView.builder(
-    itemCount: readings.streams?.length ?? 0,
-    padding: EdgeInsets.symmetric(vertical: 12),
-    itemBuilder: _listBuilder,
-  );
+  Widget _chartsListView(BuildContext context) =>
+      ListView.builder(
+        itemCount: readings.streams?.length ?? 0,
+        padding: EdgeInsets.symmetric(vertical: 12),
+        itemBuilder: _listBuilder,
+      );
 
   Widget _listBuilder(BuildContext context, int index) {
     var record = readings.streams.entries.elementAt(index);
@@ -296,6 +246,7 @@ class _ReadingsListViewState extends _ReadingsState {
 
 class _ReadingsPageViewState extends _ReadingsState {
   int currentPage;
+  bool scrollLocked = false;
 
   @override
   Widget build(context) => Scaffold(
@@ -316,11 +267,12 @@ class _ReadingsPageViewState extends _ReadingsState {
   Widget _chartsPageView(BuildContext context) => PageView.builder(
     controller: PageController(
       initialPage: widget.pageIndex,
-      viewportFraction: 0.93,
+      viewportFraction: 0.93
     ),
     itemCount: readings.streams?.length ?? 0,
     itemBuilder: _pagerBuilder,
     onPageChanged: (i) => setState(() => currentPage = i),
+      physics: scrollLocked ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics()
   );
 
   Widget _pagerBuilder(BuildContext context, int index) {
@@ -330,28 +282,138 @@ class _ReadingsPageViewState extends _ReadingsState {
     );
   }
 
-  Widget _chartPage(Metric metric, MetricReadingsStream stream) => Card(
-    elevation: 5,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          SizedBox(
-              height: 300,
-              child: buildChart(metric, stream)
-          ),
-          Align(alignment: Alignment.centerLeft,child: Text("Statistics", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600))),
-          ListTile(leading: Icon(Icons.trending_up), title: Text("Max value"), trailing: Text("${stream.maxValue} ${metric.unit}")),
-          ListTile(leading: Icon(Icons.trending_down), title: Text("Min value"), trailing: Text("${stream.minValue} ${metric.unit}")),
-          ListTile(leading: Icon(Icons.functions), title: Text("Average value"), trailing: Text("${stream.avgValue} ${metric.unit}")),
-          ListTile(leading: Icon(Icons.rule), title: Text("Compliance index"), trailing: Text("${stream.complianceIndexFor(widget.requirements.metrics[metric.metric])}%")),
-        ],
+  Widget _chartPage(Metric metric, MetricReadingsStream stream) => GestureDetector(
+    child: Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(_isActiveStream(metric)
+                    ? "Monitoring now"
+                    : "Monitoring stopped",
+                    style: TextStyle(color: Theme.of(context).hintColor)
+                ),
+                SizedBox(width: 5),
+                Icon(Icons.circle, color: _isActiveStream(metric)
+                    ? Colors.green.withAlpha(200)
+                    : Colors.red.withAlpha(200))
+              ],
+            ),
+            SizedBox(
+                height: 300,
+                child: _buildChart(metric, stream)),
+            SizedBox(height: 10),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Statistics",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)
+                )
+            ),
+            ListTile(
+                leading: Icon(Icons.trending_up),
+                title: Text("Max value"),
+                trailing: Text("${stream.maxValue}${metric.unit}")
+            ),
+            ListTile(
+                leading: Icon(Icons.trending_down),
+                title: Text("Min value"),
+                trailing: Text("${stream.minValue}${metric.unit}")
+            ),
+            ListTile(
+                leading: Icon(Icons.functions),
+                title: Text("Average value"),
+                trailing: Text("${stream.avgValue}${metric.unit}")
+            ),
+            ListTile(
+                leading: Icon(Icons.rule),
+                title: Text("Compliance index"),
+                trailing: Text("${stream.complianceIndexFor(widget.requirements.metrics[metric.metric])}%")
+            ),
+            ListTile(
+                leading: SvgIcon("running_with_errors"),
+                title: Text("Critical exposure duration"),
+                trailing: Text(stream.criticalExposureFor(widget.requirements.metrics[metric.metric], widget.requirements.periodDuration).toShortString())
+            ),
+          ],
+        ),
       ),
     ),
+    onTapDown:(v) => setState(() {
+      if (v.localPosition.dy < 350) {
+        scrollLocked = true;
+      } else {
+        scrollLocked = false;
+      }
+    }),
   );
+
+  Widget _buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(fromReadingsStream(metric, stream),
+      animate: true,
+      primaryMeasureAxis: charts.NumericAxisSpec(
+          showAxisLine: false,
+          renderSpec: charts.GridlineRendererSpec(
+            labelStyle: charts.TextStyleSpec(
+              fontSize: 10,
+              color: toChartColor(Theme.of(context).hintColor),
+            ),
+            lineStyle: charts.LineStyleSpec(
+              thickness: 0,
+              color: toChartColor(Theme.of(context).hintColor),
+            ),
+          ),
+          tickFormatterSpec: charts.BasicNumericTickFormatterSpec((v) => "$v${metric.unit}")
+      ),
+      domainAxis: charts.DateTimeAxisSpec(
+          showAxisLine: false,
+          viewport: timeViewport(stream),
+          renderSpec: charts.GridlineRendererSpec(
+              labelStyle: charts.TextStyleSpec(
+                fontSize: 10,
+                color: toChartColor(Theme.of(context).hintColor),
+              ),
+              lineStyle: charts.LineStyleSpec(
+                thickness: 0,
+                color: toChartColor(Theme.of(context).hintColor),
+              )
+          )
+      ),
+      defaultRenderer: charts.LineRendererConfig(
+        includePoints: true,
+        includeArea: true,
+        areaOpacity: 0.1,
+        strokeWidthPx: 2,
+        radiusPx: 3,
+        roundEndCaps: true,
+      ),
+      behaviors: [
+        charts.PanAndZoomBehavior(),
+        charts.SlidingViewport(),
+        charts.SelectNearest(),
+        charts.DomainHighlighter(),
+        charts.RangeAnnotation([
+          charts.RangeAnnotationSegment(
+              requirements[metric.metric].minLimit,
+              requirements[metric.metric].maxLimit,
+              charts.RangeAnnotationAxisType.measure,
+              startLabel: "Min (${requirements[metric.metric].minLimit}${metric.unit})",
+              endLabel: "Max (${requirements[metric.metric].maxLimit}${metric.unit})",
+              labelStyleSpec: charts.TextStyleSpec(
+                color: toChartColor(Theme.of(context).hintColor),
+              ),
+              labelAnchor: charts.AnnotationLabelAnchor.end,
+              color: charts.Color(r: 12, g: 110, b: 76, a: 100)),
+        ], defaultLabelPosition: charts.AnnotationLabelPosition.auto),
+      ]
+  );
+
+  bool _isActiveStream(Metric metric) => DateTime.now().difference(readings.streams[metric].last.timestamp).inSeconds < widget.requirements.period * 3;
 
   String _currentPageTitle() =>
       readings.streams.entries.elementAt(currentPage ?? widget.pageIndex).key.name;
