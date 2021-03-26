@@ -65,7 +65,7 @@ class _AssetsTabState extends State<AssetsTab> {
       top: false,
       bottom: false,
       child: Hero(
-        tag: index,
+        tag: assets[index].id,
         child: _assetCard(assets[index]),
       ),
     );
@@ -112,8 +112,8 @@ class _AssetsTabState extends State<AssetsTab> {
                         color: Theme.of(context).hintColor),
                     SizedBox(width: 5),
                     Text(asset.location.toSentenceCase(),
-                        style:
-                        TextStyle(color: Theme.of(context).hintColor))
+                        style: TextStyle(color: Theme.of(context).hintColor)
+                    )
                   ],
                 ),
                 SizedBox(height: 3),

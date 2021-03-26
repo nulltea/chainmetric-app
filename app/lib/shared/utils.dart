@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
-void openPage(BuildContext context, Widget page, {Function() then}) => Navigator.push(
+void openPage(BuildContext context, Widget page, {Function() then, int duration = 300}) => Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => page)
+    CustomMaterialPageRoute(builder: (context) => page, duration: duration)
 ).whenComplete(() => then?.call());
 
 Future showYesNoDialog(BuildContext context, {
@@ -47,3 +47,19 @@ void dismissOverlay() {
   if (OverlayScreen().state == Screen.showing) OverlayScreen().pop();
 }
 
+class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {
+  final int duration;
+
+  CustomMaterialPageRoute({
+    WidgetBuilder builder,
+    RouteSettings settings,
+    bool maintainState = true,
+    bool fullscreenDialog = false,
+    this.duration = 300
+  }) : super(builder: builder, settings: settings, fullscreenDialog: fullscreenDialog);
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: duration);
+
+
+}

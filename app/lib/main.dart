@@ -46,6 +46,7 @@ class _AppState extends State<App> {
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
+    backgroundColor: Color.fromARGB(255, 20, 28, 33),
     scaffoldBackgroundColor: Color.fromARGB(255, 20, 28, 33),
     primaryColor: Color.fromARGB(255, 24, 43, 50),
     accentColor: Colors.teal,
@@ -122,6 +123,7 @@ void _initJson() {
         typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value),
         typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value),
         typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
+        typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList()),
       })
   );
 }
