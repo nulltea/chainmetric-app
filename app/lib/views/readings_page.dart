@@ -176,36 +176,122 @@ class _ReadingsListViewState extends _ReadingsState {
         child: InkWell(
           child: _chartCard(record.key, record.value),
           onLongPress: () => print("onLongPress"),
-          onTap: () => openPage(context, ReadingsPage(
-            asset: widget.asset,
-            requirements: widget.requirements,
-            pageView: true,
-            pageIndex: index,
-            readings: readings,
-          )),
+          onTap: () =>
+              openPage(context, ReadingsPage(
+                asset: widget.asset,
+                requirements: widget.requirements,
+                pageView: true,
+                pageIndex: index,
+                readings: readings,
+              )),
         ),
       ),
     );
   }
 
   Widget _chartCard(Metric metric, MetricReadingsStream stream) => Card(
-    elevation: 5,
+    elevation: 1,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
     child: Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(top: 8),
       child: Container(
-          height: 150,
+          height: 100,
           child: Stack(
             children: [
-              Text(metric.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              Positioned(
+                  left: 8,
+                  child: metric.icon()
+              ),
               Positioned.fill(
-                top: 30,
-                child: buildChart(metric, stream),
+                left: 40,
+                child: Text(metric.name, style: TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.w600)),
+              ),
+              Positioned(
+                right: 8,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text("${stream.lastValue}",
+                          style: TextStyle(fontSize: 15)
+                      ),
+                      Text(metric.unit,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Theme.of(context).hintColor
+                          )
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: 80,
+                    child: _buildChart(metric, stream)
+                ),
               ),
             ],
           )
       ),
     ),
   );
+
+  Widget _buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(fromReadingsStream(metric, stream),
+      animate: true,
+      primaryMeasureAxis: charts.NumericAxisSpec(
+          showAxisLine: false,
+          renderSpec: charts.NoneRenderSpec(
+              axisLineStyle: charts.LineStyleSpec(
+                  color: charts.MaterialPalette.transparent
+              )
+          )
+      ),
+      domainAxis: charts.DateTimeAxisSpec(
+          showAxisLine: false,
+          viewport: timeViewport(stream),
+          renderSpec: charts.NoneRenderSpec(
+              axisLineStyle: charts.LineStyleSpec(
+                  color: charts.MaterialPalette.transparent
+              )
+          )
+      ),
+      defaultRenderer: charts.LineRendererConfig(
+        includePoints: false,
+        includeArea: true,
+        roundEndCaps: true,
+        areaOpacity: 0.1,
+        strokeWidthPx: 2,
+        radiusPx: 2
+      ),
+    layoutConfig: charts.LayoutConfig(
+      bottomMarginSpec: charts.MarginSpec.fixedPixel(0),
+      leftMarginSpec: charts.MarginSpec.fixedPixel(0),
+      rightMarginSpec: charts.MarginSpec.fixedPixel(0),
+      topMarginSpec: charts.MarginSpec.fixedPixel(20),
+    ),
+  );
+
+  @override
+  List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(Metric metric, MetricReadingsStream stream) {
+    return [
+      charts.Series<MetricReadingPoint, DateTime>(
+        id: metric.metric,
+        displayName: metric.name,
+        colorFn: (point, _) => meetRequirement(point.value, requirements[metric.metric])
+            ? charts.MaterialPalette.cyan.shadeDefault
+            : charts.MaterialPalette.red.shadeDefault,
+        domainFn: (point, _) => point.timestamp,
+        measureFn: (point, _) => point.value <= 0 ? 0: point.value,
+        data: stream,
+      )
+    ];
+  }
 }
 
 class _ReadingsPageViewState extends _ReadingsState {

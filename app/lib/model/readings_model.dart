@@ -29,7 +29,7 @@ class MetricReadingPoint {
   num value;
 }
 
-class MetricReadingsStream extends ListBase<MetricReadingPoint> {
+class MetricReadingsStream extends ListBase<MetricReadingPoint> with MetricReadingPoint {
   List<MetricReadingPoint> _list = [];
   set length(int newLength) { _list.length = newLength; }
   int get length => _list.length;
@@ -37,6 +37,14 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint> {
   void operator []=(int index, MetricReadingPoint value) { _list[index] = value; }
 
   List<num> get _values => _list.map((p) => p.value).toList();
+
+  num get firstValue => isNotEmpty
+      ? _roundDouble(first.value, 2)
+      : 0;
+
+  num get lastValue => isNotEmpty
+      ? _roundDouble(last.value, 2)
+      : 0;
 
   num get maxValue => isNotEmpty
       ? _roundDouble(_values.reduce(max), 2)
@@ -53,6 +61,10 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint> {
   num complianceIndexFor(Requirement requirement) => isNotEmpty
       ? ((_values.where((p) => _meetRequirement(p, requirement)).length / length) * 100).round()
       : 100;
+
+  Duration criticalExposureFor(Requirement requirement, Duration period) => isNotEmpty
+      ? period * _values.where((p) => !_meetRequirement(p, requirement)).length
+      : 0;
 
   MetricReadingsStream();
   MetricReadingsStream.from(List<MetricReadingPoint> from) {

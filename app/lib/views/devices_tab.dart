@@ -88,9 +88,9 @@ class _DevicesTabState extends State<DevicesTab> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  device.stateIcon,
+                  Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor)),
                   SizedBox(width: 5),
-                  Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor))
+                  device.stateIcon,
                 ],
               )
             ]),
