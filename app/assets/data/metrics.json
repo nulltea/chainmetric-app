@@ -2,86 +2,103 @@
   {
     "name": "Temperature",
     "metric": "temp",
-    "unit": "°C"
+    "unit": "°C",
+    "icon": "0xe6b0"
   },
   {
     "name": "Humidity",
     "metric": "hdt",
-    "unit": "% RH"
+    "unit": "% RH",
+    "icon": "0xe8d0"
   },
   {
     "name": "Luminosity",
     "metric": "lux",
-    "unit": " lux"
+    "unit": " lux",
+    "icon": "0xe50d"
   },
   {
     "name": "Magnetism",
     "metric": "mgn",
-    "unit": " Gauss"
+    "unit": " Gauss",
+    "icon": "magnet"
   },
   {
     "name": "Pressure",
     "metric": "bar",
-    "unit": " PSI"
+    "unit": " PSI",
+    "icon": "0xe675"
   },
   {
     "name": "Altitude",
     "metric": "alt",
-    "unit":" m"
+    "unit":" m",
+    "icon": "0xe265"
   },
   {
-    "name": "UV index",
+    "name": "UV Index",
     "metric": "uv",
-    "unit": " (I)"
+    "unit": " (I)",
+    "icon": "0xe611"
   },
   {
-    "name": "Visible light",
+    "name": "Visible Light",
     "metric": "vis",
-    "unit": " lux"
+    "unit": " lux",
+    "icon": "0xe50f"
   },
   {
-    "name": "IR light",
+    "name": "IR Light",
     "metric": "ir",
-    "unit": " lux"
+    "unit": " lux",
+    "icon": "0xe50e"
   },
   {
     "name": "Proximity",
     "metric": "prx",
-    "unit": " m"
+    "unit": " m",
+    "icon": "0xea54"
   },
   {
-    "name": "CO2 concentration",
+    "name": "Air quality (CO2)",
     "metric": "co2",
-    "unit": " ppm"
+    "unit": " ppm",
+    "icon": "co2"
   },
   {
-    "name": "TVOCs concentration",
+    "name": "Air quality (TVOCs)",
     "metric": "tvoc",
-    "unit": " ppb"
+    "unit": " ppb",
+    "icon": "tvoc"
   },
   {
     "name": "Acceleration (G)",
     "metric": "axg",
-    "unit": " G"
+    "unit": " G",
+    "icon": "0xea0b"
   },
   {
-    "name": "Acceleration (M/S^2)",
+    "name": "Acceleration (M/S2)",
     "metric": "axms",
-    "unit": " m/s^2"
+    "unit": " m/s^2",
+    "icon": "0xea0b"
   },
   {
     "name": "Heart rate",
     "metric": "hrt",
-    "unit": " bpm"
+    "unit": " bpm",
+    "icon": "0xe721"
   },
   {
     "name": "Blood oxidation",
     "metric": "blo",
-    "unit": "%"
+    "unit": "%",
+    "icon": "blood"
   },
   {
     "name": "Noise level",
     "metric": "nse",
-    "unit": " dBA"
+    "unit": " dBA",
+    "icon": "0xead1"
   }
 ]
