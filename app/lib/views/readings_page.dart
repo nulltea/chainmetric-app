@@ -125,15 +125,7 @@ class _ReadingsListViewState extends _ReadingsState {
         tag: record.key,
         child: InkWell(
           child: _chartCard(record.key, record.value),
-          onLongPress: () => print("onLongPress"),
-          onTap: () =>
-              openPage(context, ReadingsPage(
-                asset: widget.asset,
-                requirements: widget.requirements,
-                pageView: true,
-                pageIndex: index,
-                readings: readings,
-              )),
+          onTap: () => _openPage(index),
         ),
       ),
     );
@@ -225,11 +217,25 @@ class _ReadingsListViewState extends _ReadingsState {
       rightMarginSpec: charts.MarginSpec.fixedPixel(0),
       topMarginSpec: charts.MarginSpec.fixedPixel(20),
     ),
+    behaviors: [
+      charts.LinePointHighlighter(
+        defaultRadiusPx: 0,
+        showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.none,
+        showVerticalFollowLine: charts.LinePointHighlighterFollowLineType.none,
+      )
+    ],
+    selectionModels: [
+      charts.SelectionModelConfig(
+        type: charts.SelectionModelType.info,
+        changedListener: (_) => _openPage(readings.streams.keys.toList().indexOf(metric))
+      )
+    ],
   );
 
   @override
-  List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(Metric metric, MetricReadingsStream stream) {
-    return [
+  List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(
+      Metric metric,
+      MetricReadingsStream stream) => [
       charts.Series<MetricReadingPoint, DateTime>(
         id: metric.metric,
         displayName: metric.name,
@@ -241,7 +247,14 @@ class _ReadingsListViewState extends _ReadingsState {
         data: stream,
       )
     ];
-  }
+
+  void _openPage(int index) => openPage(context, ReadingsPage(
+    asset: widget.asset,
+    requirements: widget.requirements,
+    pageView: true,
+    pageIndex: index,
+    readings: readings,
+  ));
 }
 
 class _ReadingsPageViewState extends _ReadingsState {
