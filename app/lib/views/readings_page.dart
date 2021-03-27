@@ -52,10 +52,10 @@ abstract class _ReadingsState extends State<ReadingsPage> {
   }
 
   @protected
-  Future refreshData() {
+  Future refreshData() async {
     refreshKey.currentState?.show();
     return ReadingsController.getReadings(widget.asset.id).then((value) =>
-        setState(() => readings = value)
+       setState(() => readings = value)
     );
   }
 
@@ -260,22 +260,23 @@ class _ReadingsListViewState extends _ReadingsState {
 class _ReadingsPageViewState extends _ReadingsState {
   int currentPage;
   bool scrollLocked = false;
+  bool animate = true;
 
   @override
   Widget build(context) => Scaffold(
-    appBar: AppBar(
-      title: Text(_currentPageTitle()),
-      centerTitle: true,
-      toolbarHeight: 50,
-      backgroundColor: Theme.of(context).backgroundColor,
-      elevation: 0,
-      leading: IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () => Navigator.of(context).pop()
+      appBar: AppBar(
+        title: Text(_currentPageTitle()),
+        centerTitle: true,
+        toolbarHeight: 50,
+        backgroundColor: Theme.of(context).backgroundColor,
+        elevation: 0,
+        leading: IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop()
+        ),
       ),
-    ),
-    body: _chartsPageView(context)
-  );
+      body: _chartsPageView(context)
+    );
 
   Widget _chartsPageView(BuildContext context) => PageView.builder(
     controller: PageController(
@@ -284,7 +285,13 @@ class _ReadingsPageViewState extends _ReadingsState {
     ),
     itemCount: readings.streams?.length ?? 0,
     itemBuilder: _pagerBuilder,
-    onPageChanged: (i) => setState(() => currentPage = i),
+    onPageChanged: (i) {
+        setState(() {
+        currentPage = i;
+        animate = true;
+      });
+      // refreshData();
+    },
       physics: scrollLocked ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics()
   );
 
@@ -308,6 +315,11 @@ class _ReadingsPageViewState extends _ReadingsState {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Align(
+                    alignment: Alignment.topLeft,
+                    child: metric.icon(size: 30)
+                ),
+                Spacer(),
                 Text(_isActiveStream(metric)
                     ? "Monitoring now"
                     : "Monitoring stopped",
@@ -315,10 +327,11 @@ class _ReadingsPageViewState extends _ReadingsState {
                 ),
                 SizedBox(width: 5),
                 Icon(Icons.circle, color: _isActiveStream(metric)
-                    ? Colors.green.withAlpha(200)
-                    : Colors.red.withAlpha(200))
+                    ? Colors.green.withAlpha(160)
+                    : Colors.red.withAlpha(160))
               ],
             ),
+            SizedBox(height: 10),
             SizedBox(
                 height: 300,
                 child: _buildChart(metric, stream)),
@@ -359,6 +372,7 @@ class _ReadingsPageViewState extends _ReadingsState {
       ),
     ),
     onTapDown:(v) => setState(() {
+      animate = false;
       if (v.localPosition.dy < 350) {
         scrollLocked = true;
       } else {
@@ -368,7 +382,7 @@ class _ReadingsPageViewState extends _ReadingsState {
   );
 
   Widget _buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(fromReadingsStream(metric, stream),
-      animate: true,
+      animate: animate,
       primaryMeasureAxis: charts.NumericAxisSpec(
           showAxisLine: false,
           renderSpec: charts.GridlineRendererSpec(
