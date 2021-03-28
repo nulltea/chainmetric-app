@@ -8,12 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:tuple/tuple.dart';
 
 const READINGS_CHANNEL = "chainmetric.app.blockchain-native-sdk/contracts/readings";
+const READINGS_EVENTS_CHANNEL = "chainmetric.app.blockchain-native-sdk/events/readings";
 
 typedef void ReadingsListener(MetricReadingPoint point);
 typedef void CancelReadingsListening();
 
 class ReadingsController {
   static final _readingsContract = MethodChannel(READINGS_CHANNEL);
+  static final _readingsEvents = EventChannel(READINGS_EVENTS_CHANNEL);
 
   static Future<MetricReadings> getReadings(String assetID) async {
     try {
@@ -52,6 +54,14 @@ class ReadingsController {
     }
 
     return null;
+  }
+
+  static Future<CancelReadingsListening> subscribeToStream(String assetID, String metric, ReadingsListener listener) async {
+    var subscription = _readingsEvents.receiveBroadcastStream().listen((eventArtifact) {
+      listener(JsonMapper.deserialize<MetricReadingPoint>(eventArtifact));
+    }, cancelOnError: true);
+
+    return () => subscription.cancel();
   }
 
   static void _unmarshalReadings(Tuple2<String, SendPort> args) async {

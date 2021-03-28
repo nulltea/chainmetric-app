@@ -2,7 +2,6 @@ package sdk
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 	"github.com/pkg/errors"
@@ -35,8 +34,13 @@ func (rc *ReadingsContract) ForMetric(assetID, metric string) (string, error) {
 }
 
 func (rc *ReadingsContract) RequestEventEmittingFor(assetID, metric string) (string, error) {
-	cancelToken, err := rc.contract.SubmitTransaction("RequestEventEmittingFor", assetID, metric)
-	return string(cancelToken), errors.Wrap(err, "failed executing 'RequestEventEmittingFor' transaction")
+	eventToken, err := rc.contract.SubmitTransaction("RequestEventEmittingFor", assetID, metric)
+	return string(eventToken), errors.Wrap(err, "failed executing 'RequestEventEmittingFor' transaction")
+}
+
+func (rc *ReadingsContract) CancelEventEmitting(eventToken string) error {
+	_, err := rc.contract.SubmitTransaction("CancelEventEmitting", eventToken)
+	return errors.Wrap(err, "failed executing 'RequestEventEmittingFor' transaction")
 }
 
 func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel, error) {
@@ -44,13 +48,20 @@ func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel,
 		channel = NewEventsChannel()
 	)
 
-	reg, notifier, err := rc.contract.RegisterEvent(fmt.Sprintf("readings.posted.%s.%s", assetID, metric))
+	eventToken, err := rc.RequestEventEmittingFor(assetID, metric); if err != nil {
+		return nil, err
+	}
+
+	reg, notifier, err := rc.contract.RegisterEvent(eventToken)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed executing 'SubscribeFor' transaction")
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-	channel.SetCancel(cancel)
+	channel.SetCancel(func() {
+		cancel()
+		rc.CancelEventEmitting(eventToken)
+	})
 
 	go func() {
 		defer rc.contract.Unregister(reg)
