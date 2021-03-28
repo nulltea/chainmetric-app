@@ -306,7 +306,7 @@ class _ReadingsPageViewState extends _ReadingsState {
     itemCount: readings.streams?.length ?? 0,
     itemBuilder: _pagerBuilder,
     onPageChanged: _onPageChanged,
-      physics: scrollLocked ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics()
+    physics: scrollLocked ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
   );
 
   Widget _pagerBuilder(BuildContext context, int index) {
@@ -482,18 +482,27 @@ class _ReadingsPageViewState extends _ReadingsState {
     );
 
   void _onPageChanged(int page) {
-    setState(() {
-      currentPage = page;
-      animate = true;
-    });
     var metric = readings.streams.entries.elementAt(page).key;
+
+    // Updating current page for displaying metric name as title
+    setStateWithAnimate(() => currentPage = page);
+
     ReadingsController.getStream(widget.asset.id, metric.metric)
-        .then((value) => setState(() {
-          animate = false;
+        .then((value) => setStateWithAnimate(() {
           readings.streams[metric] = value;
-          print("stream for ${metric.name} updated with ${value.length} points");
-        }));
+        }, animate: false));
+
+    ReadingsController.subscribeToStream(widget.asset.id, metric.metric, (point) {
+      setStateWithAnimate(() {
+        readings.streams[metric].add(point);
+      }, animate: false);
+    });
   }
+
+  void setStateWithAnimate(void Function() setter, {bool animate = true}) => setState(() {
+      this.animate = animate;
+      setter();
+    });
 
   bool _isActiveStream(Metric metric) => DateTime.now().difference(readings.streams[metric].last.timestamp).inSeconds < widget.requirements.period * 3;
 

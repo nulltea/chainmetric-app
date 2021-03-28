@@ -1,9 +1,11 @@
 package chainmetric.app
 
+import android.util.Log
 import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ReadingsEventsHandler : EventChannel.StreamHandler {
@@ -19,7 +21,9 @@ class ReadingsEventsHandler : EventChannel.StreamHandler {
                     val channel = blockchainSDK.readings.subscribeFor(assetID, metric)
                     channels[event] = channel
                     channel.setHandler {
-                        artifact -> events.success(artifact)
+                        artifact -> CoroutineScope(Dispatchers.Main).launch {
+                            events.success(artifact)
+                        }
                     }
                 }
                 else -> throw IllegalStateException("Event '$eventName' unsupported")

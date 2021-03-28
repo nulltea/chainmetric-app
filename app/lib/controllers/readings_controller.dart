@@ -57,9 +57,11 @@ class ReadingsController {
   }
 
   static Future<CancelReadingsListening> subscribeToStream(String assetID, String metric, ReadingsListener listener) async {
-    var subscription = _readingsEvents.receiveBroadcastStream().listen((eventArtifact) {
+    var subscription = _readingsEvents
+        .receiveBroadcastStream("posted.$assetID.$metric")
+        .listen((eventArtifact) {
       listener(JsonMapper.deserialize<MetricReadingPoint>(eventArtifact));
-    }, cancelOnError: true);
+    }, cancelOnError: false);
 
     return () => subscription.cancel();
   }

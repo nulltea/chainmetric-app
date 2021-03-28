@@ -52,8 +52,7 @@ func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel,
 		return nil, err
 	}
 
-	reg, notifier, err := rc.contract.RegisterEvent(eventToken)
-	if err != nil {
+	reg, notifier, err := rc.contract.RegisterEvent(eventToken); if err != nil {
 		return nil, errors.Wrap(err, "failed executing 'SubscribeFor' transaction")
 	}
 
