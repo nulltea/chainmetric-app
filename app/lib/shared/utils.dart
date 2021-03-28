@@ -60,6 +60,4 @@ class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {
 
   @override
   Duration get transitionDuration => Duration(milliseconds: duration);
-
-
 }

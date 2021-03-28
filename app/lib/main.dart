@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 
 
 void main() {
-  _initJson();
+  initJson();
 
   runApp(App());
 }
@@ -108,7 +108,7 @@ class _AppState extends State<App> {
   }
 }
 
-void _initJson() {
+void initJson() {
   initializeReflectable();
   JsonMapper().useAdapter(JsonMapperAdapter(
       valueDecorators: {

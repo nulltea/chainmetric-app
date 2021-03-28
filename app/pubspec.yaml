@@ -22,6 +22,7 @@ dependencies:
   loading_animations: ^2.1.0
   flutter_svg: ^0.19.3
   charts_flutter: ^0.10.0
+  tuple: any
 
 dev_dependencies:
   flutter_test:

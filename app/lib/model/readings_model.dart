@@ -13,10 +13,12 @@ class MetricReadings {
   @JsonProperty(name: "streams")
   Map<String, List<MetricReadingPoint>> streamsRaw;
 
-  Map<Metric, MetricReadingsStream> get streams =>
-      _streams ??= streamsRaw?.map((key, value) => MapEntry(
+  @JsonProperty(ignore: true)
+  Map<Metric, MetricReadingsStream> get streams => References.metricsMap != null
+      ? _streams ??= streamsRaw?.map((key, value) => MapEntry(
           References.metricsMap[key],
-          MetricReadingsStream.from(streamsRaw[key])));
+          MetricReadingsStream.from(streamsRaw[key])))
+      : null;
   Map<Metric, MetricReadingsStream> _streams;
 }
 
@@ -27,6 +29,13 @@ class MetricReadingPoint {
   String location;
   DateTime timestamp;
   num value;
+  num get valueRounded => roundValue(value, 2);
+
+  static num roundValue(num value, int places) {
+    if (value is int) return value;
+    double mod = pow(10.0, places);
+    return ((value * mod).round().toDouble() / mod);
+  }
 }
 
 class MetricReadingsStream extends ListBase<MetricReadingPoint> with MetricReadingPoint {
@@ -39,23 +48,23 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint> with MetricReadi
   List<num> get _values => _list.map((p) => p.value).toList();
 
   num get firstValue => isNotEmpty
-      ? _roundDouble(first.value, 2)
+      ? MetricReadingPoint.roundValue(first.value, 2)
       : 0;
 
   num get lastValue => isNotEmpty
-      ? _roundDouble(last.value, 2)
+      ? MetricReadingPoint.roundValue(last.value, 2)
       : 0;
 
   num get maxValue => isNotEmpty
-      ? _roundDouble(_values.reduce(max), 2)
+      ? MetricReadingPoint.roundValue(_values.reduce(max), 2)
       : 0;
 
   num get minValue => isNotEmpty
-      ? _roundDouble(_values.reduce(min), 2)
+      ? MetricReadingPoint.roundValue(_values.reduce(min), 2)
       : 0;
 
   num get avgValue => isNotEmpty
-      ? _roundDouble(_values.reduce((a, b) => a + b) / length, 2)
+      ? MetricReadingPoint.roundValue(_values.reduce((a, b) => a + b) / length, 2)
       : 0;
 
   num complianceIndexFor(Requirement requirement) => isNotEmpty
@@ -71,11 +80,7 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint> with MetricReadi
     _list = from;
   }
 
-  num _roundDouble(num value, int places) {
-    if (value is int) return value;
-    double mod = pow(10.0, places);
-    return ((value * mod).round().toDouble() / mod);
-  }
+
 
   bool _meetRequirement(num value, Requirement requirement) =>
       requirement.minLimit <= value && value <= requirement.maxLimit;

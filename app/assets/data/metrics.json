@@ -9,7 +9,7 @@
     "name": "Humidity",
     "metric": "hdt",
     "unit": "% RH",
-    "icon": "0xe8d0"
+    "icon": "humidity"
   },
   {
     "name": "Luminosity",
