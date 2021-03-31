@@ -10,35 +10,35 @@
 
 _**Chainmetric Client Application**_ provides a convenient visual user interface for interacting, managing, and monitoring assets stored on permissioned IoR-enabled blockchain as a part of supply-chain control needs.
 
-Cross-platform application written with the help of Flutter framework provides a way to input assets to the ledger, assign requirements of storing and delivering such assets, monitoring environmental metric readings sourced by [IoT sensor-equipped devices][chainmetric sensorsys repo] and validated by [blockchain network's][chainmetric network repo] [Smart Contracts][chainmetric contracts repo].
+A cross-platform application written with the help of the Flutter framework provides a way to input assets to the ledger, assign requirements of storing and delivering such assets, monitoring environmental metric readings sourced by [IoT sensor-equipped devices][chainmetric sensorsys repo] and validated by [blockchain network's][chainmetric network repo] [Smart Contracts][chainmetric contracts repo].
 
 [![screenshots]][this repo]
 
 ## Tradeoff
 
-Chainmetric application is written using [Flutter][flutter] UI development framework, which provides a convenient way of crafting fast user experiences for mobile, web, and desktop from a single codebase. It's programming language [Dart][dart] has a build in support for [declarative UI][declarative ui] and its massive widget catalog makes Flutter a pretty hot alternative to native mobile development and other hybrid frameworks like React Native or Ionic Angular.
+Chainmetric application is written using the [Flutter][flutter] UI development framework, which provides a convenient way of crafting fast user experiences for mobile, web, and desktop from a single codebase. Its programming language [Dart][dart] has build-in support for [declarative UI][declarative ui] and its massive widget catalog makes Flutter a pretty hot alternative to native mobile development and other hybrid frameworks like React Native or Ionic Angular.
 
-However, Flutter is still a young technology and it's dedicated programming language may not have alternatives for some packages that may be crucial for project. And that is exactly the tradeoff with Chainmetric project, since its blockchain network is build upon [Hyperledger Fabric][hyperledger fabric] stack, which currently does not support client SDK for Dart (only [Go][fabric sdk go], [Python][fabric sdk py], [NodeJS][fabric sdk node], and [Java][fabric sdk java]).
+However, Flutter is still a young technology and its dedicated programming language may not have alternatives for some packages that may be crucial for the project. And that is exactly the tradeoff with the Chainmetric project since its blockchain network is built upon [Hyperledger Fabric][hyperledger fabric] stack, which currently does not support client SDK for Dart (only [Go][fabric sdk go], [Python][fabric sdk py], [NodeJS][fabric sdk node], and [Java][fabric sdk java]).
 
-So, the available options here is to skip Flutter in favor of native development, try use JS-based frameworks like React Native, or even implement own SDK on Dart, which actually is not that complicated, since foremost it uses common gRPC protocols communication.
+So, the available options here are to skip Flutter in favor of native development, try to use JS-based frameworks like React Native, or even implement own SDK on Dart, which actually is not that complicated, since foremost it uses common gRPC protocols communication.
 
-Thankfully, there is one more option which happens to be ideal for this project, which implies in binding Golang-written SDK using [`gomobile`][gomobile] utility to mobile native languages, which this case are Kotlin for Android, and Swift for iOS, and then use call this native functionality from Dart codebase using [Method Channel][method channel]. Even thought this approach seems too complicated at the first glance, it it actually pretty straightforward and works just fine.
+Thankfully, there is one more option that happens to be ideal for this project, which implies binding Golang-written SDK using [`gomobile`][gomobile] utility to mobile native languages, which this case are Kotlin for Android, and Swift for iOS, and then use call this native functionality from Dart codebase using [Method Channel][method channel]. Even though this approach seems too complicated at the first glance, it is actually pretty straightforward and works just fine.
 
 ## Streaming
 
-The one ambitious feature of current application is too reactively stream environmental metric readings posted on blockchain by sensors-equipped IoT devices, while such data is validated by on-chain [Smart Contracts][chainmetric contracts repo] against previously assigned requirements.
+The one ambitious feature of the Chainmetric application is to reactively stream environmental metric readings posted on blockchain by sensors-equipped IoT devices, while such data is validated by on-chain [Smart Contracts][chainmetric contracts repo] against previously assigned requirements.
 
-The implementation of such feature requires th combination of Flutter's [Event Channel][event channel] with carefully choreographed event emitters and listeners on each level of system:
+The implementation of such feature requires the combination of Flutter's [Event Channel][event channel] with carefully choreographed event emitters and listeners throughout each level of the system:
 
 [![diagram]][this repo]
 
 ## Requirements
 
-- Just a mobile phone and cryptographic credentials to access network
+- Just a mobile phone and cryptographic credentials to access the network
 
 ## Wrap up
 
-Chainmetric application implementation manages to connect [modern UI rendering engine][flutter] and [enterprise-grade permissioned blockchain][hyperledger fabric] by utilizing Golang cross-platform capabilities. Such approach allowed to quickly create decent-looking user interface which is truly reactive to changes in the [blockchain network][chainmetric network repo] and allows to made them in any place at any time.
+Chainmetric application implementation manages to connect [modern UI rendering engine][flutter] and [enterprise-grade permissioned blockchain][hyperledger fabric] by utilizing Golang cross-platform capabilities. Such an approach allowed to quickly create a decent-looking user interface that is truly reactive to changes in the [blockchain network][chainmetric network repo] and allows to make them in any place at any time.
 
 ## License
 
