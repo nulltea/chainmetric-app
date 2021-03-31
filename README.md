@@ -36,6 +36,14 @@ The implementation of such feature requires the combination of Flutter's [Event 
 
 - Just a mobile phone and cryptographic credentials to access the network
 
+## Roadmap
+
+- Asset view page
+- Device view page
+- User profile tab
+- Home dashboard tab
+- Metric requirements violation notifications
+
 ## Wrap up
 
 Chainmetric application implementation manages to connect [modern UI rendering engine][flutter] and [enterprise-grade permissioned blockchain][hyperledger fabric] by utilizing Golang cross-platform capabilities. Such an approach allowed to quickly create a decent-looking user interface that is truly reactive to changes in the [blockchain network][chainmetric network repo] and allows to make them in any place at any time.
