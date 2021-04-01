@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/model/asset_model.dart';
@@ -57,7 +58,7 @@ abstract class _ReadingsState extends State<ReadingsPage> {
     if (widget.readings != null) {
       this.readings = widget.readings;
     } else {
-      refreshData();
+      SchedulerBinding.instance.addPostFrameCallback((_) => refreshData() );
     }
 
     if (widget.devices != null) {
@@ -281,6 +282,13 @@ class _ReadingsPageViewState extends _ReadingsState {
   int currentPage;
   bool scrollLocked = false;
   bool animate = true;
+  var streamListeners = Map<Metric, CancelReadingsListening>();
+
+  @override
+  void initState() {
+    super.initState();
+    _onPageChanged(widget.pageIndex);
+  }
 
   @override
   Widget build(context) => Scaffold(
@@ -297,6 +305,12 @@ class _ReadingsPageViewState extends _ReadingsState {
       ),
       body: _chartsPageView(context)
     );
+
+  @override
+  void dispose() {
+    super.dispose();
+    streamListeners.forEach((_, cancel) => cancel());
+  }
 
   Widget _chartsPageView(BuildContext context) => PageView.builder(
     controller: PageController(
@@ -487,16 +501,20 @@ class _ReadingsPageViewState extends _ReadingsState {
     // Updating current page for displaying metric name as title
     setStateWithAnimate(() => currentPage = page);
 
-    ReadingsController.getStream(widget.asset.id, metric.metric)
-        .then((value) => setStateWithAnimate(() {
-          readings.streams[metric] = value;
-        }, animate: false));
+    if (!streamListeners.containsKey(metric)) {
+      ReadingsController.getStream(widget.asset.id, metric.metric)
+          .then((value) =>
+          setStateWithAnimate(() {
+            readings.streams[metric] = value;
+          }, animate: false));
 
-    ReadingsController.subscribeToStream(widget.asset.id, metric.metric, (point) {
-      setStateWithAnimate(() {
-        readings.streams[metric].add(point);
-      }, animate: false);
-    });
+      ReadingsController.subscribeToStream(
+          widget.asset.id, metric.metric, (point) {
+        setStateWithAnimate(() {
+          readings.streams[metric].add(point);
+        }, animate: false);
+      }).then((cancel) => streamListeners[metric] = cancel);
+    }
   }
 
   void setStateWithAnimate(void Function() setter, {bool animate = true}) => setState(() {
@@ -504,7 +522,7 @@ class _ReadingsPageViewState extends _ReadingsState {
       setter();
     });
 
-  bool _isActiveStream(Metric metric) => DateTime.now().difference(readings.streams[metric].last.timestamp).inSeconds < widget.requirements.period * 3;
+  bool _isActiveStream(Metric metric) => DateTime.now().difference(readings.streams[metric].last.timestamp).inSeconds < max(widget.requirements.period * 3, 60);
 
   String _currentPageTitle() =>
       readings.streams.entries.elementAt(currentPage ?? widget.pageIndex).key.name;

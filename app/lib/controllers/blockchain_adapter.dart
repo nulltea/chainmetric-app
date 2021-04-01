@@ -136,7 +136,6 @@ peers:
             tr8Xq7o+qSaD2WwasHfCi9N2fyCWtO03PCAIGwaNxMoCIQCJmnypJJPgKNL25qa6
             RD9K+IGYhEbmgaNX7BARW2DKgg==
             -----END CERTIFICATE-----
-
     grpcOptions:
       ssl-target-name-override: peer0.supplier.iotchain.network
       hostnameOverride: peer0.supplier.iotchain.network

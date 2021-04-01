@@ -5,6 +5,7 @@ import 'package:chainmetric/main.dart';
 import 'package:chainmetric/model/readings_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/services.dart';
+import 'package:streams_channel/streams_channel.dart';
 import 'package:tuple/tuple.dart';
 
 const READINGS_CHANNEL = "chainmetric.app.blockchain-native-sdk/contracts/readings";
@@ -15,7 +16,7 @@ typedef void CancelReadingsListening();
 
 class ReadingsController {
   static final _readingsContract = MethodChannel(READINGS_CHANNEL);
-  static final _readingsEvents = EventChannel(READINGS_EVENTS_CHANNEL);
+  static final _readingsEvents = StreamsChannel(READINGS_EVENTS_CHANNEL);
 
   static Future<MetricReadings> getReadings(String assetID) async {
     try {

@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 class ReadingsEventsHandler : EventChannel.StreamHandler {
     private val channels = mutableMapOf<String, sdk.EventChannel>()
 
-    override fun onListen(event: Any?, events: EventChannel.EventSink) {
+    override fun onListen(event: Any?, events: EventChannel.EventSink?) {
         CoroutineScope(Dispatchers.IO).launch {
             val args = (event as String).split(".")
             when (val eventName = args[0]) {
@@ -22,7 +22,7 @@ class ReadingsEventsHandler : EventChannel.StreamHandler {
                     channels[event] = channel
                     channel.setHandler {
                         artifact -> CoroutineScope(Dispatchers.Main).launch {
-                            events.success(artifact)
+                            events?.success(artifact)
                         }
                     }
                 }
@@ -32,6 +32,8 @@ class ReadingsEventsHandler : EventChannel.StreamHandler {
     }
 
     override fun onCancel(event: Any?) {
-        channels[event]?.cancel()
+        CoroutineScope(Dispatchers.IO).launch {
+            channels[event]?.cancel()
+        }
     }
 }

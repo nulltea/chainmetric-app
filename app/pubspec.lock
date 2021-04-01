@@ -597,6 +597,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  streams_channel:
+    dependency: "direct main"
+    description:
+      name: streams_channel
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3"
   string_scanner:
     dependency: transitive
     description:
