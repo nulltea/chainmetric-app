@@ -111,6 +111,11 @@ abstract class _ReadingsState extends State<ReadingsPage> {
         end: stream.last.timestamp
     );
   }
+
+  @protected
+  charts.NumericExtents measureViewport(MetricReadingsStream stream) {
+    return charts.NumericExtents(((stream.minValue / 10).floor() * 10) - 10, ((stream.maxValue / 10).ceil() * 10) + 10);
+  }
 }
 
 class _ReadingsListViewState extends _ReadingsState {
@@ -428,6 +433,7 @@ class _ReadingsPageViewState extends _ReadingsState {
         animate: animate,
         primaryMeasureAxis: charts.NumericAxisSpec(
             showAxisLine: false,
+            viewport: measureViewport(stream),
             renderSpec: charts.GridlineRendererSpec(
               labelStyle: charts.TextStyleSpec(
                 fontSize: 10,
@@ -472,8 +478,8 @@ class _ReadingsPageViewState extends _ReadingsState {
           ),
           charts.RangeAnnotation([
             charts.RangeAnnotationSegment(
-                requirements[metric.metric].minLimit,
-                requirements[metric.metric].maxLimit,
+                max(requirements[metric.metric].minLimit, measureViewport(stream).min),
+                min(requirements[metric.metric].maxLimit, measureViewport(stream).max),
                 charts.RangeAnnotationAxisType.measure,
                 startLabel: "Min (${requirements[metric.metric].minLimit}${metric.unit})",
                 endLabel: "Max (${requirements[metric.metric].maxLimit}${metric.unit})",
