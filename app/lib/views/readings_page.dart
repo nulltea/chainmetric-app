@@ -16,7 +16,8 @@ import 'package:chainmetric/model/device_model.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports
 import 'package:charts_flutter/src/text_style.dart' as style; // ignore: implementation_imports
-import 'package:charts_common/src/chart/common/canvas_shapes.dart'; // ignore: implementation_imports
+import 'package:charts_common/src/chart/common/canvas_shapes.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // ignore: implementation_imports
 
 const VIEWPORT_POINTS = 25;
 
@@ -288,6 +289,7 @@ class _ReadingsPageViewState extends _ReadingsState {
   bool scrollLocked = false;
   bool animate = true;
   var streamListeners = Map<Metric, CancelReadingsListening>();
+  PageController _controller;
 
   @override
   void initState() {
@@ -308,7 +310,23 @@ class _ReadingsPageViewState extends _ReadingsState {
             onPressed: () => Navigator.of(context).pop()
         ),
       ),
-      body: _chartsPageView(context)
+      body: _chartsPageView(context),
+    bottomNavigationBar: Container(
+      height: 25,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: SmoothPageIndicator(
+            controller: _controller,
+            count: readings.streams?.length ?? 0,
+            effect: ExpandingDotsEffect(
+              dotColor: Theme.of(context).cardColor,
+              activeDotColor: Theme.of(context).accentColor,
+              dotHeight: 14,
+              dotWidth: 14,
+            )
+        ),
+      ),
+    ),
     );
 
   @override
@@ -318,9 +336,9 @@ class _ReadingsPageViewState extends _ReadingsState {
   }
 
   Widget _chartsPageView(BuildContext context) => PageView.builder(
-    controller: PageController(
-      initialPage: widget.pageIndex,
-      viewportFraction: 0.93
+    controller: _controller = PageController(
+        initialPage: widget.pageIndex,
+        viewportFraction: 0.93
     ),
     itemCount: readings.streams?.length ?? 0,
     itemBuilder: _pagerBuilder,
@@ -338,6 +356,7 @@ class _ReadingsPageViewState extends _ReadingsState {
   Widget _chartPage(Metric metric, MetricReadingsStream stream) => GestureDetector(
       child: Card(
         elevation: 5,
+        margin: EdgeInsets.only(left: 4, right: 4, bottom: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
