@@ -62,5 +62,9 @@
   "blo": {
     "min_limit": 88,
     "max_limit": 100
+  },
+  "vbr": {
+    "min_limit": 0,
+    "max_limit": 10
   }
 }

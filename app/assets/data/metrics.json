@@ -100,5 +100,11 @@
     "metric": "nse",
     "unit": " dBA",
     "icon": "0xead1"
+  },
+  {
+    "name": "Vibration",
+    "metric": "vbr",
+    "unit": " Hz",
+    "icon": "0xead1"
   }
 ]
