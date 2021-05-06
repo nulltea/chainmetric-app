@@ -9,6 +9,7 @@ import 'package:chainmetric/views/device_form.dart';
 
 import 'components/modal_menu.dart';
 import 'components/navigation_tab.dart';
+import 'device_pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
   DevicesTab({GlobalKey key}) : super(key: key ?? GlobalKey());
@@ -129,6 +130,14 @@ class _DevicesTabState extends State<DevicesTab> {
           icon: Icons.phonelink_setup,
           action: () => openPage(
               context, DeviceForm(model: device),
+              then: _refreshData
+          )
+      ),
+      ModalMenuOption(
+          title: "Pair device",
+          icon: Icons.bluetooth_searching,
+          action: () => openPage(
+              context, DevicePairing(),
               then: _refreshData
           )
       ),
