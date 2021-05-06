@@ -124,6 +124,16 @@ void initJson() {
         typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value),
         typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
         typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList()),
-      })
+      },
+    enumValues: {
+        DeviceCommand: EnumDescriptor(
+            values: DeviceCommand.values,
+            mapping: <DeviceCommand, String>{
+              DeviceCommand.Pause: "pause",
+              DeviceCommand.Resume: "resume",
+              DeviceCommand.PairBluetooth: "ble_pair"
+            }
+        ),
+    })
   );
 }

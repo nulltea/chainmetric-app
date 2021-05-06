@@ -20,6 +20,11 @@ class DevicesController {
     return Blockchain.trySubmitTransaction("devices", "Register", jsonData);
   }
 
+  static Future<bool> sendCommand(String device, DeviceCommand cmd) {
+    var jsonData = JsonMapper.serialize(device);
+    return Blockchain.trySubmitTransaction("devices", "Register", jsonData);
+  }
+
   static Future<bool> unbindDevice(String id) {
     return Blockchain.trySubmitTransaction("devices", "Unbind", id);
   }

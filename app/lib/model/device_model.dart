@@ -17,7 +17,10 @@ class Device {
   String state;
   String location;
 
+
+  @JsonProperty(ignore: true)
   String get stateView => state?.toSentenceCase() ?? "Unknown";
+  @JsonProperty(ignore: true)
   Icon get stateIcon {
     switch (state) {
       case "online":
@@ -48,4 +51,13 @@ class DeviceProfile {
     }
     return Color(int.parse("FF$hexCode", radix: 16));
   }
+}
+
+@jsonSerializable
+enum DeviceCommand {
+  @JsonValue
+  Pause,
+
+  Resume,
+  PairBluetooth
 }
