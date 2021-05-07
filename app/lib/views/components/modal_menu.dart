@@ -43,7 +43,7 @@ class ModalMenuOption extends StatelessWidget {
   };
 }
 
-void showModalMenu({BuildContext context, List<ModalMenuOption> options}) {
+void showModalMenu({@required BuildContext context, @required List<ModalMenuOption> options}) {
   OverlayScreen().show(context, identifier: "modal");
   showMaterialModalBottomSheet(
     context: context,
@@ -57,5 +57,20 @@ void showModalMenu({BuildContext context, List<ModalMenuOption> options}) {
             children: options.where((o) => o.enabled).toList(),
           ),
         )),
+  ).whenComplete(dismissOverlay);
+}
+
+void showOverlayPage({
+  @required BuildContext context,
+  @required Widget Function(BuildContext) builder
+}) {
+  OverlayScreen().show(context, identifier: "modal");
+  showMaterialModalBottomSheet(
+    context: context,
+    backgroundColor: Theme.of(context).primaryColor.withAlpha(0),
+    builder: builder,
+    expand: true,
+    enableDrag: false,
+    isDismissible: false
   ).whenComplete(dismissOverlay);
 }

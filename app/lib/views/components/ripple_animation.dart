@@ -75,15 +75,7 @@ class _RipplesState extends State<Ripples> with TickerProviderStateMixin {
     return Center(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(widget.size),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: RadialGradient(
-              colors: <Color>[
-                widget.color,
-                Color.lerp(widget.color, Colors.black, .05)
-              ],
-            ),
-          ),
+        child: Container(
           child: ScaleTransition(
             scale: Tween(begin: 0.95, end: 1.0).animate(
               CurvedAnimation(
