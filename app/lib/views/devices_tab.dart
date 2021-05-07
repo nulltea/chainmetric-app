@@ -9,6 +9,7 @@ import 'package:chainmetric/views/device_form.dart';
 
 import 'components/modal_menu.dart';
 import 'components/navigation_tab.dart';
+import 'device_pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
   DevicesTab({GlobalKey key}) : super(key: key ?? GlobalKey());
@@ -133,6 +134,11 @@ class _DevicesTabState extends State<DevicesTab> {
           )
       ),
       ModalMenuOption(
+          title: "Pair device",
+          icon: Icons.bluetooth_searching,
+          action: () => _startBluetoothPairing(device.id)
+      ),
+      ModalMenuOption(
           title: "Unbind device",
           icon: Icons.link_off,
           action: () => showYesNoDialog(context,
@@ -143,5 +149,9 @@ class _DevicesTabState extends State<DevicesTab> {
             onNo: () => print("close modal"))
       ),
     ]);
+  }
+
+  void _startBluetoothPairing(String deviceID) {
+    showOverlayPage(context: context, builder: (context) => DevicePairing(deviceID));
   }
 }

@@ -9,7 +9,7 @@ class AssetsController {
     String data = await Blockchain.evaluateTransaction(
         "assets", "Query", JsonMapper.serialize(query));
     try {
-      return data.isNotEmpty
+      return data != null && data.isNotEmpty
           ? JsonMapper.deserialize<AssetsResponse>(data)
           : AssetsResponse();
     } on Exception catch (e) {

@@ -452,7 +452,6 @@ class _ReadingsPageViewState extends _ReadingsState {
         animate: animate,
         primaryMeasureAxis: charts.NumericAxisSpec(
             showAxisLine: false,
-            viewport: measureViewport(stream),
             renderSpec: charts.GridlineRendererSpec(
               labelStyle: charts.TextStyleSpec(
                 fontSize: 10,

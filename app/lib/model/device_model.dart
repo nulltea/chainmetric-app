@@ -17,7 +17,10 @@ class Device {
   String state;
   String location;
 
+
+  @JsonProperty(ignore: true)
   String get stateView => state?.toSentenceCase() ?? "Unknown";
+  @JsonProperty(ignore: true)
   Icon get stateIcon {
     switch (state) {
       case "online":
@@ -48,4 +51,39 @@ class DeviceProfile {
     }
     return Color(int.parse("FF$hexCode", radix: 16));
   }
+}
+
+@jsonSerializable
+class DeviceCommandRequest {
+  @JsonProperty(name: "device_id")
+  String deviceID;
+  DeviceCommand command;
+  List<Object> args;
+
+  DeviceCommandRequest(this.deviceID, this.command, {this.args});
+}
+
+@jsonSerializable
+class DeviceCommandLogEntry {
+  @JsonProperty(name: "device_id")
+  String deviceID;
+  DeviceCommand command;
+  List<Object> args;
+  DeviceCommandStatus status;
+  String error;
+  DateTime timestamp;
+}
+
+@jsonSerializable
+enum DeviceCommand {
+  pause,
+  resume,
+  pairBluetooth
+}
+
+@jsonSerializable
+enum DeviceCommandStatus {
+  completed,
+  processing,
+  failed
 }

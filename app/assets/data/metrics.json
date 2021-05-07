@@ -72,6 +72,12 @@
     "icon": "tvoc"
   },
   {
+    "name": "Air quality (LPG)",
+    "metric": "lpg",
+    "unit": " ppm",
+    "icon": "tvoc"
+  },
+  {
     "name": "Acceleration (G)",
     "metric": "axg",
     "unit": " G",
