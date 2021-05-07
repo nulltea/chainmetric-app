@@ -54,10 +54,36 @@ class DeviceProfile {
 }
 
 @jsonSerializable
-enum DeviceCommand {
-  @JsonValue
-  Pause,
+class DeviceCommandRequest {
+  @JsonProperty(name: "device_id")
+  String deviceID;
+  DeviceCommand command;
+  List<Object> args;
 
-  Resume,
-  PairBluetooth
+  DeviceCommandRequest(this.deviceID, this.command, {this.args});
+}
+
+@jsonSerializable
+class DeviceCommandLogEntry {
+  @JsonProperty(name: "device_id")
+  String deviceID;
+  DeviceCommand command;
+  List<Object> args;
+  DeviceCommandStatus status;
+  String error;
+  DateTime timestamp;
+}
+
+@jsonSerializable
+enum DeviceCommand {
+  pause,
+  resume,
+  pairBluetooth
+}
+
+@jsonSerializable
+enum DeviceCommandStatus {
+  completed,
+  processing,
+  failed
 }
