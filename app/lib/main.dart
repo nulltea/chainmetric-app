@@ -3,8 +3,11 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:chainmetric/model/device_model.dart';
 import 'package:chainmetric/model/metric_model.dart';
 import 'package:chainmetric/model/requirements_model.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
+import 'package:yaml/yaml.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 import 'controllers/references_adapter.dart';
 import 'main.reflectable.dart';
@@ -18,9 +21,8 @@ import 'views/main_page.dart';
 import 'package:flutter/material.dart';
 
 
-void main() {
-  initJson();
-
+void main() async {
+  init();
   runApp(App());
 }
 
@@ -38,6 +40,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    _initConfig();
     _initBackend();
     _initOverlay();
   }
@@ -90,6 +93,16 @@ class _AppState extends State<App> {
     setState(() => _requireAuth = _isLoading = false);
   }
 
+  Future _initConfig() async {
+    YamlMap yaml = loadYaml(
+        await rootBundle.loadString("assets/config.yaml")
+    );
+
+    GlobalConfiguration().loadFromMap(
+        Map<String, dynamic>.fromIterable(yaml.keys, key: (key) => key, value: (key) => yaml[key])
+    );
+  }
+
   void _initOverlay() {
     OverlayScreen().saveScreens({
       "modal": CustomOverlayScreen(
@@ -106,6 +119,10 @@ class _AppState extends State<App> {
       ),
     });
   }
+}
+
+void init() {
+  initJson();
 }
 
 void initJson() {

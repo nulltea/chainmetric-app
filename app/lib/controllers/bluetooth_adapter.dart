@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:global_configuration/global_configuration.dart';
 
 class Bluetooth {
   static final FlutterBlue _bluetooth = FlutterBlue.instance;
@@ -26,7 +27,7 @@ class Bluetooth {
     StreamSubscription scanSub;
 
     scanSub = _bluetooth.scan(
-        //withServices: [Guid("F8AE4978-5AAB-46C3-A8CB-127F347EAA01")]
+        withServices: [Guid(GlobalConfiguration().getValue("device_bluetooth_service_uuid"))]
     ).listen((result) {
       if (result.device.name.contains("chainmetric")) {
         onPair(result.device);
