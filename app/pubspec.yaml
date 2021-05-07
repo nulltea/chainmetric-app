@@ -26,6 +26,7 @@ dependencies:
   charts_flutter: ^0.10.0
   streams_channel: ^0.2.3
   smooth_page_indicator: ^0.2.3
+  rect_getter: 0.0.1
 
 dev_dependencies:
   flutter_test:

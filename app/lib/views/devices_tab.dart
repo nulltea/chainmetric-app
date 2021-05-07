@@ -136,10 +136,7 @@ class _DevicesTabState extends State<DevicesTab> {
       ModalMenuOption(
           title: "Pair device",
           icon: Icons.bluetooth_searching,
-          action: () => openPage(
-              context, DevicePairing(),
-              then: _refreshData
-          )
+          action: () => _startBluetoothPairing(device.id)
       ),
       ModalMenuOption(
           title: "Unbind device",
@@ -152,5 +149,9 @@ class _DevicesTabState extends State<DevicesTab> {
             onNo: () => print("close modal"))
       ),
     ]);
+  }
+
+  void _startBluetoothPairing(String deviceID) {
+    showOverlayPage(context: context, builder: (context) => DevicePairing(deviceID));
   }
 }

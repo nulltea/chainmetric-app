@@ -60,6 +60,8 @@ class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {
 
   @override
   Duration get transitionDuration => Duration(milliseconds: duration);
-
-
 }
+
+Function decorateWithDelay(Function func, Duration duration) => () {
+  Future.delayed(duration, func);
+};
