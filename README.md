@@ -8,7 +8,7 @@
 
 ## Overview
 
-_**Chainmetric Client Application**_ provides a convenient visual user interface for interacting, managing, and monitoring assets stored on permissioned IoR-enabled blockchain as a part of supply-chain control needs.
+_**Chainmetric Client Application**_ provides a convenient visual user interface for interacting, managing, and monitoring assets stored on permissioned IoT-enabled blockchain as a part of supply-chain control needs.
 
 A cross-platform application written with the help of the Flutter framework provides a way to input assets to the ledger, assign requirements of storing and delivering such assets, monitoring environmental metric readings sourced by [IoT sensor-equipped devices][chainmetric sensorsys repo] and validated by [blockchain network's][chainmetric network repo] [Smart Contracts][chainmetric contracts repo].
 
@@ -38,11 +38,12 @@ The implementation of such feature requires the combination of Flutter's [Event 
 
 ## Roadmap
 
-- Asset view page
-- Device view page
-- User profile tab
-- Home dashboard tab
-- Metric requirements violation notifications
+- [ ] Device Bluetooth pairing and further GPS location tethering
+- [ ] Asset view page
+- [ ] Device view page
+- [ ] User profile tab
+- [ ] Home dashboard tab
+- [ ] Metric requirements violation notifications
 
 ## Wrap up
 
