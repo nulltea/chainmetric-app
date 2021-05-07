@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/assets_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
@@ -138,12 +139,12 @@ class _AssetFormState extends State<AssetForm> {
                                       color: Theme.of(context).hintColor,
                                       fontSize: 16)),
                               Row(children: [
-                                NumberPicker.horizontal(
-                                  initialValue: asset.amount ?? 1,
+                                NumberPicker(
+                                  axis: Axis.horizontal,
+                                  value: asset.amount ?? 1,
                                   minValue: 1,
                                   maxValue: 100,
                                   haptics: true,
-                                  highlightSelectedValue: true,
                                   onChanged: (value) =>
                                       setState(() => asset.amount = value),
                                 )
