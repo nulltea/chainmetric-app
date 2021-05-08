@@ -26,9 +26,7 @@ class Bluetooth {
   static Function scanDevices(String deviceID, {@required Function(BluetoothDevice) onPair}) {
     StreamSubscription scanSub;
 
-    scanSub = _bluetooth.scan(
-        withServices: [Guid(GlobalConfiguration().getValue("device_bluetooth_service_uuid"))]
-    ).listen((result) {
+    scanSub = _bluetooth.scan().listen((result) {
       if (result.device.name.contains("chainmetric")) {
         onPair(result.device);
         _bluetooth.stopScan();

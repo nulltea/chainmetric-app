@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:chainmetric/model/readings_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:chainmetric/model/device_model.dart';
@@ -7,7 +8,6 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 import 'package:yaml/yaml.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 import 'controllers/references_adapter.dart';
 import 'main.reflectable.dart';
@@ -34,8 +34,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   bool _requireAuth = true;
   bool _isLoading = true;
-
-  ThemeData _defaultDarkTheme = ThemeData.dark();
 
   @override
   void initState() {

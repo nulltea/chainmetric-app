@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
+import 'package:chainmetric/controllers/gps_adapter.dart';
 import 'package:chainmetric/model/device_model.dart';
 import 'package:chainmetric/shared/utils.dart';
 import 'package:chainmetric/views/components/ripple_animation.dart';
@@ -203,7 +204,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
     if (ok) {
       Future.delayed(Duration(milliseconds: 500), () {
         setState(() {
-          _messageSize = 25;
+          _messageSize = 22;
           _message = "Scanning devices nearby";
         });
         _initBluetooth();
@@ -212,25 +213,26 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   }
 
   void _initBluetooth() {
-    _cancelBluetooth = Bluetooth.init(onReady: _scanForDevice, onDisabled: () => print("Bluetooth is disabled"));
+    _cancelBluetooth = Bluetooth.init(
+        onReady: _scanForDevice,
+        onDisabled: () => print("Bluetooth is disabled")
+    );
   }
 
   void _scanForDevice() {
     _cancelBluetooth = Bluetooth.scanDevices(widget.deviceID, onPair: (device) {
-      Future.delayed(Duration(milliseconds: 1000), () async {
-        _displayDevice(device);
-        setState(() => _message = "Pairing with ${device.name}");
-        _pairWithDevice(device);
-      });
+      _displayDevice(device);
+      setState(() => _message = "Pairing with ${device.name}");
+      _pairWithDevice(device);
     });
   }
 
-  void _pairWithDevice(BluetoothDevice device) {
-    Future.delayed(Duration(milliseconds: 1000), () async {
-      await device.connect();
-      setState(() => _message = "Paired! Almost there");
-      _showCompleteView(device);
-    });
+  void _pairWithDevice(BluetoothDevice device) async {
+    await device.connect();
+    setState(() => _message = "Paired! Sending your GPS location");
+
+    await GeoService.postLocation(device);
+    _showCompleteView(device);
   }
 
   void _displayDevice(BluetoothDevice device) {
