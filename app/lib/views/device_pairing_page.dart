@@ -5,16 +5,16 @@ import 'package:chainmetric/controllers/bluetooth_adapter.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/controllers/gps_adapter.dart';
 import 'package:chainmetric/model/device_model.dart';
-import 'package:chainmetric/shared/utils.dart';
 import 'package:chainmetric/views/components/ripple_animation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 import 'components/jumping_dots_indicator.dart';
 
 class DevicePairing extends StatefulWidget {
   final String deviceID;
+  final completeAnimation = Duration(milliseconds: 800);
 
   DevicePairing(this.deviceID);
 
@@ -23,21 +23,26 @@ class DevicePairing extends StatefulWidget {
 }
 
 class _DevicePairingState extends State<DevicePairing> with TickerProviderStateMixin  {
+  DiscoveredDevice _device;
+
+  String _message = "Getting things ready";
+  double _messageSize = 25.0;
+
+  bool _deviceFound = false;
+  double _deviceProximityX = 150;
+  double _deviceProximityY = 250;
+
+  Rect _rect;
+  GlobalKey _rectGetterKey = RectGetter.createGlobalKey();
+
   AnimationController _controllerScan;
   Animation _animationScan;
   AnimationController _controllerDevice;
   Animation _animationDevice;
   Path _path;
-  String _message = "Getting things ready";
-  double _messageSize = 25.0;
-  bool _deviceFound = false;
-  double _deviceProximityX = 150;
-  double _deviceProximityY = 250;
-  Function _cancelBluetooth;
-  Rect _rect;
-  GlobalKey _rectGetterKey = RectGetter.createGlobalKey();
-  Duration _completeAnimation = Duration(milliseconds: 800);
-  BluetoothDevice _device;
+
+  Function _cancelScan;
+
 
   @override
   void initState() {
@@ -47,6 +52,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
         vsync: this,
         duration: Duration(milliseconds: 5000)
     );
+
     _animationScan = Tween(begin: 0.0, end: 1.0).animate(_controllerScan)
       ..addListener(() {
         setState(() {});
@@ -54,6 +60,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
           _controllerScan.repeat();
         }
       });
+
     _controllerScan.forward();
     _path  = _drawPath();
 
@@ -134,7 +141,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
       return Container();
     }
     return AnimatedPositioned(
-      duration: _completeAnimation,
+      duration: widget.completeAnimation,
       left: _rect.left,
       right: MediaQuery.of(context).size.width - _rect.right,
       top: _rect.top,
@@ -207,35 +214,31 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
           _messageSize = 22;
           _message = "Scanning devices nearby";
         });
-        _initBluetooth();
+
+        Bluetooth.init(
+          onReady: _scanForDevice,
+        );
       });
     }
   }
 
-  void _initBluetooth() {
-    _cancelBluetooth = Bluetooth.init(
-        onReady: _scanForDevice,
-        onDisabled: () => print("Bluetooth is disabled")
-    );
-  }
-
   void _scanForDevice() {
-    _cancelBluetooth = Bluetooth.scanDevices(widget.deviceID, onPair: (device) {
+    _cancelScan = Bluetooth.discoverDevice(widget.deviceID, onFound: (device) {
       _displayDevice(device);
       setState(() => _message = "Pairing with ${device.name}");
       _pairWithDevice(device);
     });
   }
 
-  void _pairWithDevice(BluetoothDevice device) async {
-    await device.connect();
-    setState(() => _message = "Paired! Sending your GPS location");
-
-    await GeoService.postLocation(device);
-    _showCompleteView(device);
+  void _pairWithDevice(DiscoveredDevice device) {
+    Bluetooth.connectToDevice(device.id, onConnect: (deviceID) async {
+      setState(() => _message = "Paired! Sending your GPS location");
+      await GeoService.postLocation(deviceID);
+      _showCompleteView(device);
+    });
   }
 
-  void _displayDevice(BluetoothDevice device) {
+  void _displayDevice(DiscoveredDevice device) {
     var rand = Random(DateTime.now().millisecond);
     setState(() {
       _deviceProximityX = ((rand.nextBool() ? 1 : -1) * (100 + rand.nextInt(200))).toDouble();
@@ -244,11 +247,12 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
     });
   }
 
-  void _showCompleteView(BluetoothDevice device) {
+  void _showCompleteView(DiscoveredDevice device) {
     _controllerDevice = AnimationController(
         vsync: this,
-        duration: _completeAnimation
+        duration: widget.completeAnimation
     );
+
     _animationDevice = Tween(begin: 0.0, end: 100.0).animate(_controllerDevice)
       ..addListener(() {
         setState(() {
@@ -257,11 +261,14 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
           }
         });
       });
+
     setState(() => _rect = RectGetter.getRectFromKey(_rectGetterKey));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controllerDevice.forward();
       setState(() => _rect = _rect.inflate(MediaQuery.of(context).size.longestSide));
     });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _rect = Rect.fromLTWH(
@@ -294,8 +301,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   void dispose() {
     _controllerScan.dispose();
     _controllerDevice?.dispose();
-    _cancelBluetooth();
-    _device?.disconnect();
+    _cancelScan();
     super.dispose();
   }
 }

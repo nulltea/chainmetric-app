@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chainmetric/model/location_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/shared/extensions.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
@@ -15,7 +16,7 @@ class Device {
   List<String> supports = <String>[];
   String holder;
   String state;
-  String location;
+  Location location;
 
 
   @JsonProperty(ignore: true)

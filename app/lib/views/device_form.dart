@@ -207,23 +207,6 @@ class _DeviceFormState extends State<DeviceForm> {
                             setState(() => device.holder = value);
                           },
                         ),
-                        TextFormField(
-                          initialValue: device.location,
-                          decoration: InputDecoration(
-                            filled: true,
-                            hintText: "Enter the device location",
-                            labelText: "Location",
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please specify the device location";
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() => device.location = value);
-                          },
-                        ),
                         SizedBox(
                             width: double.infinity,
                             height: 45,
@@ -315,7 +298,6 @@ class _DeviceFormState extends State<DeviceForm> {
           dev = _parseQRCode(scanData.code);
           dev.name = dev.hostname;
           dev.profile = "common";
-          dev.location = "warehouse"; // TODO: location determination via GPS
           dev.holder = "supplierMSP"; // TODO: holder determination via user identity
         } on QRScanException catch (e) {
           setState(() {

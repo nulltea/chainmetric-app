@@ -15,7 +15,7 @@ dependencies:
   streams_channel: ^0.2.3
   global_configuration: 2.0.0-nullsafety.1
   yaml: ^3.1.0
-  flutter_blue: ^0.8.0
+  flutter_reactive_ble: ^3.1.0
   geolocator: ^7.0.3
   geocoding: ^2.0.0
   path_provider: ^2.0.1
