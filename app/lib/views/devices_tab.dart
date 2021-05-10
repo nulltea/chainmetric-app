@@ -1,4 +1,5 @@
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
+import 'package:chainmetric/controllers/gps_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/model/device_model.dart';
@@ -132,7 +133,18 @@ class _DevicesTabState extends State<DevicesTab> {
               ? "Pair device"
               : "Forget device",
           icon: Icons.bluetooth_searching,
-          action: () => _startBluetoothPairing(device.id)
+          action: () => !Bluetooth.isPaired(device.id)
+              ? _startBluetoothPairing(device.id)
+              : showYesNoDialog(context,
+              title: "Forget ${device.name}",
+              message: "This action will unpair the device from your phone. Are you sure?",
+              onYes: () => Bluetooth.forgetDevice(device.id)
+          )
+      ),
+      if (Bluetooth.isPaired(device.id)) ModalMenuOption(
+            title: "Share location",
+            icon: Icons.my_location,
+            action: decorateWithLoading(context, () => GeoService.postLocation(device.id))
       ),
       ModalMenuOption(
           title: "Unbind device",
@@ -141,8 +153,9 @@ class _DevicesTabState extends State<DevicesTab> {
             title: "Unbind ${device.name}",
             message: "This action will reset the device and remove it from the network. Are you sure?",
             onYes: decorateWithLoading(context, () => DevicesController.unbindDevice(device.id)
-                .whenComplete(_refreshData)),
-            onNo: () => print("close modal"))
+                .whenComplete(_refreshData)
+            )
+          )
       ),
     ]);
   }

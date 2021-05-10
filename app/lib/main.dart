@@ -1,3 +1,6 @@
+import 'package:chainmetric/controllers/bluetooth_adapter.dart';
+import 'package:chainmetric/controllers/gps_adapter.dart';
+import 'package:chainmetric/controllers/preferences_adapter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:chainmetric/model/readings_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
@@ -38,7 +41,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    _initConfig();
+    initConfig();
     _initBackend();
     _initOverlay();
   }
@@ -80,7 +83,8 @@ class _AppState extends State<App> {
     );
   }
 
-  Future _initBackend() async {
+  Future<void> _initBackend() async {
+    await Preferences.init();
     await References.init();
     await Blockchain.initWallet();
     if (await Blockchain.authRequired()) {
@@ -89,16 +93,8 @@ class _AppState extends State<App> {
     }
     await Blockchain.initConnection("supply-channel");
     setState(() => _requireAuth = _isLoading = false);
-  }
 
-  Future _initConfig() async {
-    YamlMap yaml = loadYaml(
-        await rootBundle.loadString("assets/config.yaml")
-    );
-
-    GlobalConfiguration().loadFromMap(
-        Map<String, dynamic>.fromIterable(yaml.keys, key: (key) => key, value: (key) => yaml[key])
-    );
+    await Bluetooth.init();
   }
 
   void _initOverlay() {
@@ -123,6 +119,16 @@ void init() {
   initJson();
 }
 
+Future<void> initConfig() async {
+  YamlMap yaml = loadYaml(
+      await rootBundle.loadString("assets/config.yaml")
+  );
+
+  GlobalConfiguration().loadFromMap(
+  Map<String, dynamic>.fromIterable(yaml.keys, key: (key) => key, value: (key) => yaml[key])
+  );
+}
+
 void initJson() {
   initializeReflectable();
   JsonMapper().useAdapter(JsonMapperAdapter(
@@ -140,6 +146,7 @@ void initJson() {
         typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
         typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList()),
         typeOf<List<DeviceCommandLogEntry>>(): (value) => value.cast<DeviceCommandLogEntry>(),
+        typeOf<Map<String, PairedDevice>>(): (value) => Map<String, PairedDevice>.from(value),
       },
     enumValues: {
         DeviceCommand: EnumDescriptor(

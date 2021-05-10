@@ -41,7 +41,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   Animation _animationDevice;
   Path _path;
 
-  Function _cancelScan;
+  Function _cancelScan = () {};
 
 
   @override
@@ -215,9 +215,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
           _message = "Scanning devices nearby";
         });
 
-        Bluetooth.init(
-          onReady: _scanForDevice,
-        );
+        _scanForDevice();
       });
     }
   }
@@ -231,9 +229,9 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   }
 
   void _pairWithDevice(DiscoveredDevice device) {
-    Bluetooth.connectToDevice(device.id, onConnect: (deviceID) async {
+    Bluetooth.connectToDevice(widget.deviceID, onConnect: (_) async {
       setState(() => _message = "Paired! Sending your GPS location");
-      await GeoService.postLocation(deviceID);
+      await GeoService.postLocation(widget.deviceID);
       _showCompleteView(device);
     });
   }

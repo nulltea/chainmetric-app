@@ -31,6 +31,7 @@ Future showYesNoDialog(BuildContext context, {
 
 void loading(BuildContext context) => OverlayScreen().show(context, identifier: "loading");
 
+/// Wraps function `fn` in loading
 Function decorateWithLoading(BuildContext context, Future Function() fn) => () {
   loading(context);
   fn().whenComplete(dismissOverlay);

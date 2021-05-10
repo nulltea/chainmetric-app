@@ -88,3 +88,11 @@ enum DeviceCommandStatus {
   processing,
   failed
 }
+
+@jsonSerializable
+class PairedDevice {
+  String hardwareID;
+  String deviceID;
+  String advertisedName;
+  @JsonProperty(ignore: true) int rssi;
+}

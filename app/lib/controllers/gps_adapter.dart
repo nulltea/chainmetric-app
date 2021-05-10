@@ -1,11 +1,20 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
+import 'package:chainmetric/controllers/preferences_adapter.dart';
+import 'package:chainmetric/main.dart';
+import 'package:chainmetric/model/device_model.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:global_configuration/global_configuration.dart';
+
+import 'devices_controller.dart';
 
 class GeoService {
   static final serviceUUID = Uuid.parse(
@@ -31,20 +40,29 @@ class GeoService {
   ];
 
   static Future<void> postLocation(String deviceID) async {
+    var hardwareID = Bluetooth.getHardwareID(deviceID);
+
+    if (!Bluetooth.isConnected(deviceID)) {
+      if (await DevicesController.sendCommand(deviceID, DeviceCommand.pairBluetooth)) {
+        Bluetooth.connectToDevice(deviceID, onConnect: postLocation);
+      }
+      return;
+    }
+
     var eastCoordinateChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
         characteristicId: eastCoordinateUUID,
-        deviceId: deviceID
+        deviceId: hardwareID
     );
     var northCoordinateChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
         characteristicId: northCoordinateUUID,
-        deviceId: deviceID
+        deviceId: hardwareID
     );
     var locationNameChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
         characteristicId: locationNameUUID,
-        deviceId: deviceID
+        deviceId: hardwareID
     );
 
     var position = await Geolocator.getCurrentPosition(
@@ -72,5 +90,26 @@ class GeoService {
     await Bluetooth.driver.writeCharacteristicWithoutResponse(
         locationNameChar, value: locationNamePayload
     );
+  }
+
+  static void startActivelyShareLocation() {
+    FlutterIsolate.spawn(tryShareLocation, null);
+  }
+
+  static void tryShareLocation(Map<String, PairedDevice> devices) async {
+    initJson();
+    await Preferences.init();
+    await Bluetooth.init();
+    await initConfig();
+
+    Timer.periodic(Duration(minutes: 1), (t) {
+      Bluetooth.pairedDevices.forEach((deviceID, info) {
+        if (!Bluetooth.isConnected(deviceID)) {
+          Bluetooth.connectToDevice(deviceID, onConnect: postLocation);
+          return;
+        }
+        postLocation(info.hardwareID);
+      });
+    });
   }
 }
