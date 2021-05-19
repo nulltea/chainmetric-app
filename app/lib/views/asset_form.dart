@@ -7,6 +7,8 @@ import 'package:chainmetric/shared/utils.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/widgets/place_picker.dart';
 
 class AssetForm extends StatefulWidget {
   final Asset model;
@@ -186,23 +188,24 @@ class _AssetFormState extends State<AssetForm> {
                             setState(() => asset.holder = value);
                           },
                         ),
-                        TextFormField(
-                          initialValue: asset.location,
-                          decoration: InputDecoration(
-                            filled: true,
-                            hintText: "Enter the device location",
-                            labelText: "Location",
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please specify the device location";
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() => asset.location = value);
-                          },
-                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: _showLocationPicker,
+                            style: ElevatedButton.styleFrom(
+                              primary: Theme.of(context).buttonTheme.colorScheme.secondary.withOpacity(0.5),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.location_pin),
+                                SizedBox(width: 5),
+                                Text("Pick location",
+                                    style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                        )),
                         Container(
                           child: Column(
                             children: [
@@ -210,7 +213,7 @@ class _AssetFormState extends State<AssetForm> {
                                   initialValue: asset.tags.join(' '),
                                   decoration: InputDecoration(
                                     filled: true,
-                                    hintText: "Separate tags with Space",
+                                    hintText: "Separate tags with [space]",
                                     labelText: "Tags",
                                   ),
                                   validator: (value) {
@@ -283,5 +286,15 @@ class _AssetFormState extends State<AssetForm> {
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
+  }
+
+  Future<void> _showLocationPicker() async {
+    LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            PlacePicker("AIzaSyBtxi-PqZ_p9H3XlLAX_81881KLl1qAGHo",
+            )));
+
+    // Handle the result in your way
+    print(result);
   }
 }

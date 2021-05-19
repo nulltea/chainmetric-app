@@ -34,6 +34,7 @@ dependencies:
   charts_flutter: ^0.10.0
   smooth_page_indicator: ^0.2.3
   rect_getter: 0.0.1
+  place_picker: ^0.9.19-nullsafety
 
 dev_dependencies:
   flutter_test:
