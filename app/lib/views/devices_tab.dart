@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:chainmetric/controllers/bluetooth_adapter.dart';
+import 'package:chainmetric/controllers/gps_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/model/device_model.dart';
 import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/shared/extensions.dart';
 import 'package:chainmetric/views/components/svg_icon.dart';
 import 'package:chainmetric/views/device_form.dart';
 
@@ -121,11 +121,6 @@ class _DevicesTabState extends State<DevicesTab> {
   void _showDeviceMenu(BuildContext context, Device device) {
     showModalMenu(context: context, options: [
       ModalMenuOption(
-          title: "Transfer device",
-          icon: Icons.local_shipping,
-          action: () => print("Transfer asset")
-      ),
-      ModalMenuOption(
           title: "Configure device",
           icon: Icons.phonelink_setup,
           action: () => openPage(
@@ -134,9 +129,22 @@ class _DevicesTabState extends State<DevicesTab> {
           )
       ),
       ModalMenuOption(
-          title: "Pair device",
+          title: !Bluetooth.isPaired(device.id)
+              ? "Pair device"
+              : "Forget device",
           icon: Icons.bluetooth_searching,
-          action: () => _startBluetoothPairing(device.id)
+          action: () => !Bluetooth.isPaired(device.id)
+              ? _startBluetoothPairing(device.id)
+              : showYesNoDialog(context,
+              title: "Forget ${device.name}",
+              message: "This action will unpair the device from your phone. Are you sure?",
+              onYes: () => Bluetooth.forgetDevice(device.id)
+          )
+      ),
+      if (Bluetooth.isPaired(device.id)) ModalMenuOption(
+            title: "Share location",
+            icon: Icons.my_location,
+            action: decorateWithLoading(context, () => GeoService.postLocation(device.id))
       ),
       ModalMenuOption(
           title: "Unbind device",
@@ -145,8 +153,9 @@ class _DevicesTabState extends State<DevicesTab> {
             title: "Unbind ${device.name}",
             message: "This action will reset the device and remove it from the network. Are you sure?",
             onYes: decorateWithLoading(context, () => DevicesController.unbindDevice(device.id)
-                .whenComplete(_refreshData)),
-            onNo: () => print("close modal"))
+                .whenComplete(_refreshData)
+            )
+          )
       ),
     ]);
   }

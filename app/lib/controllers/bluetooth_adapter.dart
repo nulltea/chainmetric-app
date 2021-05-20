@@ -1,43 +1,89 @@
 import 'dart:async';
 
+import 'package:chainmetric/controllers/preferences_adapter.dart';
+import 'package:chainmetric/model/device_model.dart';
+import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+
+import 'gps_adapter.dart';
+
+typedef void DeviceDisconnectFunc();
 
 class Bluetooth {
-  static final FlutterBlue _bluetooth = FlutterBlue.instance;
+  static final driver = FlutterReactiveBle();
+  static final connectionTimeout = Duration(seconds: 15);
 
-  static Function init({Function onDisabled, Function onReady}) {
-    StreamSubscription stateSub;
+  static Map<String, PairedDevice> pairedDevices = {};
+  static Map<String, DeviceDisconnectFunc> connectedDevices = {};
 
-    stateSub = _bluetooth.state.listen((state) {
-      if (state == BluetoothState.off) {
-        onDisabled();
-      } else if (state == BluetoothState.on) {
-        onReady();
-        stateSub.cancel();
+  static Future<void> init() {
+    pairedDevices = Preferences.getPairedDevices();
+    return driver.initialize();
+  }
+
+  static Function discoverDevice(String deviceID, {@required Function(DiscoveredDevice) onFound}) {
+    StreamSubscription sub;
+
+    sub = driver.scanForDevices(
+        withServices: [  ]
+    ).listen((device) {
+      if (device.name.contains("chainmetric")) {
+        sub.cancel();
+        if (!pairedDevices.containsKey(deviceID)) {
+          pairedDevices[deviceID] = PairedDevice()
+            ..deviceID = deviceID
+            ..hardwareID=device.id
+            ..advertisedName=device.name
+            ..rssi=device.rssi;
+
+          Preferences.setPairedDevices(pairedDevices);
+        }
+        onFound(device);
       }
     });
 
-    return stateSub.cancel;
+    return sub.cancel;
   }
 
+  static Function connectToDevice(String deviceID, {@required Function(String) onConnect}) {
+    StreamSubscription sub;
+    bool triggered = false;
 
-  static Function scanDevices(String deviceID, {@required Function(BluetoothDevice) onPair}) {
-    StreamSubscription scanSub;
+    assert(isPaired(deviceID), "device was never paired yet");
+    assert(!isConnected(deviceID), "device is already connected");
 
-    scanSub = _bluetooth.scan(
-        //withServices: [Guid("F8AE4978-5AAB-46C3-A8CB-127F347EAA01")]
-    ).listen((result) {
-      if (result.device.name.contains("chainmetric")) {
-        onPair(result.device);
-        _bluetooth.stopScan();
-        scanSub.cancel();
+    sub = driver.connectToDevice(
+        id: pairedDevices[deviceID].hardwareID,
+        connectionTimeout: connectionTimeout,
+        servicesWithCharacteristicsToDiscover: {
+          GeoService.serviceUUID: GeoService.characteristicUUIDs
+        }
+    ).listen((event) {
+      print(event);
+      if (event.connectionState == DeviceConnectionState.connected && !triggered) {
+        triggered = true;
+        connectedDevices[deviceID] = sub.cancel;
+
+        onConnect(deviceID);
       }
     });
 
-    return () {
-      _bluetooth.stopScan();
-      scanSub.cancel();
-    };
+    return sub.cancel;
   }
+
+  static Future<void> forgetDevice(String deviceID) async {
+    if (isConnected(deviceID)) connectedDevices[deviceID]();
+    pairedDevices.remove(deviceID);
+    Preferences.setPairedDevices(pairedDevices);
+  }
+
+  static String getHardwareID(String deviceID) {
+    assert(isPaired(deviceID), "device was never paired yet");
+    return pairedDevices[deviceID].hardwareID;
+  }
+
+  static bool isPaired(String deviceID) => pairedDevices.containsKey(deviceID);
+
+  static bool isConnected(String deviceID) => connectedDevices.containsKey(deviceID);
 }

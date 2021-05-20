@@ -1,10 +1,16 @@
+import 'package:chainmetric/controllers/bluetooth_adapter.dart';
+import 'package:chainmetric/controllers/gps_adapter.dart';
+import 'package:chainmetric/controllers/preferences_adapter.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:chainmetric/model/readings_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:chainmetric/model/device_model.dart';
 import 'package:chainmetric/model/metric_model.dart';
 import 'package:chainmetric/model/requirements_model.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
+import 'package:yaml/yaml.dart';
 
 import 'controllers/references_adapter.dart';
 import 'main.reflectable.dart';
@@ -18,9 +24,8 @@ import 'views/main_page.dart';
 import 'package:flutter/material.dart';
 
 
-void main() {
-  initJson();
-
+void main() async {
+  init();
   runApp(App());
 }
 
@@ -33,11 +38,10 @@ class _AppState extends State<App> {
   bool _requireAuth = true;
   bool _isLoading = true;
 
-  ThemeData _defaultDarkTheme = ThemeData.dark();
-
   @override
   void initState() {
     super.initState();
+    initConfig();
     _initBackend();
     _initOverlay();
   }
@@ -79,7 +83,8 @@ class _AppState extends State<App> {
     );
   }
 
-  Future _initBackend() async {
+  Future<void> _initBackend() async {
+    await Preferences.init();
     await References.init();
     await Blockchain.initWallet();
     if (await Blockchain.authRequired()) {
@@ -88,6 +93,8 @@ class _AppState extends State<App> {
     }
     await Blockchain.initConnection("supply-channel");
     setState(() => _requireAuth = _isLoading = false);
+
+    await Bluetooth.init();
   }
 
   void _initOverlay() {
@@ -108,6 +115,20 @@ class _AppState extends State<App> {
   }
 }
 
+void init() {
+  initJson();
+}
+
+Future<void> initConfig() async {
+  YamlMap yaml = loadYaml(
+      await rootBundle.loadString("assets/config.yaml")
+  );
+
+  GlobalConfiguration().loadFromMap(
+  Map<String, dynamic>.fromIterable(yaml.keys, key: (key) => key, value: (key) => yaml[key])
+  );
+}
+
 void initJson() {
   initializeReflectable();
   JsonMapper().useAdapter(JsonMapperAdapter(
@@ -125,6 +146,7 @@ void initJson() {
         typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
         typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList()),
         typeOf<List<DeviceCommandLogEntry>>(): (value) => value.cast<DeviceCommandLogEntry>(),
+        typeOf<Map<String, PairedDevice>>(): (value) => Map<String, PairedDevice>.from(value),
       },
     enumValues: {
         DeviceCommand: EnumDescriptor(

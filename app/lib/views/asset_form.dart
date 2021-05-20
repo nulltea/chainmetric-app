@@ -1,11 +1,16 @@
+import 'package:chainmetric/model/location_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/assets_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:chainmetric/model/asset_model.dart';
 import 'package:chainmetric/shared/utils.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/widgets/place_picker.dart';
 
 class AssetForm extends StatefulWidget {
   final Asset model;
@@ -108,7 +113,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         TextFormField(
-                          initialValue: asset.cost.toString(),
+                          initialValue: (asset.cost ?? 0.0).toString(),
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an cost",
@@ -122,7 +127,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                            setState(() => asset.cost = num.parse(value));
+                            setState(() => asset.cost = num.tryParse(value) ?? 0);
                           },
                         ),
                         Container(
@@ -138,12 +143,12 @@ class _AssetFormState extends State<AssetForm> {
                                       color: Theme.of(context).hintColor,
                                       fontSize: 16)),
                               Row(children: [
-                                NumberPicker.horizontal(
-                                  initialValue: asset.amount ?? 1,
+                                NumberPicker(
+                                  axis: Axis.horizontal,
+                                  value: asset.amount ?? 1,
                                   minValue: 1,
                                   maxValue: 100,
                                   haptics: true,
-                                  highlightSelectedValue: true,
                                   onChanged: (value) =>
                                       setState(() => asset.amount = value),
                                 )
@@ -185,23 +190,24 @@ class _AssetFormState extends State<AssetForm> {
                             setState(() => asset.holder = value);
                           },
                         ),
-                        TextFormField(
-                          initialValue: asset.location,
-                          decoration: InputDecoration(
-                            filled: true,
-                            hintText: "Enter the device location",
-                            labelText: "Location",
-                          ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return "Please specify the device location";
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() => asset.location = value);
-                          },
-                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: _showLocationPicker,
+                            style: ElevatedButton.styleFrom(
+                              primary: Theme.of(context).buttonTheme.colorScheme.secondary.withOpacity(0.5),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.location_pin),
+                                SizedBox(width: 5),
+                                Text("Pick location",
+                                    style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                        )),
                         Container(
                           child: Column(
                             children: [
@@ -209,7 +215,7 @@ class _AssetFormState extends State<AssetForm> {
                                   initialValue: asset.tags.join(' '),
                                   decoration: InputDecoration(
                                     filled: true,
-                                    hintText: "Separate tags with Space",
+                                    hintText: "Separate tags with [space]",
                                     labelText: "Tags",
                                   ),
                                   validator: (value) {
@@ -281,6 +287,24 @@ class _AssetFormState extends State<AssetForm> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
+    }
+  }
+
+  Future<void> _showLocationPicker() async {
+    LocationResult result = await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) =>
+            PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
+            )
+        )
+    );
+
+    if (result != null) {
+      setState(() {
+        asset.location = Location()
+          ..latitude = result.latLng.latitude
+          ..longitude = result.latLng.longitude
+          ..name = result.name;
+      });
     }
   }
 }
