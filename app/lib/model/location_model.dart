@@ -2,7 +2,7 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 @jsonSerializable
 class Location {
-  double latitude;
-  double longitude;
+  num latitude;
+  num longitude;
   String name;
 }
