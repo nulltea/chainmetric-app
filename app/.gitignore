@@ -46,3 +46,9 @@ app.*.map.json
 /android/app/release
 
 lib/main.reflectable.dart
+
+# Environmental variables
+**/.env
+
+# Main config file
+assets/config.yaml

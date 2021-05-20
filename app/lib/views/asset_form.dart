@@ -4,6 +4,7 @@ import 'package:chainmetric/controllers/assets_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:chainmetric/model/asset_model.dart';
 import 'package:chainmetric/shared/utils.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -111,7 +112,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         TextFormField(
-                          initialValue: asset.cost.toString(),
+                          initialValue: (asset.cost ?? 0).toString(),
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an cost",
@@ -291,7 +292,7 @@ class _AssetFormState extends State<AssetForm> {
   Future<void> _showLocationPicker() async {
     LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            PlacePicker("AIzaSyBtxi-PqZ_p9H3XlLAX_81881KLl1qAGHo",
+            PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
             )));
 
     // Handle the result in your way
