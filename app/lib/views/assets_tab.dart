@@ -6,7 +6,6 @@ import 'package:chainmetric/controllers/assets_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:chainmetric/model/asset_model.dart';
 import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/shared/extensions.dart';
 import 'package:chainmetric/views/asset_form.dart';
 import 'package:chainmetric/views/components/modal_menu.dart';
 import 'package:chainmetric/views/requirements_form.dart';
@@ -109,9 +108,10 @@ class _AssetsTabState extends State<AssetsTab> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(Icons.location_on,
-                        color: Theme.of(context).hintColor),
+                        color: Theme.of(context).hintColor
+                    ),
                     SizedBox(width: 5),
-                    Text(asset.location.toSentenceCase(),
+                    Text(asset.location.name,
                         style: TextStyle(color: Theme.of(context).hintColor)
                     )
                   ],

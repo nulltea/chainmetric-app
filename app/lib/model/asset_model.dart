@@ -4,6 +4,8 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/model/requirements_model.dart';
 
+import 'location_model.dart';
+
 @jsonSerializable
 class Asset {
   String id;
@@ -15,7 +17,7 @@ class Asset {
   int amount;
   String holder;
   String state;
-  String location;
+  Location location;
   List<String> tags = <String>[];
 }
 

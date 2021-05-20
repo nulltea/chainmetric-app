@@ -1,3 +1,4 @@
+import 'package:chainmetric/model/location_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/assets_controller.dart';
@@ -112,7 +113,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         TextFormField(
-                          initialValue: (asset.cost ?? 0).toString(),
+                          initialValue: (asset.cost ?? 0.0).toString(),
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an cost",
@@ -126,7 +127,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                            setState(() => asset.cost = num.parse(value));
+                            setState(() => asset.cost = num.tryParse(value) ?? 0);
                           },
                         ),
                         Container(
@@ -290,12 +291,20 @@ class _AssetFormState extends State<AssetForm> {
   }
 
   Future<void> _showLocationPicker() async {
-    LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
+    LocationResult result = await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) =>
             PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
-            )));
+            )
+        )
+    );
 
-    // Handle the result in your way
-    print(result);
+    if (result != null) {
+      setState(() {
+        asset.location = Location()
+          ..latitude = result.latLng.latitude
+          ..longitude = result.latLng.longitude
+          ..name = result.name;
+      });
+    }
   }
 }
