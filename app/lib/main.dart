@@ -67,6 +67,9 @@ class _AppState extends State<App> {
       headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
       bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      fillColor: Color.fromARGB(255, 30, 54, 64),
+    )
   );
 
   @override

@@ -155,7 +155,7 @@ class _AssetsTabState extends State<AssetsTab> {
       ModalMenuOption(
         title: "Revoke requirements",
         icon: Icons.delete_sweep,
-        action: () => decorateWithLoading(context, () => RequirementsController
+        action: decorateWithLoading(context, () => RequirementsController
               .revokeRequirements(asset.requirements.id)
             .whenComplete(_refreshData)),
         enabled: asset.requirements != null,
@@ -189,7 +189,7 @@ class _AssetsTabState extends State<AssetsTab> {
           action: () => showYesNoDialog(context,
               title: "Delete ${asset.sku}",
               message: "Are you sure?",
-              onYes: () => decorateWithLoading(context, () => AssetsController.deleteAsset(asset.id)
+              onYes: decorateWithLoading(context, () => AssetsController.deleteAsset(asset.id)
                   .whenComplete(_refreshData)),
               onNo: () => print("close modal"))
       ),

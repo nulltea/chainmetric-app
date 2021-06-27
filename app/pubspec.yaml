@@ -49,3 +49,4 @@ flutter:
     - assets/data/
     - assets/icons/
     - assets/config.yaml
+    - assets/connection.yaml

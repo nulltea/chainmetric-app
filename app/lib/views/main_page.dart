@@ -43,7 +43,7 @@ class _MainPageState extends State<MainPage> {
         buttonIcon: Icon(Icons.qr_code_scanner, color: Colors.black),
         pageAction: (state) => openPage(
             state.context, DeviceForm(),
-            //then: (state as _MainPageState).currentTab().refreshData
+            then: (state as _MainPageState).currentTab().refreshData
         )
     ),
     NavigationTabItem(
