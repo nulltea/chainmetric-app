@@ -38,7 +38,7 @@ The implementation of such feature requires the combination of Flutter's [Event 
 
 ## Roadmap
 
-- [ ] Device Bluetooth pairing and further GPS location tethering
+- [x] Device Bluetooth pairing and further GPS location tethering [(#2)](https://github.com/timoth-y/chainmetric-app/pull/2)
 - [ ] Asset view page
 - [ ] Device view page
 - [ ] User profile tab
