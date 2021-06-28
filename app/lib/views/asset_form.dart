@@ -113,7 +113,7 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         TextFormField(
-                          initialValue: (asset.cost ?? 0.0).toString(),
+                          initialValue: asset.cost?.toString() ?? "",
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter an cost",
@@ -132,18 +132,22 @@ class _AssetFormState extends State<AssetForm> {
                         ),
                         Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
+                              color: Theme.of(context).inputDecorationTheme.fillColor,
                               boxShadow: kElevationToShadow[1],
                               borderRadius: BorderRadius.circular(2.0),
                             ),
+                            width: double.infinity,
                             padding: EdgeInsets.only(left: 10, top: 10),
                             child: Stack(children: [
                               Text("Amount",
                                   style: TextStyle(
                                       color: Theme.of(context).hintColor,
-                                      fontSize: 16)),
-                              Row(children: [
-                                NumberPicker(
+                                      fontSize: 16
+                                  )
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: NumberPicker(
                                   axis: Axis.horizontal,
                                   value: asset.amount ?? 1,
                                   minValue: 1,
@@ -151,8 +155,8 @@ class _AssetFormState extends State<AssetForm> {
                                   haptics: true,
                                   onChanged: (value) =>
                                       setState(() => asset.amount = value),
-                                )
-                              ], mainAxisAlignment: MainAxisAlignment.center)
+                                ),
+                              )
                             ])),
                         TextFormField(
                           initialValue: asset.info,
@@ -192,18 +196,24 @@ class _AssetFormState extends State<AssetForm> {
                         ),
                         SizedBox(
                           width: double.infinity,
-                          height: 50,
+                          height: 60,
                           child: ElevatedButton(
                             onPressed: _showLocationPicker,
                             style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context).buttonTheme.colorScheme.secondary.withOpacity(0.5),
+                              primary: Theme.of(context).inputDecorationTheme.fillColor,
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.location_pin),
-                                SizedBox(width: 5),
+                                Icon(Icons.location_pin,
+                                    color: Theme.of(context).hintColor,
+                                  size: 26,
+                                ),
+                                SizedBox(width: 10),
                                 Text("Pick location",
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: Theme.of(context).hintColor
+                                    ),
                                 ),
                               ],
                             ),
@@ -284,8 +294,9 @@ class _AssetFormState extends State<AssetForm> {
           Navigator.pop(context);
         }
       } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()))
+        );
       }
     }
   }
@@ -293,7 +304,7 @@ class _AssetFormState extends State<AssetForm> {
   Future<void> _showLocationPicker() async {
     LocationResult result = await Navigator.of(context).push(
         MaterialPageRoute(builder: (context) =>
-            PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
+              PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
             )
         )
     );
@@ -305,6 +316,10 @@ class _AssetFormState extends State<AssetForm> {
           ..longitude = result.latLng.longitude
           ..name = result.name;
       });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Location wasn't picked, please try again"))
+      );
     }
   }
 }

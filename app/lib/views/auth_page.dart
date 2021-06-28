@@ -1,3 +1,4 @@
+import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/blockchain_adapter.dart';
 import 'package:chainmetric/model/auth_model.dart';
@@ -59,10 +60,7 @@ class _AuthPageState extends State<AuthPage> {
                             labelText: "Organization",
                             fillColor: Colors.teal.shade600,
                           ),
-                          items: <Organization>{
-                            Organization(name: "Supplier", mspID: "supplierMSP"),
-                            Organization(name: "Deliverer", mspID: "delivererMSP")
-                          }.map<DropdownMenuItem<String>>(
+                          items: References.organizations.map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,
                                         child: Text(org.name),

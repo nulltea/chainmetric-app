@@ -31,7 +31,8 @@ Future showYesNoDialog(BuildContext context, {
 
 void loading(BuildContext context) => OverlayScreen().show(context, identifier: "loading");
 
-/// Wraps function `fn` in loading
+/// Wraps function `fn` in loading and returns function,
+/// so it's must be used without () => when passing as functor.
 Function decorateWithLoading(BuildContext context, Future Function() fn) => () {
   loading(context);
   fn().whenComplete(dismissOverlay);

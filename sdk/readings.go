@@ -33,14 +33,14 @@ func (rc *ReadingsContract) ForMetric(assetID, metric string) (string, error) {
 	return string(data), errors.Wrap(err, "failed executing 'ForMetric' transaction")
 }
 
-func (rc *ReadingsContract) RequestEventEmittingFor(assetID, metric string) (string, error) {
-	eventToken, err := rc.contract.SubmitTransaction("RequestEventEmittingFor", assetID, metric)
-	return string(eventToken), errors.Wrap(err, "failed executing 'RequestEventEmittingFor' transaction")
+func (rc *ReadingsContract) BindToEventSocket(assetID, metric string) (string, error) {
+	eventToken, err := rc.contract.SubmitTransaction("BindToEventSocket", assetID, metric)
+	return string(eventToken), errors.Wrap(err, "failed executing 'BindToEventSocket' transaction")
 }
 
-func (rc *ReadingsContract) CancelEventEmitting(eventToken string) error {
-	_, err := rc.contract.SubmitTransaction("CancelEventEmitting", eventToken)
-	return errors.Wrap(err, "failed executing 'RequestEventEmittingFor' transaction")
+func (rc *ReadingsContract) CloseEventSocket(eventToken string) error {
+	_, err := rc.contract.SubmitTransaction("CloseEventSocket", eventToken)
+	return errors.Wrap(err, "failed executing 'CloseEventSocket' transaction")
 }
 
 func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel, error) {
@@ -48,7 +48,7 @@ func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel,
 		channel = NewEventsChannel()
 	)
 
-	eventToken, err := rc.RequestEventEmittingFor(assetID, metric); if err != nil {
+	eventToken, err := rc.BindToEventSocket(assetID, metric); if err != nil {
 		return nil, err
 	}
 
@@ -59,7 +59,7 @@ func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel,
 	ctx, cancel := context.WithCancel(context.Background())
 	channel.SetCancel(func() {
 		cancel()
-		rc.CancelEventEmitting(eventToken)
+		rc.CloseEventSocket(eventToken)
 	})
 
 	go func() {

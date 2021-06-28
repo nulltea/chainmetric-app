@@ -298,7 +298,6 @@ class _DeviceFormState extends State<DeviceForm> {
           dev = _parseQRCode(scanData.code);
           dev.name = dev.hostname;
           dev.profile = "common";
-          dev.holder = "supplierMSP"; // TODO: holder determination via user identity
         } on QRScanException catch (e) {
           setState(() {
             scannerTitle = e.problem;
@@ -334,12 +333,6 @@ class _DeviceFormState extends State<DeviceForm> {
     dev.ip = parts[1];
 
     var metrics = parts[2].split(',');
-    if (metrics.isEmpty || metrics.length == 1 && metrics[0].isEmpty) {
-      throw QRScanException(
-        problem: "Device is invalid",
-        cause: "Device must support at least one metric"
-      );
-    }
 
     dev.supports = metrics;
 

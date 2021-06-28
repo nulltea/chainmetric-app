@@ -1,10 +1,14 @@
 [
   {
-    "name": "Supplier",
-    "mspID": "supplierMSP"
+    "name": "Chipa INU",
+    "mspID": "chipa-inu"
   },
   {
-    "name": "Deliverer",
-    "mspID": "delivererMSP"
+    "name": "Blueberry Go",
+    "mspID": "blueberry-go"
+  },
+  {
+    "name": "Moon LAN",
+    "mspID": "moon-lan"
   }
 ]
