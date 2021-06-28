@@ -110,10 +110,23 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                       requirements.metrics
                                           .addEntries(value.map((metric) =>
                                           MapEntry(
-                                              metric,
-                                              References.defaultRequirements[
-                                              metric]))));
+                                              metric, References.defaultRequirements[
+                                              metric]))
+                                      )
+                                  );
                                 },
+                                onConfirm: (selected) => setState(() {
+                                  var toRemoveKeys = <String>[];
+                                  for (var metric in requirements.metrics.keys) {
+                                    if (!selected.contains(metric)) {
+                                      toRemoveKeys.add(metric);
+                                    }
+                                  }
+
+                                  for (var key in toRemoveKeys) {
+                                    requirements.metrics.remove(key);
+                                  }
+                                })
                               ),
                             ],
                           ),
