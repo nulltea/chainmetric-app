@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:chainmetric/model/location_model.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:chainmetric/model/device_model.dart';
 import 'package:chainmetric/shared/exceptions.dart';
 import 'package:chainmetric/shared/utils.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:overlay_screen/overlay_screen.dart';
+import 'package:place_picker/entities/location_result.dart';
+import 'package:place_picker/widgets/place_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class DeviceForm extends StatefulWidget {
@@ -209,6 +213,30 @@ class _DeviceFormState extends State<DeviceForm> {
                         ),
                         SizedBox(
                             width: double.infinity,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: _showLocationPicker,
+                              style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context).inputDecorationTheme.fillColor,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.location_pin,
+                                    color: Theme.of(context).hintColor,
+                                    size: 26,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text("Pick location",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        color: Theme.of(context).hintColor
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                            width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
                               onPressed: decorateWithLoading(context, _submitDevice),
@@ -349,6 +377,28 @@ class _DeviceFormState extends State<DeviceForm> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
+    }
+  }
+
+  Future<void> _showLocationPicker() async {
+    LocationResult result = await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) =>
+            PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
+            )
+        )
+    );
+
+    if (result != null) {
+      setState(() {
+        device.location = Location()
+          ..latitude = result.latLng.latitude
+          ..longitude = result.latLng.longitude
+          ..name = result.name;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Location wasn't picked, please try again"))
+      );
     }
   }
 }
