@@ -49,7 +49,7 @@ Each Chainmetric device is equipped with Bluetooth LE module, so that the phone 
 and perform some local communication, like share GPS location.
 
 <p align="center">
-    <img src="https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.gif?raw=true" alt="chainmetric bluetooth" width="250px"/>
 </p>
 
 [assets screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/asset_management.png?raw=true
