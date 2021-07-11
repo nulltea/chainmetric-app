@@ -35,7 +35,7 @@ are also can be assigned, changed, and revoked without leaving app.
 
 ![assets screens]
 
-#### IoT devices management
+### IoT devices management
 
 IoT devices are essential for Chainmetric solution, they provide continuous flow of sensor reading from where the assets are located.
 
@@ -43,7 +43,7 @@ Application provides extensive functionality to manage such devices, register th
 
 ![devices screens]
 
-### Bluetooth pairing with IoT devices
+### Bluetooth pairing
 
 Each Chainmetric device is equipped with Bluetooth LE module, so that the phone with application can pair with them
 and perform some local communication, like share GPS location.
@@ -52,22 +52,33 @@ and perform some local communication, like share GPS location.
     <img src="https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
 </p>
 
-[assets screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/asset_management.png?raw=true
-[devices screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/device_management.png?raw=true
-[bluetooth screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.png?raw=true
-[bluetooth gif]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.gif?raw=true
+### Environment monitoring
 
-## Streaming
+Once asset is on Chainmetric blockchain ledger, and the requirements assigned to it, you can monitor its surrounding
+environment conditions in real time, verify if those are complied with required conditions, and receive notification whenever violations occurs.
 
-The one ambitious feature of the Chainmetric application is to reactively stream environmental metric readings posted on blockchain by sensors-equipped IoT devices, while such data is validated by on-chain [Smart Contracts][chainmetric contracts repo] against previously assigned requirements.
+<p align="center">
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/readings_streaming.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
+</p>
+
+Environment metric readings from sensors connected to the device are being streamed directly to device,
+while being validated by on-chain [Smart Contracts][chainmetric contracts repo] against previously assigned requirements.
 
 The implementation of such feature requires the combination of Flutter's [Event Channel][event channel] with carefully choreographed event emitters and listeners throughout each level of the system:
 
 [![diagram]][this repo]
 
+[assets screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/asset_management.png?raw=true
+[devices screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/device_management.png?raw=true
+[bluetooth screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.png?raw=true
+[diagram]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/diagram.png?raw=true
+
+
 ## Requirements
 
-- Just a mobile phone and cryptographic credentials to access the network
+- Mobile phone with Android or IOS
+- Connection config, which can be generated via `fabnctl` command line utility
+- Cryptographic credentials to access the network
 
 ## Roadmap
 
@@ -113,8 +124,6 @@ Licensed under the [Apache 2.0][license file].
 [gomobile]: https://github.com/golang/mobile
 [method channel]: https://api.flutter.dev/flutter/services/MethodChannel-class.html
 [event channel]: https://api.flutter.dev/flutter/services/EventChannel-class.html
-
-[diagram]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/diagram.png?raw=true
 
 [chainmetric network repo]: https://github.com/timoth-y/chainmetric-network
 [chainmetric contracts repo]: https://github.com/timoth-y/chainmetric-contracts
