@@ -24,6 +24,39 @@ So, the available options here are to skip Flutter in favor of native developmen
 
 Thankfully, there is one more option that happens to be ideal for this project, which implies binding Golang-written SDK using [`gomobile`][gomobile] utility to mobile native languages, which this case are Kotlin for Android, and Swift for iOS, and then use call this native functionality from Dart codebase using [Method Channel][method channel]. Even though this approach seems too complicated at the first glance, it is actually pretty straightforward and works just fine.
 
+## Features
+
+### Asset and requirements management
+
+Application allows supply chain participants to manage their assets: register them, transfer ownership, view changes history, etc.
+
+Requirements for conditions in which such assets must be stored and transported during supply operations
+are also can be assigned, changed, and revoked without leaving app.
+
+![assets screens]
+
+#### IoT devices management
+
+IoT devices are essential for Chainmetric solution, they provide continuous flow of sensor reading from where the assets are located.
+
+Application provides extensive functionality to manage such devices, register them, monitor their activity, transfer ownership, control and send remote commands.
+
+![devices screens]
+
+### Bluetooth pairing with IoT devices
+
+Each Chainmetric device is equipped with Bluetooth LE module, so that the phone with application can pair with them
+and perform some local communication, like share GPS location.
+
+<p align="center">
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
+</p>
+
+[assets screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/asset_management.png?raw=true
+[devices screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/device_management.png?raw=true
+[bluetooth screens]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.png?raw=true
+[bluetooth gif]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/bluetooth_pairing.gif?raw=true
+
 ## Streaming
 
 The one ambitious feature of the Chainmetric application is to reactively stream environmental metric readings posted on blockchain by sensors-equipped IoT devices, while such data is validated by on-chain [Smart Contracts][chainmetric contracts repo] against previously assigned requirements.
