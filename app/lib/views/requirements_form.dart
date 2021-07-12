@@ -1,8 +1,6 @@
 import 'package:chainmetric/controllers/requirements_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:chainmetric/controllers/blockchain_adapter.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:chainmetric/model/metric_model.dart';
 import 'package:chainmetric/model/requirements_model.dart';

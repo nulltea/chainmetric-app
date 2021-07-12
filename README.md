@@ -24,21 +24,70 @@ So, the available options here are to skip Flutter in favor of native developmen
 
 Thankfully, there is one more option that happens to be ideal for this project, which implies binding Golang-written SDK using [`gomobile`][gomobile] utility to mobile native languages, which this case are Kotlin for Android, and Swift for iOS, and then use call this native functionality from Dart codebase using [Method Channel][method channel]. Even though this approach seems too complicated at the first glance, it is actually pretty straightforward and works just fine.
 
-## Streaming
+## Features
 
-The one ambitious feature of the Chainmetric application is to reactively stream environmental metric readings posted on blockchain by sensors-equipped IoT devices, while such data is validated by on-chain [Smart Contracts][chainmetric contracts repo] against previously assigned requirements.
+### Asset and requirements management
+
+Application allows supply chain participants to manage their assets: register them, transfer ownership, view changes history, etc.
+
+Requirements for conditions in which such assets must be stored and transported during supply operations
+are also can be assigned, changed, and revoked without leaving app.
+
+![assets screens]
+
+### IoT devices management
+
+IoT devices are essential for Chainmetric solution, they provide continuous flow of sensor reading from where the assets are located.
+
+Application provides extensive functionality to manage such devices, register them, monitor their activity, transfer ownership, control and send remote commands.
+
+![devices screens]
+
+### Bluetooth pairing
+
+Each Chainmetric device is equipped with Bluetooth LE module, so that the phone with application can pair with them
+and perform some local communication, like share GPS location.
+
+<p align="center">
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/main/docs/bluetooth_pairing.gif?raw=true" alt="chainmetric bluetooth" width="250px"/>
+</p>
+
+### Environment monitoring
+
+Once asset is on Chainmetric blockchain ledger, and the requirements assigned to it, you can monitor its surrounding
+environment conditions in real time, verify if those are complied with required conditions, and receive notification whenever violations occurs.
+
+<p align="center">
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/main/docs/readings_streaming.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
+</p>
+
+Environment metric readings from sensors connected to the device are being streamed directly to device,
+while being validated by on-chain [Smart Contracts][chainmetric contracts repo] against previously assigned requirements.
 
 The implementation of such feature requires the combination of Flutter's [Event Channel][event channel] with carefully choreographed event emitters and listeners throughout each level of the system:
 
 [![diagram]][this repo]
 
+[assets screens]: https://github.com/timoth-y/chainmetric-app/blob/main/docs/asset_management.png?raw=true
+[devices screens]: https://github.com/timoth-y/chainmetric-app/blob/main/docs/device_management.png?raw=true
+[bluetooth screens]: https://github.com/timoth-y/chainmetric-app/blob/main/docs/bluetooth_pairing.png?raw=true
+[diagram]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/diagram.png?raw=true
+
+
 ## Requirements
 
-- Just a mobile phone and cryptographic credentials to access the network
+- Mobile phone with Android or IOS
+- [Connection config][connection config] which can be generated via [`fabnctl`][fabnctl] command line utility
+- Cryptographic credentials to access the network
+
+[connection config]: https://github.com/timoth-y/chainmetric-app/blob/main/app/assets/connection_template.yaml
+[fabnctl]: https://github.com/timoth-y/fabnctl#bonus-generate-connectionyaml
+
 
 ## Roadmap
 
-- [x] Device Bluetooth pairing and further GPS location tethering [(#2)](https://github.com/timoth-y/chainmetric-app/pull/2)
+- [x] IoT device Bluetooth pairing [(#1)](https://github.com/timoth-y/chainmetric-app/pull/1)
+- [x] GPS location tethering [(#2)](https://github.com/timoth-y/chainmetric-app/pull/2)
 - [ ] Asset view page
 - [ ] Device view page
 - [ ] User profile tab
@@ -80,8 +129,6 @@ Licensed under the [Apache 2.0][license file].
 [gomobile]: https://github.com/golang/mobile
 [method channel]: https://api.flutter.dev/flutter/services/MethodChannel-class.html
 [event channel]: https://api.flutter.dev/flutter/services/EventChannel-class.html
-
-[diagram]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/diagram.png?raw=true
 
 [chainmetric network repo]: https://github.com/timoth-y/chainmetric-network
 [chainmetric contracts repo]: https://github.com/timoth-y/chainmetric-contracts
