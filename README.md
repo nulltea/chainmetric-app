@@ -49,7 +49,7 @@ Each Chainmetric device is equipped with Bluetooth LE module, so that the phone 
 and perform some local communication, like share GPS location.
 
 <p align="center">
-    <img src="https://github.com/timoth-y/chainmetric-app/blob/main/docs/bluetooth_pairing.gif?raw=true" alt="chainmetric bluetooth" width="250px"/>
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/master/docs/bluetooth_pairing.gif?raw=true" alt="chainmetric bluetooth" width="250px"/>
 </p>
 
 ### Environment monitoring
@@ -58,7 +58,7 @@ Once asset is on Chainmetric blockchain ledger, and the requirements assigned to
 environment conditions in real time, verify if those are complied with required conditions, and receive notification whenever violations occurs.
 
 <p align="center">
-    <img src="https://github.com/timoth-y/chainmetric-app/blob/main/docs/readings_streaming.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/master/docs/readings_streaming.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
 </p>
 
 Environment metric readings from sensors connected to the device are being streamed directly to device,
@@ -68,9 +68,9 @@ The implementation of such feature requires the combination of Flutter's [Event 
 
 [![diagram]][this repo]
 
-[assets screens]: https://github.com/timoth-y/chainmetric-app/blob/main/docs/asset_management.png?raw=true
-[devices screens]: https://github.com/timoth-y/chainmetric-app/blob/main/docs/device_management.png?raw=true
-[bluetooth screens]: https://github.com/timoth-y/chainmetric-app/blob/main/docs/bluetooth_pairing.png?raw=true
+[assets screens]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/asset_management.png?raw=true
+[devices screens]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/device_management.png?raw=true
+[bluetooth screens]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/bluetooth_pairing.png?raw=true
 [diagram]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/diagram.png?raw=true
 
 
@@ -80,7 +80,7 @@ The implementation of such feature requires the combination of Flutter's [Event 
 - [Connection config][connection config] which can be generated via [`fabnctl`][fabnctl] command line utility
 - Cryptographic credentials to access the network
 
-[connection config]: https://github.com/timoth-y/chainmetric-app/blob/main/app/assets/connection_template.yaml
+[connection config]: https://github.com/timoth-y/chainmetric-app/blob/master/app/assets/connection_template.yaml
 [fabnctl]: https://github.com/timoth-y/fabnctl#bonus-generate-connectionyaml
 
 
