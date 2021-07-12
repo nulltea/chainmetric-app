@@ -1,4 +1,4 @@
-# ChainMetric: Client Application
+# Chainmetric: Client Application
 
 [![dart badge]][dart]&nbsp;
 [![flutter badge]][flutter]&nbsp;
