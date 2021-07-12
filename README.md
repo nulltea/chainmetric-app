@@ -77,12 +77,17 @@ The implementation of such feature requires the combination of Flutter's [Event 
 ## Requirements
 
 - Mobile phone with Android or IOS
-- Connection config, which can be generated via `fabnctl` command line utility
+- [Connection config][connection config] which can be generated via [`fabnctl`][fabnctl] command line utility
 - Cryptographic credentials to access the network
+
+[connection config]: https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/app/assets/connection_template.yaml
+[fabnctl]: https://github.com/timoth-y/fabnctl#bonus-generate-connectionyaml
+
 
 ## Roadmap
 
-- [x] Device Bluetooth pairing and further GPS location tethering [(#2)](https://github.com/timoth-y/chainmetric-app/pull/2)
+- [x] IoT device Bluetooth pairing [(#1)](https://github.com/timoth-y/chainmetric-app/pull/1)
+- [x] GPS location tethering [(#2)](https://github.com/timoth-y/chainmetric-app/pull/2)
 - [ ] Asset view page
 - [ ] Device view page
 - [ ] User profile tab
