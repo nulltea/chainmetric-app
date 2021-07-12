@@ -58,7 +58,7 @@ Once asset is on Chainmetric blockchain ledger, and the requirements assigned to
 environment conditions in real time, verify if those are complied with required conditions, and receive notification whenever violations occurs.
 
 <p align="center">
-    <img src="https://github.com/timoth-y/chainmetric-app/blob/master/docs/readings_streaming.gif?raw=true" alt="chainmetric bluetooth" style="width:300px;"/>
+    <img src="https://github.com/timoth-y/chainmetric-app/blob/master/docs/readings_streaming.gif?raw=true" alt="chainmetric streaming" width="250px"/>
 </p>
 
 Environment metric readings from sensors connected to the device are being streamed directly to device,
