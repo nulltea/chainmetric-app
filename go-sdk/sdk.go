@@ -1,4 +1,4 @@
-package sdk
+package go_sdk
 
 //go:generate gomobile bind --target=android -tags=mobile -o ../app/android/app/src/main/libs/blockchainSDK.aar
 

@@ -1,4 +1,4 @@
-package sdk
+package go_sdk
 
 import "context"
 
