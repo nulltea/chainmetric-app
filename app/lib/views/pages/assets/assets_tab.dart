@@ -1,16 +1,16 @@
-import 'package:chainmetric/controllers/requirements_controller.dart';
-import '../readings/readings_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:chainmetric/controllers/assets_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/model/asset_model.dart';
+import 'package:chainmetric/controllers/requirements_controller.dart';
+import 'package:chainmetric/models/asset_model.dart';
 import 'package:chainmetric/shared/utils.dart';
-import 'asset_form.dart';
 import 'package:chainmetric/views/components/modal_menu.dart';
-import '../requirements/requirements_form.dart';
+import 'package:chainmetric/views/components/navigation_tab.dart';
+import 'package:chainmetric/views/pages/readings/readings_page.dart';
+import 'package:chainmetric/views/pages/requirements/requirements_form.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
-import '../../components/navigation_tab.dart';
+import 'asset_form.dart';
 
 
 class AssetsTab extends NavigationTab {
@@ -40,12 +40,12 @@ class _AssetsTabState extends State<AssetsTab> {
   }
 
   @override
-  Widget build(context) => RefreshIndicator(
+  Widget build(BuildContext context) => RefreshIndicator(
     key: _refreshKey,
     onRefresh: _refreshData,
     child: ListView.builder(
       itemCount: assets.length,
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       itemBuilder: _listBuilder,
     ),
   );
@@ -71,6 +71,7 @@ class _AssetsTabState extends State<AssetsTab> {
   }
 
   Widget _assetCard(AssetResponseItem asset) => InkWell(
+        onLongPress: () => _showAssetMenu(context, asset),
         child: Card(
           elevation: 5,
           color: References.assetTypesMap[asset.type].color,
@@ -80,49 +81,46 @@ class _AssetsTabState extends State<AssetsTab> {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Icon(Icons.photo, size: 90),
-              SizedBox(width: 10),
+              const Icon(Icons.photo, size: 90),
+              const SizedBox(width: 10),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SizedBox(height: 8),
-                Text(asset.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                Text(asset.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                 Text(asset.sku,
                     style: TextStyle(
                         fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400))
               ]),
-              Spacer(),
+              const Spacer(),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(Icons.corporate_fare,
                         color: Theme.of(context).hintColor),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(References.organizationsMap[asset.holder].name,
                         style:
                             TextStyle(color: Theme.of(context).hintColor))
                   ],
                 ),
-                SizedBox(height: 3),
+                const SizedBox(height: 3),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(Icons.location_on,
                         color: Theme.of(context).hintColor
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(asset.location.name,
                         style: TextStyle(color: Theme.of(context).hintColor)
                     )
                   ],
                 ),
-                SizedBox(height: 3),
+                const SizedBox(height: 3),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(Icons.fact_check,
                         color: Theme.of(context).hintColor),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(asset.requirements != null
                         ? "Assigned (${asset.requirements.metrics.length})"
                         : "Not assigned",
@@ -134,11 +132,10 @@ class _AssetsTabState extends State<AssetsTab> {
             ]),
           ),
         ),
-        onLongPress: () => _showAssetMenu(context, asset),
       );
 
   Future<AssetsResponse> _fetchAssets() async =>
-      await AssetsController.getAssets(limit: _itemsLength, scrollID: scrollID);
+      AssetsController.getAssets(limit: _itemsLength, scrollID: scrollID);
 
   void _showAssetMenu(BuildContext context, AssetResponseItem asset) {
     showModalMenu(context: context, options: [

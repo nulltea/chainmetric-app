@@ -2,8 +2,8 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/model/metric_model.dart';
-import 'package:chainmetric/model/requirements_model.dart';
+import 'package:chainmetric/models/metric_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 @jsonSerializable

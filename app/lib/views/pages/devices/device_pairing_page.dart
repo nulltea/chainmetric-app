@@ -4,19 +4,17 @@ import 'dart:ui';
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/controllers/gps_adapter.dart';
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/models/device_model.dart';
+import 'package:chainmetric/views/components/jumping_dots_indicator.dart';
 import 'package:chainmetric/views/components/ripple_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:rect_getter/rect_getter.dart';
 
-import '../../components/jumping_dots_indicator.dart';
-
 class DevicePairing extends StatefulWidget {
   final String deviceID;
-  final completeAnimation = Duration(milliseconds: 800);
 
-  DevicePairing(this.deviceID);
+  const DevicePairing(this.deviceID);
 
   @override
   _DevicePairingState createState() => _DevicePairingState();
@@ -33,7 +31,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   double _deviceProximityY = 250;
 
   Rect _rect;
-  GlobalKey _rectGetterKey = RectGetter.createGlobalKey();
+  final _rectGetterKey = RectGetter.createGlobalKey();
 
   AnimationController _controllerScan;
   Animation _animationScan;
@@ -41,16 +39,19 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   Animation _animationDevice;
   Path _path;
 
-  Function _cancelScan = () {};
+  final completeAnimation = const Duration(milliseconds: 800);
+  Function _cancelScan;
 
 
   @override
   void initState() {
     super.initState();
 
+    _cancelScan = (){};
+
     _controllerScan = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 5000)
+        duration: const Duration(milliseconds: 5000)
     );
 
     _animationScan = Tween(begin: 0.0, end: 1.0).animate(_controllerScan)
@@ -68,72 +69,68 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-    child: Stack(
-      children: [
-        Positioned.fill(
-          top: 30,
-          child: Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(icon: Icon(Icons.close, size: 35, color: Colors.white.withAlpha(200)), onPressed: _dismiss)
-          ),
+  Widget build(BuildContext context) => Stack(
+    children: [
+      Positioned.fill(
+        top: 30,
+        child: Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(icon: Icon(Icons.close, size: 35, color: Colors.white.withAlpha(200)), onPressed: _dismiss)
         ),
-        Positioned.fill(
-          top: 150,
-          child: Align(
-              alignment: Alignment.topCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+      ),
+      Positioned.fill(
+        top: 150,
+        child: Align(
+            alignment: Alignment.topCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(_message, style: TextStyle(
+                    fontSize: _messageSize,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white.withAlpha(200)
+                ), textAlign: TextAlign.center),
+                const SizedBox(width: 3),
+                JumpingDotsProgressIndicator(
+                    fontSize: _messageSize + 5,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white.withAlpha(200)
+                )
+              ],
+            )
+        ),
+      ),
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: SizedBox(
+          height: 500,
+          width: 500,
+          child: Ripples(
+              child: Stack(
                 children: [
-                  Text(_message, style: TextStyle(
-                      fontSize: _messageSize,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white.withAlpha(200)
-                  ), textAlign: TextAlign.center),
-                  SizedBox(width: 3),
-                  JumpingDotsProgressIndicator(
-                      fontSize: _messageSize + 5,
-                      fontWeight: FontWeight.w900,
-                      numberOfDots: 3,
-                      color: Colors.white.withAlpha(200)
-                  )
-                ],
-              )
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            height: 500,
-            width: 500,
-            child: Ripples(
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      top: _calculate(_animationScan.value).dy,
-                      left: _calculate(_animationScan.value).dx,
-                      child: Center(child: Icon(Icons.search, size: 30)),
+                  Positioned.fill(
+                    top: _calculate(_animationScan.value as double).dy,
+                    left: _calculate(_animationScan.value as double).dx,
+                    child: const Center(child: Icon(Icons.search, size: 30)),
+                  ),
+                  Positioned.fill(
+                    top: _deviceProximityY * -1,
+                    left: _deviceProximityX,
+                    child: Visibility(
+                      visible: _deviceFound,
+                      child: RectGetter(
+                        key: _rectGetterKey,
+                        child: const Icon(Icons.memory, size: 50),
+                      )
                     ),
-                    Positioned.fill(
-                      top: _deviceProximityY * -1,
-                      left: _deviceProximityX,
-                      child: Visibility(
-                        visible: _deviceFound,
-                        child: RectGetter(
-                          key: _rectGetterKey,
-                          child: Icon(Icons.memory, size: 50),
-                        )
-                      ),
-                    )
-                  ]
-                ),
-            ),
+                  )
+                ]
+              ),
           ),
         ),
-        buildCompletedView()
-      ],
-    ),
+      ),
+      buildCompletedView()
+    ],
   );
 
   Widget buildCompletedView() {
@@ -141,75 +138,71 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
       return Container();
     }
     return AnimatedPositioned(
-      duration: widget.completeAnimation,
+      duration: completeAnimation,
       left: _rect.left,
       right: MediaQuery.of(context).size.width - _rect.right,
       top: _rect.top,
       bottom: MediaQuery.of(context).size.height - _rect.bottom,
       child: DecoratedBox(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.teal,
         ),
         child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
-              children: [
-                Visibility(
-                  visible: _device != null,
-                  child: Positioned.fill(
-                    top: 30,
-                    child: Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(icon: Icon(Icons.close, size: 35, color: Colors.white.withAlpha(200)), onPressed: _dismiss)
-                    ),
+          child: Stack(
+            children: [
+              Visibility(
+                visible: _device != null,
+                child: Positioned.fill(
+                  top: 30,
+                  child: Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(icon: Icon(Icons.close, size: 35, color: Colors.white.withAlpha(200)), onPressed: _dismiss)
                   ),
                 ),
-                Visibility(
-                  visible: _device != null,
-                  child: Positioned.fill(
-                    top: -300,
-                    child: Center(
-                      child: Text("Successfully paired with ${"Chainmetric IoT"}!", style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ), textAlign: TextAlign.center),
-                    ),
+              ),
+              Visibility(
+                visible: _device != null,
+                child: const Positioned.fill(
+                  top: -300,
+                  child: Center(
+                    child: Text("Successfully paired with ${"Chainmetric IoT"}!", style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ), textAlign: TextAlign.center),
                   ),
                 ),
-                Center(
-                    child: Icon(Icons.memory, size: 50 + _animationDevice.value)
-                ),
-                Visibility(
-                  visible: _device != null,
-                  child: Positioned.fill(
-                    top: 300,
-                    child: Center(
-                      child: Text("Now this device would be able to access GPS location from your phone", style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ), textAlign: TextAlign.center),
-                    ),
+              ),
+              Center(
+                  child: Icon(Icons.memory, size: 50 + (_animationDevice.value as double))
+              ),
+              Visibility(
+                visible: _device != null,
+                child: const Positioned.fill(
+                  top: 300,
+                  child: Center(
+                    child: Text("Now this device would be able to access GPS location from your phone", style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ), textAlign: TextAlign.center),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),
     );
   }
 
-  void _sendCommandToDevice() async {
+  Future<void> _sendCommandToDevice() async {
     setState(() {
       _messageSize = 22;
       _message = "Sending command to the device";
     });
-    var ok = await DevicesController.sendCommand(widget.deviceID, DeviceCommand.pairBluetooth);
-    if (ok) {
-      Future.delayed(Duration(milliseconds: 500), () {
+
+    if (await DevicesController.sendCommand(widget.deviceID, DeviceCommand.pairBluetooth)) {
+      Future.delayed(const Duration(milliseconds: 500), () {
         setState(() {
           _messageSize = 22;
           _message = "Scanning devices nearby";
@@ -237,7 +230,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   }
 
   void _displayDevice(DiscoveredDevice device) {
-    var rand = Random(DateTime.now().millisecond);
+    final rand = Random(DateTime.now().millisecond);
     setState(() {
       _deviceProximityX = ((rand.nextBool() ? 1 : -1) * (100 + rand.nextInt(200))).toDouble();
       _deviceProximityY = ((rand.nextBool() ? 1 : -1) * (100 + rand.nextInt(200))).toDouble();
@@ -248,7 +241,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   void _showCompleteView(DiscoveredDevice device) {
     _controllerDevice = AnimationController(
         vsync: this,
-        duration: widget.completeAnimation
+        duration: completeAnimation
     );
 
     _animationDevice = Tween(begin: 0.0, end: 100.0).animate(_controllerDevice)
@@ -282,16 +275,15 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   }
 
   Path _drawPath(){
-    Path path = Path();
+    final Path path = Path();
     path.addOval(Rect.fromCircle(radius: 25, center: Offset.zero));
     return path;
   }
 
-  Offset _calculate(value) {
-    PathMetrics pathMetrics = _path.computeMetrics();
-    PathMetric pathMetric = pathMetrics.elementAt(0);
-    value = pathMetric.length * value;
-    Tangent pos = pathMetric.getTangentForOffset(value);
+  Offset _calculate(double value) {
+    final PathMetrics pathMetrics = _path.computeMetrics();
+    final PathMetric pathMetric = pathMetrics.elementAt(0);
+    final Tangent pos = pathMetric.getTangentForOffset((pathMetric.length) * value);
     return pos.position;
   }
 

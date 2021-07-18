@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:chainmetric/model/asset_model.dart';
-import 'package:chainmetric/model/device_model.dart';
-import 'package:chainmetric/model/metric_model.dart';
-import 'package:chainmetric/model/organization_model.dart';
-import 'package:chainmetric/model/requirements_model.dart';
+import 'package:chainmetric/models/asset_model.dart';
+import 'package:chainmetric/models/device_model.dart';
+import 'package:chainmetric/models/metric_model.dart';
+import 'package:chainmetric/models/organization_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
 
 class References {
   static List<Organization> organizations = <Organization>[];

@@ -1,31 +1,28 @@
+import 'package:chainmetric/controllers/blockchain_adapter.dart';
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
-import 'package:chainmetric/controllers/gps_adapter.dart';
 import 'package:chainmetric/controllers/preferences_adapter.dart';
+import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/main.reflectable.dart';
 import 'package:chainmetric/main_theme.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:chainmetric/model/readings_model.dart';
+import 'package:chainmetric/models/asset_model.dart';
+import 'package:chainmetric/models/device_model.dart';
+import 'package:chainmetric/models/metric_model.dart';
+import 'package:chainmetric/models/organization_model.dart';
+import 'package:chainmetric/models/readings_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
+import 'package:chainmetric/views/components/loading_splash.dart';
+import 'package:chainmetric/views/main_page.dart';
+import 'package:chainmetric/views/pages/auth/auth_page.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:chainmetric/model/device_model.dart';
-import 'package:chainmetric/model/metric_model.dart';
-import 'package:chainmetric/model/requirements_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:global_configuration/global_configuration.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 import 'package:yaml/yaml.dart';
 
-import 'controllers/references_adapter.dart';
-import 'main.reflectable.dart';
-import 'package:chainmetric/controllers/blockchain_adapter.dart';
-import 'views/pages/auth/auth_page.dart';
-import 'package:chainmetric/views/components/loading_splash.dart';
 
-import 'model/asset_model.dart';
-import 'model/organization_model.dart';
-import 'views/main_page.dart';
-import 'package:flutter/material.dart';
-
-
-void main() async {
+void main() {
   init();
   runApp(App());
 }
@@ -55,16 +52,16 @@ class _AppState extends State<App> {
     scaffoldBackgroundColor: AppTheme.primaryBG,
     primaryColor: AppTheme.primaryColor,
     primarySwatch: Colors.teal,
-    bottomAppBarTheme: BottomAppBarTheme(
+    bottomAppBarTheme: const BottomAppBarTheme(
       color: AppTheme.appBarBG,
     ),
     cardColor: AppTheme.cardBG,
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
       headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
       bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
     ),
-    inputDecorationTheme: InputDecorationTheme(
+    inputDecorationTheme: const InputDecorationTheme(
       fillColor: AppTheme.inputBG,
     )
   );
@@ -101,7 +98,7 @@ class _AppState extends State<App> {
     OverlayScreen().saveScreens({
       "modal": CustomOverlayScreen(
         backgroundColor: darkTheme.primaryColor.withAlpha(225),
-        content: Center(),
+        content: const Center(),
       ),
       "loading": CustomOverlayScreen(
         backgroundColor: darkTheme.primaryColor.withAlpha(225),
@@ -120,12 +117,12 @@ void init() {
 }
 
 Future<void> initConfig() async {
-  YamlMap yaml = loadYaml(
+  final yaml = loadYaml(
       await rootBundle.loadString("assets/config.yaml")
-  );
+  ) as YamlMap;
 
   GlobalConfiguration().loadFromMap(
-  Map<String, dynamic>.fromIterable(yaml.keys, key: (key) => key, value: (key) => yaml[key])
+    { for (var key in yaml.keys) key as String : yaml[key] }
   );
 }
 
@@ -141,12 +138,12 @@ void initJson() {
         typeOf<List<AssetType>>(): (value) => value.cast<AssetType>(),
         typeOf<List<DeviceProfile>>(): (value) => value.cast<DeviceProfile>(),
         typeOf<List<Metric>>(): (value) => value.cast<Metric>(),
-        typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value),
-        typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value),
+        typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value as Map),
+        typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value as Map),
         typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
-        typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList()),
+        typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList() as List<MetricReadingPoint>),
         typeOf<List<DeviceCommandLogEntry>>(): (value) => value.cast<DeviceCommandLogEntry>(),
-        typeOf<Map<String, PairedDevice>>(): (value) => Map<String, PairedDevice>.from(value),
+        typeOf<Map<String, PairedDevice>>(): (value) => Map<String, PairedDevice>.from(value as Map),
       },
     enumValues: {
         DeviceCommand: EnumDescriptor(

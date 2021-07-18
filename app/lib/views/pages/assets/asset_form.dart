@@ -1,10 +1,10 @@
-import 'package:chainmetric/model/location_model.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/assets_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/model/asset_model.dart';
+import 'package:chainmetric/models/asset_model.dart';
+import 'package:chainmetric/models/location_model.dart';
 import 'package:chainmetric/shared/utils.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -15,18 +15,18 @@ import 'package:place_picker/widgets/place_picker.dart';
 class AssetForm extends StatefulWidget {
   final Asset model;
 
-  AssetForm({this.model});
+  const AssetForm({this.model});
 
   @override
-  _AssetFormState createState() => _AssetFormState(model);
+  _AssetFormState createState() => _AssetFormState();
 }
 
 class _AssetFormState extends State<AssetForm> {
   final _formKey = GlobalKey<FormState>();
   Asset asset = Asset();
 
-  _AssetFormState(Asset model) {
-    this.asset = model ?? Asset();
+  _AssetFormState() {
+    asset = widget.model ?? Asset();
   }
 
   @override
@@ -38,7 +38,7 @@ class _AssetFormState extends State<AssetForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Input asset"),
+        title: const Text("Input asset"),
       ),
       body: Form(
         key: _formKey,
@@ -46,22 +46,21 @@ class _AssetFormState extends State<AssetForm> {
           child: Align(
             alignment: Alignment.topCenter,
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 400),
+                constraints: const BoxConstraints(maxWidth: 400),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...[
                         TextFormField(
                           initialValue: asset.name,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter an asset name",
                             labelText: "Name",
                           ),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value.isEmpty) {
                               return "Please provide name for new asset";
                             }
@@ -73,12 +72,12 @@ class _AssetFormState extends State<AssetForm> {
                         ),
                         TextFormField(
                           initialValue: asset.sku,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter an SKU code",
                             labelText: "SKU code",
                           ),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value.isEmpty) {
                               return "Please provide SKU code for new asset";
                             }
@@ -90,7 +89,7 @@ class _AssetFormState extends State<AssetForm> {
                         ),
                         DropdownButtonFormField(
                           value: asset.type,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             filled: true,
                             hintText: "Choose asset type",
                             labelText: "Asset type",
@@ -103,23 +102,23 @@ class _AssetFormState extends State<AssetForm> {
                                       ))
                               .toList(),
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.isEmpty as bool) {
                               return "Please choose an asset type";
                             }
                             return null;
                           },
-                          onChanged: (value) {
+                          onChanged: (String value) {
                             setState(() => asset.type = value);
                           },
                         ),
                         TextFormField(
                           initialValue: asset.cost?.toString() ?? "",
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter an cost",
                             labelText: "Cost",
                           ),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value.isEmpty) {
                               return "Please provide cost for new asset";
                             }
@@ -137,7 +136,7 @@ class _AssetFormState extends State<AssetForm> {
                               borderRadius: BorderRadius.circular(2.0),
                             ),
                             width: double.infinity,
-                            padding: EdgeInsets.only(left: 10, top: 10),
+                            padding: const EdgeInsets.only(left: 10, top: 10),
                             child: Stack(children: [
                               Text("Amount",
                                   style: TextStyle(
@@ -160,7 +159,7 @@ class _AssetFormState extends State<AssetForm> {
                             ])),
                         TextFormField(
                           initialValue: asset.info,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "Enter asset description",
                             labelText: "Description",
                             filled: true,
@@ -172,7 +171,7 @@ class _AssetFormState extends State<AssetForm> {
                         ),
                         DropdownButtonFormField(
                           value: asset.holder,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "Choose the owner organization",
                             labelText: "Owned by",
                             filled: true,
@@ -184,13 +183,13 @@ class _AssetFormState extends State<AssetForm> {
                                         child: Text(org.name),
                                       ))
                               .toList(),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value == null || value.isEmpty) {
                               return "Please choose an owner organization";
                             }
                             return null;
                           },
-                          onChanged: (value) {
+                          onChanged: (String value) {
                             setState(() => asset.holder = value);
                           },
                         ),
@@ -208,7 +207,7 @@ class _AssetFormState extends State<AssetForm> {
                                     color: Theme.of(context).hintColor,
                                   size: 26,
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 Text("Pick location",
                                     style: TextStyle(
                                         fontSize: 17,
@@ -218,51 +217,49 @@ class _AssetFormState extends State<AssetForm> {
                               ],
                             ),
                         )),
-                        Container(
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                  initialValue: asset.tags.join(' '),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    hintText: "Separate tags with [space]",
-                                    labelText: "Tags",
-                                  ),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return "Please specify the device location";
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    setState(() {
-                                      if (value.trim().isEmpty) {
-                                        asset.tags = [];
-                                        return;
-                                      }
-                                      asset.tags = value.trim().split(' ');
-                                    });
-                                  }),
-                              MultiSelectChipDisplay(
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
+                        Column(
+                          children: [
+                            TextFormField(
+                                initialValue: asset.tags.join(' '),
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  hintText: "Separate tags with [space]",
+                                  labelText: "Tags",
                                 ),
-                                chipColor: Colors.teal,
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                                items: asset.tags
-                                    .map((tag) => MultiSelectItem(
-                                          tag,
-                                          "#$tag",
-                                        ))
-                                    .toList(),
-                                onTap: (value) {
-                                  setState(() => asset.tags.remove(value));
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return "Please specify the device location";
+                                  }
+                                  return null;
                                 },
-                              )
-                            ],
-                          ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (value.trim().isEmpty) {
+                                      asset.tags = [];
+                                      return;
+                                    }
+                                    asset.tags = value.trim().split(' ');
+                                  });
+                                }),
+                            MultiSelectChipDisplay(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                              ),
+                              chipColor: Colors.teal,
+                              textStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                              items: asset.tags
+                                  .map((tag) => MultiSelectItem(
+                                        tag,
+                                        "#$tag",
+                                      ))
+                                  .toList(),
+                              onTap: (value) {
+                                setState(() => asset.tags.remove(value));
+                              },
+                            )
+                          ],
                         ),
                         SizedBox(
                             width: double.infinity,
@@ -274,7 +271,7 @@ class _AssetFormState extends State<AssetForm> {
                             )),
                       ].expand((widget) => [
                             widget,
-                            SizedBox(
+                            const SizedBox(
                               height: 24,
                             )
                           ])
@@ -302,7 +299,7 @@ class _AssetFormState extends State<AssetForm> {
   }
 
   Future<void> _showLocationPicker() async {
-    LocationResult result = await Navigator.of(context).push(
+    final LocationResult result = await Navigator.of(context).push(
         MaterialPageRoute(builder: (context) =>
               PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
             )
@@ -318,7 +315,7 @@ class _AssetFormState extends State<AssetForm> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Location wasn't picked, please try again"))
+          const SnackBar(content: Text("Location wasn't picked, please try again"))
       );
     }
   }

@@ -1,10 +1,10 @@
+import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:chainmetric/controllers/requirements_controller.dart';
+import 'package:chainmetric/models/metric_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
+import 'package:chainmetric/shared/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/model/metric_model.dart';
-import 'package:chainmetric/model/requirements_model.dart';
-import 'package:chainmetric/shared/utils.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -16,16 +16,16 @@ class RequirementsForm extends StatefulWidget {
   const RequirementsForm({this.model});
 
   @override
-  _RequirementsFormState createState() => _RequirementsFormState(model);
+  _RequirementsFormState createState() => _RequirementsFormState();
 }
 
 class _RequirementsFormState extends State<RequirementsForm> {
   Requirements requirements;
-  ScrollController _controller = new ScrollController();
+  final ScrollController _controller = ScrollController();
   final _formKey = GlobalKey<FormState>();
 
-  _RequirementsFormState(Requirements state) {
-    this.requirements = state;
+  _RequirementsFormState() {
+    requirements = widget.model;
   }
 
   String get periodStr =>
@@ -43,7 +43,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Assign requirements"),
+        title: const Text("Assign requirements"),
       ),
       body: Form(
         key: _formKey,
@@ -51,12 +51,11 @@ class _RequirementsFormState extends State<RequirementsForm> {
           child: Align(
             alignment: Alignment.topCenter,
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 400),
+                constraints: const BoxConstraints(maxWidth: 400),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...[
                         Container(
@@ -69,30 +68,30 @@ class _RequirementsFormState extends State<RequirementsForm> {
                           ),
                           child: Column(
                             children: [
-                              Padding(padding: EdgeInsets.all(10.0),
+                              Padding(padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
-                                      Text("Period"),
-                                      Spacer(),
+                                      const Text("Period"),
+                                      const Spacer(),
                                       TextButton(
-                                        child: Text("$periodStr"),
                                         onPressed: () =>
                                             showPeriodPicker(context),
+                                        child: Text(periodStr),
                                       )
                                     ],
                                   )),
                               MultiSelectBottomSheetField(
                                 initialValue:
                                 requirements.metrics.keys.toList(),
-                                title: Text("Metrics"),
-                                buttonText: Text("Select metrics"),
+                                title: const Text("Metrics"),
+                                buttonText: const Text("Select metrics"),
                                 listType: MultiSelectListType.CHIP,
                                 chipColor: Colors.teal.shade800,
                                 selectedColor: Colors.teal,
-                                selectedItemsTextStyle: TextStyle(
+                                selectedItemsTextStyle: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
-                                buttonIcon: Icon(Icons.add),
+                                buttonIcon: const Icon(Icons.add),
                                 items: References.metrics
                                     .where((metric) =>
                                 !requirements.metrics
@@ -108,20 +107,20 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                       requirements.metrics
                                           .addEntries(value.map((metric) =>
                                           MapEntry(
-                                              metric, References.defaultRequirements[
+                                              metric as String, References.defaultRequirements[
                                               metric]))
                                       )
                                   );
                                 },
                                 onConfirm: (selected) => setState(() {
-                                  var toRemoveKeys = <String>[];
-                                  for (var metric in requirements.metrics.keys) {
+                                  final toRemoveKeys = <String>[];
+                                  for (final metric in requirements.metrics.keys) {
                                     if (!selected.contains(metric)) {
                                       toRemoveKeys.add(metric);
                                     }
                                   }
 
-                                  for (var key in toRemoveKeys) {
+                                  for (final key in toRemoveKeys) {
                                     requirements.metrics.remove(key);
                                   }
                                 })
@@ -131,7 +130,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                         ),
                         ListView(
                           shrinkWrap: true,
-                          padding: EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.symmetric(vertical: 6),
                           physics: const AlwaysScrollableScrollPhysics(),
                           controller: _controller,
                           children: requirements.metrics.entries.map(
@@ -157,7 +156,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                       ].expand((widget) =>
                       [
                         widget,
-                        SizedBox(
+                        const SizedBox(
                           height: 24,
                         )
                       ])
@@ -173,48 +172,45 @@ class _RequirementsFormState extends State<RequirementsForm> {
   Widget _requirementControl(Metric metric, Requirement req) =>
       Card(
         elevation: 5,
-        child: Container(
-          height: 125,
-          child: Padding(
-            padding: EdgeInsets.only(top: 10, right: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 5),
-                  child: Stack(fit: StackFit.expand,
-                      children: [
-                    Text(metric.name,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                    Row(
-                      children: <Widget>[
-                        Flexible(child: TextFormField(
-                          initialValue: req.minLimit.toString(),
-                          decoration: InputDecoration(
-                              filled: true,
-                              labelText: "Min",
-                              suffixText: metric.unit.trim()),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() => req.minLimit = num.parse(value));
-                          },
-                        )),
-                      SizedBox(width: 10,),
-                        Flexible(child: TextFormField(
-                          initialValue: req.maxLimit.toString(),
-                          decoration: InputDecoration(
-                              filled: true,
-                              labelText: "Max",
-                              suffixText: metric.unit),
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            setState(() => req.maxLimit = num.parse(value));
-                          },
-                        ))
-                      ],
-                    )
-                  ])),
-            ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10, right: 10),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+                padding: const EdgeInsets.only(left: 10, top: 5),
+                child: Stack(fit: StackFit.expand,
+                    children: [
+                  Text(metric.name,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  Row(
+                    children: <Widget>[
+                      Flexible(child: TextFormField(
+                        initialValue: req.minLimit.toString(),
+                        decoration: InputDecoration(
+                            filled: true,
+                            labelText: "Min",
+                            suffixText: metric.unit.trim()),
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          setState(() => req.minLimit = num.parse(value));
+                        },
+                      )),
+                    const SizedBox(width: 10,),
+                      Flexible(child: TextFormField(
+                        initialValue: req.maxLimit.toString(),
+                        decoration: InputDecoration(
+                            filled: true,
+                            labelText: "Max",
+                            suffixText: metric.unit),
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          setState(() => req.maxLimit = num.parse(value));
+                        },
+                      ))
+                    ],
+                  )
+                ])),
           ),
         ),
       );
@@ -223,14 +219,10 @@ class _RequirementsFormState extends State<RequirementsForm> {
     showCupertinoModalBottomSheet(
       context: context,
       builder: (context) =>
-          Container(
-            height: 300,
-            child: CupertinoTimerPicker(
-              initialTimerDuration: requirements.periodDuration,
-              minuteInterval: 1,
-              onTimerDurationChanged: (value) =>
-                  setState(() => requirements.period = value.inSeconds),
-            ),
+          CupertinoTimerPicker(
+            initialTimerDuration: requirements.periodDuration,
+            onTimerDurationChanged: (value) =>
+                setState(() => requirements.period = value.inSeconds),
           ),
     );
   }

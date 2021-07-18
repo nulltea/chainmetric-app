@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/model/requirements_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
 
 import 'location_model.dart';
 

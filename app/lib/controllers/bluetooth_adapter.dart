@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:chainmetric/controllers/preferences_adapter.dart';
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/models/device_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';

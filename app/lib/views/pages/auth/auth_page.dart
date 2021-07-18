@@ -2,8 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/blockchain_adapter.dart';
-import 'package:chainmetric/model/auth_model.dart';
-import 'package:chainmetric/model/organization_model.dart';
+import 'package:chainmetric/models/auth_model.dart';
+import 'package:chainmetric/models/organization_model.dart';
 
 import '../../../main_theme.dart';
 
@@ -78,13 +78,13 @@ class _AuthPageState extends State<AuthPage> {
                                 ))
                         .toList(),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty as bool) {
                         return "You must specify your organization in order to authenticate";
                       }
                       return null;
                     },
                     onChanged: (value) {
-                      setState(() => credentials.organization = value);
+                      setState(() => credentials.organization = value as String);
                     },
                   ),
                   TextFormField(

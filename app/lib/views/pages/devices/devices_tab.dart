@@ -1,14 +1,14 @@
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
-import 'package:chainmetric/controllers/gps_adapter.dart';
-import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/controllers/gps_adapter.dart';
+import 'package:chainmetric/models/device_model.dart';
 import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/views/components/modal_menu.dart';
+import 'package:chainmetric/views/components/navigation_tab.dart';
 import 'package:chainmetric/views/components/svg_icon.dart';
-import 'device_form.dart';
+import 'package:flutter/material.dart';
 
-import '../../components/modal_menu.dart';
-import '../../components/navigation_tab.dart';
+import 'device_form.dart';
 import 'device_pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
@@ -36,12 +36,12 @@ class _DevicesTabState extends State<DevicesTab> {
   }
 
   @override
-  Widget build(context) => RefreshIndicator(
+  Widget build(BuildContext context) => RefreshIndicator(
     key: _refreshKey,
     onRefresh: _refreshData,
     child: ListView.builder(
       itemCount: devices.length,
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       itemBuilder: _listBuilder,
     ),
   );
@@ -63,6 +63,7 @@ class _DevicesTabState extends State<DevicesTab> {
   }
 
   Widget _deviceCard(Device device) => InkWell(
+    onLongPress: () => _showDeviceMenu(context, device),
     child: Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -70,53 +71,48 @@ class _DevicesTabState extends State<DevicesTab> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Container(
-          height: 90,
-          child: Stack(children: [
-            Icon(Icons.memory, size: 90),
-            Positioned.fill(
-              left: 100,
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SizedBox(height: 8),
-                Text(device.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                Text(device.ip,
-                    style: TextStyle(
-                        fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400)),
-              ]),
-            ),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor)),
-                  SizedBox(width: 5),
-                  device.stateIcon,
-                ],
-              )
+        child: Stack(children: [
+          const Icon(Icons.memory, size: 90),
+          Positioned.fill(
+            left: 100,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(height: 8),
+              Text(device.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              Text(device.ip,
+                  style: TextStyle(
+                      fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400)),
             ]),
-            Positioned.fill(
-              left: 100,
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Row(
-                  children: [
-                    SvgIcon("sensors", color: Theme.of(context).hintColor),
-                    SizedBox(width: 5),
-                    Text("${device.supports.length} metrics supported", style: TextStyle(color: Theme.of(context).hintColor))
-                  ],
-                ),
-              ),
+          ),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor)),
+                const SizedBox(width: 5),
+                device.stateIcon,
+              ],
             )
           ]),
-        ),
+          Positioned.fill(
+            left: 100,
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Row(
+                children: [
+                  SvgIcon("sensors", color: Theme.of(context).hintColor),
+                  const SizedBox(width: 5),
+                  Text("${device.supports.length} metrics supported", style: TextStyle(color: Theme.of(context).hintColor))
+                ],
+              ),
+            ),
+          )
+        ]),
       ),
     ),
-    onLongPress: () => _showDeviceMenu(context, device),
   );
 
-  Future<List<Device>> _fetchDevices() async =>
-      await DevicesController.getDevices();
+  Future<List<Device>> _fetchDevices() async => DevicesController.getDevices();
 
   void _showDeviceMenu(BuildContext context, Device device) {
     showModalMenu(context: context, options: [

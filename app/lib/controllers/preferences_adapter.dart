@@ -1,4 +1,4 @@
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/models/device_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

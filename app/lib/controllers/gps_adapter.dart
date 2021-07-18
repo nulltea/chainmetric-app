@@ -7,7 +7,7 @@ import 'dart:typed_data';
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
 import 'package:chainmetric/controllers/preferences_adapter.dart';
 import 'package:chainmetric/main.dart';
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/models/device_model.dart';
 import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:geocoding/geocoding.dart';

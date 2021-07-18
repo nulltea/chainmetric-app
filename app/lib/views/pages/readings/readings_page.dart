@@ -1,25 +1,25 @@
 import 'dart:math';
 
-import 'package:flutter/scheduler.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
-import 'package:chainmetric/model/asset_model.dart';
-import 'package:chainmetric/model/requirements_model.dart';
-import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/shared/extensions.dart';
-import 'package:chainmetric/views/components/svg_icon.dart';
-import 'package:chainmetric/controllers/readings_controller.dart';
-import 'package:chainmetric/model/metric_model.dart';
-import 'package:chainmetric/model/readings_model.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/controllers/readings_controller.dart';
+import 'package:chainmetric/models/asset_model.dart';
+import 'package:chainmetric/models/device_model.dart';
+import 'package:chainmetric/models/metric_model.dart';
+import 'package:chainmetric/models/readings_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
+import 'package:chainmetric/shared/extensions.dart';
+import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/views/components/svg_icon.dart';
+import 'package:charts_common/src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports
 import 'package:charts_flutter/src/text_style.dart' as style; // ignore: implementation_imports
-import 'package:charts_common/src/chart/common/canvas_shapes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // ignore: implementation_imports
 
-const VIEWPORT_POINTS = 25;
+const defaultViewportPoints = 25;
 
 class ReadingsPage extends StatefulWidget {
   final Asset asset;
@@ -29,7 +29,7 @@ class ReadingsPage extends StatefulWidget {
   final MetricReadings readings;
   final List<Device> devices;
 
-  ReadingsPage({
+  const ReadingsPage({
     this.asset,
     this.requirements,
     this.pageView = false,
@@ -47,7 +47,7 @@ class ReadingsPage extends StatefulWidget {
 abstract class _ReadingsState extends State<ReadingsPage> {
   MetricReadings readings = MetricReadings();
 
-  final viewportPoints = VIEWPORT_POINTS;
+  final viewportPoints = defaultViewportPoints;
   final refreshKey = GlobalKey<RefreshIndicatorState>();
   Map<String, Requirement> get requirements => widget.requirements.metrics;
   List<Device> devicesCache;
@@ -57,13 +57,13 @@ abstract class _ReadingsState extends State<ReadingsPage> {
     super.initState();
 
     if (widget.readings != null) {
-      this.readings = widget.readings;
+      readings = widget.readings;
     } else {
       SchedulerBinding.instance.addPostFrameCallback((_) => refreshData() );
     }
 
     if (widget.devices != null) {
-      this.devicesCache = widget.devices;
+      devicesCache = widget.devices;
     } else {
       DevicesController.getDevices()
           .then((value) => setState(() => devicesCache = value));
@@ -124,10 +124,10 @@ class _ReadingsListViewState extends _ReadingsState {
   int get viewportPoints => 50;
 
   @override
-  Widget build(context) =>
+  Widget build(BuildContext context) =>
       Scaffold(
           appBar: AppBar(
-            title: Text("Metric readings"),
+            title: const Text("Metric readings"),
           ),
           body: RefreshIndicator(
             key: refreshKey,
@@ -139,18 +139,18 @@ class _ReadingsListViewState extends _ReadingsState {
   Widget _chartsListView(BuildContext context) =>
       ListView.builder(
         itemCount: readings.streams?.length ?? 0,
-        padding: EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         itemBuilder: _listBuilder,
       );
 
   Widget _listBuilder(BuildContext context, int index) {
-    var record = readings.streams.entries.elementAt(index);
+    final record = readings.streams.entries.elementAt(index);
     return SafeArea(
       child: Hero(
         tag: record.key,
         child: InkWell(
-          child: _chartCard(record.key, record.value),
           onTap: () => _openPage(index),
+          child: _chartCard(record.key, record.value),
         ),
       ),
     );
@@ -163,56 +163,53 @@ class _ReadingsListViewState extends _ReadingsState {
     ),
     child: Padding(
       padding: const EdgeInsets.only(top: 8),
-      child: Container(
-          height: 100,
-          child: Stack(
-            children: [
-              Positioned(
-                  left: 8,
-                  child: metric.icon()
-              ),
-              Positioned.fill(
-                left: 40,
-                child: Text(metric.name, style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.w600)
-                ),
-              ),
-              Positioned(
-                right: 8,
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text("${stream.lastValue}",
-                          style: TextStyle(fontSize: 15)
-                      ),
-                      Text(metric.unit,
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Theme.of(context).hintColor
-                          )
-                      ),
-                    ],
+      child: Stack(
+        children: [
+          Positioned(
+              left: 8,
+              child: metric.icon()
+          ),
+          Positioned.fill(
+            left: 40,
+            child: Text(metric.name, style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.w600)
+            ),
+          ),
+          Positioned(
+            right: 8,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text("${stream.lastValue}",
+                      style: const TextStyle(fontSize: 15)
                   ),
-                ),
+                  Text(metric.unit,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).hintColor
+                      )
+                  ),
+                ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  height: 80,
-                    child: _buildChart(metric, stream)
-                ),
-              ),
-            ],
-          )
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: 80,
+                child: _buildChart(metric, stream)
+            ),
+          ),
+        ],
       ),
     ),
   );
 
   Widget _buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(fromReadingsStream(metric, stream),
       animate: true,
-      primaryMeasureAxis: charts.NumericAxisSpec(
+      primaryMeasureAxis: const charts.NumericAxisSpec(
           showAxisLine: false,
           renderSpec: charts.NoneRenderSpec(
               axisLineStyle: charts.LineStyleSpec(
@@ -223,7 +220,7 @@ class _ReadingsListViewState extends _ReadingsState {
       domainAxis: charts.DateTimeAxisSpec(
           showAxisLine: false,
           viewport: timeViewport(stream),
-          renderSpec: charts.NoneRenderSpec(
+          renderSpec: const charts.NoneRenderSpec(
               axisLineStyle: charts.LineStyleSpec(
                   color: charts.MaterialPalette.transparent
               )
@@ -288,17 +285,18 @@ class _ReadingsPageViewState extends _ReadingsState {
   int currentPage;
   bool scrollLocked = false;
   bool animate = true;
-  var streamListeners = Map<Metric, CancelReadingsListening>();
+  Map<Metric, CancelReadingsListening> streamListeners;
   PageController _controller;
 
   @override
   void initState() {
     super.initState();
+    streamListeners = <Metric, CancelReadingsListening>{};
     _onPageChanged(widget.pageIndex);
   }
 
   @override
-  Widget build(context) => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: Text(_currentPageTitle()),
         centerTitle: true,
@@ -306,25 +304,22 @@ class _ReadingsPageViewState extends _ReadingsState {
         backgroundColor: Theme.of(context).backgroundColor,
         elevation: 0,
         leading: IconButton(
-            icon: Icon(Icons.close),
+            icon: const Icon(Icons.close),
             onPressed: () => Navigator.of(context).pop()
         ),
       ),
       body: _chartsPageView(context),
-    bottomNavigationBar: Container(
-      height: 25,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: SmoothPageIndicator(
-            controller: _controller,
-            count: readings.streams?.length ?? 0,
-            effect: ExpandingDotsEffect(
-              dotColor: Theme.of(context).cardColor,
-              activeDotColor: Theme.of(context).accentColor,
-              dotHeight: 14,
-              dotWidth: 14,
-            )
-        ),
+    bottomNavigationBar: Align(
+      alignment: Alignment.topCenter,
+      child: SmoothPageIndicator(
+          controller: _controller,
+          count: readings.streams?.length ?? 0,
+          effect: ExpandingDotsEffect(
+            dotColor: Theme.of(context).cardColor,
+            activeDotColor: Theme.of(context).primaryColor,
+            dotHeight: 14,
+            dotWidth: 14,
+          )
       ),
     ),
     );
@@ -347,16 +342,24 @@ class _ReadingsPageViewState extends _ReadingsState {
   );
 
   Widget _pagerBuilder(BuildContext context, int index) {
-    var record = readings.streams.entries.elementAt(index);
+    final record = readings.streams.entries.elementAt(index);
     return SafeArea(
       child: _chartPage(record.key, record.value),
     );
   }
 
   Widget _chartPage(Metric metric, MetricReadingsStream stream) => GestureDetector(
+      onTapDown:(v) => setState(() {
+        animate = false;
+        if (v.localPosition.dy < 350) {
+          scrollLocked = true;
+        } else {
+          scrollLocked = false;
+        }
+      }),
       child: Card(
         elevation: 5,
-        margin: EdgeInsets.only(left: 4, right: 4, bottom: 12),
+        margin: const EdgeInsets.only(left: 4, right: 4, bottom: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -372,7 +375,7 @@ class _ReadingsPageViewState extends _ReadingsState {
                       child: Row(
                         children: [
                           metric.icon(size: 26, color: meetRequirement(stream.lastValue, requirements[metric.metric]) ? Colors.green : Colors.red),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           Text("${stream.lastValue}",
                               style: TextStyle(fontSize: 20, color: meetRequirement(stream.lastValue, requirements[metric.metric]) ? Colors.green : Colors.red)
                           ),
@@ -385,66 +388,58 @@ class _ReadingsPageViewState extends _ReadingsState {
                         ],
                       )
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(_isActiveStream(metric)
                       ? "Monitoring now"
                       : "Last updated \n${stream.last.timestamp.timeAgoSinceDate()}",
                       style: TextStyle(color: Theme.of(context).hintColor)
                   ),
                   if (_isActiveStream(metric)) ...{
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Icon(Icons.circle, color: Colors.green.withAlpha(160))
                   }
                 ],
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               SizedBox(
                   height: 300,
                   child: _buildChart(metric, stream)),
-              SizedBox(height: 15),
-              Align(
+              const SizedBox(height: 15),
+              const Align(
                   alignment: Alignment.centerLeft,
                   child: Text("Statistics",
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)
                   )
               ),
               ListTile(
-                  leading: Icon(Icons.trending_up),
-                  title: Text("Highest value"),
+                  leading: const Icon(Icons.trending_up),
+                  title: const Text("Highest value"),
                   trailing: Text("${stream.maxValue}${metric.unit}")
               ),
               ListTile(
-                  leading: Icon(Icons.trending_down),
-                  title: Text("Lowest value"),
+                  leading: const Icon(Icons.trending_down),
+                  title: const Text("Lowest value"),
                   trailing: Text("${stream.minValue}${metric.unit}")
               ),
               ListTile(
-                  leading: Icon(Icons.functions),
-                  title: Text("Average value"),
+                  leading: const Icon(Icons.functions),
+                  title: const Text("Average value"),
                   trailing: Text("${stream.avgValue}${metric.unit}")
               ),
               ListTile(
-                  leading: Icon(Icons.rule),
-                  title: Text("Compliance index"),
+                  leading: const Icon(Icons.rule),
+                  title: const Text("Compliance index"),
                   trailing: Text("${stream.complianceIndexFor(widget.requirements.metrics[metric.metric])}%")
               ),
               ListTile(
-                  leading: SvgIcon("running_with_errors"),
-                  title: Text("Critical exposure duration"),
+                  leading: const SvgIcon("running_with_errors"),
+                  title: const Text("Critical exposure duration"),
                   trailing: Text(stream.criticalExposureFor(widget.requirements.metrics[metric.metric], widget.requirements.periodDuration).toShortString())
               ),
             ],
           ),
         ),
       ),
-      onTapDown:(v) => setState(() {
-        animate = false;
-        if (v.localPosition.dy < 350) {
-          scrollLocked = true;
-        } else {
-          scrollLocked = false;
-        }
-      }),
     );
 
   Widget _buildChart(Metric metric, MetricReadingsStream stream) =>
@@ -505,7 +500,7 @@ class _ReadingsPageViewState extends _ReadingsState {
                   color: toChartColor(Theme.of(context).hintColor),
                 ),
                 labelAnchor: charts.AnnotationLabelAnchor.end,
-                color: charts.Color(r: 12, g: 110, b: 76, a: 100)),
+                color: const charts.Color(r: 12, g: 110, b: 76, a: 100)),
           ], defaultLabelPosition: charts.AnnotationLabelPosition.auto),
         ],
       selectionModels: [
@@ -520,7 +515,7 @@ class _ReadingsPageViewState extends _ReadingsState {
     );
 
   void _onPageChanged(int page) {
-    var metric = readings.streams.entries.elementAt(page).key;
+    final metric = readings.streams.entries.elementAt(page).key;
 
     // Updating current page for displaying metric name as title
     setStateWithAnimate(() => currentPage = page);
@@ -559,7 +554,7 @@ class WithTooltipSymbolRenderer extends charts.CircleSymbolRenderer {
   final Map<String, Device> devicesMap;
 
   WithTooltipSymbolRenderer(this.context, this.metric, {List<Device> devices}):
-    this.devicesMap = Map.fromIterable(devices ?? <Device>[], key: (d) => d.id, value: (d) => d);
+    devicesMap = { for (var d in devices ?? <Device>[]) d.id : d };
 
   @override
   void paint(charts.ChartCanvas canvas, Rectangle<num> bounds, {
@@ -585,7 +580,7 @@ class WithTooltipSymbolRenderer extends charts.CircleSymbolRenderer {
         stackedBarPadding: 10
       )
     );
-    var textStyle = style.TextStyle();
+    final textStyle = style.TextStyle();
     textStyle.color = charts.MaterialPalette.teal.shadeDefault;
     textStyle.fontSize = 14;
     canvas.drawText(

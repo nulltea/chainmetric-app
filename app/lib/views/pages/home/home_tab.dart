@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:chainmetric/views/components/navigation_tab.dart';
+import 'package:flutter/material.dart';
 
 class HomeTab extends NavigationTab {
   HomeTab({GlobalKey key}) : super(key: key ?? GlobalKey());

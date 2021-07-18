@@ -1,4 +1,4 @@
-import 'package:chainmetric/model/requirements_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 import 'blockchain_adapter.dart';

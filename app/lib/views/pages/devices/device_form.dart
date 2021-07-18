@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:chainmetric/model/location_model.dart';
-import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/models/device_model.dart';
+import 'package:chainmetric/models/location_model.dart';
 import 'package:chainmetric/shared/exceptions.dart';
 import 'package:chainmetric/shared/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
-import 'package:overlay_screen/overlay_screen.dart';
 import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/widgets/place_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -21,10 +20,10 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 class DeviceForm extends StatefulWidget {
   final Device model;
 
-  DeviceForm({this.model});
+  const DeviceForm({this.model});
 
   @override
-  _DeviceFormState createState() => _DeviceFormState(model);
+  _DeviceFormState createState() => _DeviceFormState();
 }
 
 class _DeviceFormState extends State<DeviceForm> {
@@ -39,8 +38,8 @@ class _DeviceFormState extends State<DeviceForm> {
   final GlobalKey _qrKey = GlobalKey(debugLabel: "QR");
   final _formKey = GlobalKey<FormState>();
 
-  _DeviceFormState(Device device) {
-    this.device = device;
+  _DeviceFormState() {
+    device = widget.model;
   }
 
   @override
@@ -72,7 +71,7 @@ class _DeviceFormState extends State<DeviceForm> {
   Widget _buildForm(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register device"),
+        title: const Text("Register device"),
       ),
       body: Form(
         key: _formKey,
@@ -80,17 +79,16 @@ class _DeviceFormState extends State<DeviceForm> {
           child: Align(
             alignment: Alignment.topCenter,
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 400),
+                constraints: const BoxConstraints(maxWidth: 400),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...[
                         TextFormField(
                           initialValue: device.name,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter an device name",
                             labelText: "Name",
@@ -107,7 +105,7 @@ class _DeviceFormState extends State<DeviceForm> {
                         ),
                         TextFormField(
                           initialValue: device.hostname,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter the device hostname",
                             labelText: "Hostname",
@@ -124,7 +122,7 @@ class _DeviceFormState extends State<DeviceForm> {
                         ),
                         DropdownButtonFormField(
                           value: device.profile,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             filled: true,
                             hintText: "Choose the device profile",
                             labelText: "Profile",
@@ -136,7 +134,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                         child: Text(profile.name),
                                       ))
                               .toList(),
-                          onChanged: (value) {
+                          onChanged: (String value) {
                             setState(() => device.profile = value);
                           },
                         ),
@@ -150,28 +148,28 @@ class _DeviceFormState extends State<DeviceForm> {
                             children: [
                               MultiSelectBottomSheetField(
                                 initialValue: device.supports,
-                                title: Text("Supports metrics"),
-                                buttonText: Text("Select supported metrics"),
+                                title: const Text("Supports metrics"),
+                                buttonText: const Text("Select supported metrics"),
                                 listType: MultiSelectListType.CHIP,
                                 chipColor: Colors.teal.shade800,
                                 selectedColor: Colors.teal,
-                                selectedItemsTextStyle: TextStyle(
+                                selectedItemsTextStyle: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
-                                buttonIcon: Icon(Icons.arrow_drop_down),
+                                buttonIcon: const Icon(Icons.arrow_drop_down),
                                 items: References.metrics
                                     .map((metric) => MultiSelectItem(
                                           metric.metric,
                                           metric.name,
                                         ))
                                     .toList(),
-                                onSelectionChanged: (value) {
+                                onSelectionChanged: (List<String> value) {
                                   setState(() => device.supports = value);
                                 },
                               ),
                               MultiSelectChipDisplay(
                                 chipColor: Colors.teal,
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                                 items: device.supports
@@ -189,7 +187,7 @@ class _DeviceFormState extends State<DeviceForm> {
                         ),
                         DropdownButtonFormField(
                           value: device.holder,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "Choose the holder organization",
                             labelText: "Holder",
                             filled: true,
@@ -201,13 +199,13 @@ class _DeviceFormState extends State<DeviceForm> {
                                         child: Text(org.name),
                                       ))
                               .toList(),
-                          validator: (value) {
+                          validator: (String value) {
                             if (value == null || value.isEmpty) {
                               return "Please choose an holder organization";
                             }
                             return null;
                           },
-                          onChanged: (value) {
+                          onChanged: (String value) {
                             setState(() => device.holder = value);
                           },
                         ),
@@ -225,7 +223,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                     color: Theme.of(context).hintColor,
                                     size: 26,
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   Text("Pick location",
                                     style: TextStyle(
                                         fontSize: 17,
@@ -245,7 +243,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             )),
                       ].expand((widget) => [
                             widget,
-                            SizedBox(
+                            const SizedBox(
                               height: 24,
                             )
                           ])
@@ -274,7 +272,7 @@ class _DeviceFormState extends State<DeviceForm> {
             child: Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                  icon: Icon(Icons.arrow_back, size: 30),
+                  icon: const Icon(Icons.arrow_back, size: 30),
                   onPressed: () => Navigator.pop(context)
               )
             )
@@ -296,7 +294,7 @@ class _DeviceFormState extends State<DeviceForm> {
             top: -350,
             child: Center(
               child: Text(scannerTitle,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center
               )
             )
@@ -305,7 +303,7 @@ class _DeviceFormState extends State<DeviceForm> {
             top: 350,
             child: Center(
               child: Text(scannerSubtitle,
-                style: TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: 15),
                 textAlign: TextAlign.center
               )
             )
@@ -332,7 +330,7 @@ class _DeviceFormState extends State<DeviceForm> {
             scannerSubtitle = e.cause;
           });
           if (timer != null) timer.cancel();
-          timer = Timer(Duration(seconds: 5), () {
+          timer = Timer(const Duration(seconds: 5), () {
             setState(() {
               scannerTitle = defaultScannerTitle;
               scannerSubtitle = defaultScannerSubtitle;
@@ -347,20 +345,20 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Device _parseQRCode(String code) {
-    var exp = RegExp(r"\$\{(.+?)\}");
-    var match = exp.firstMatch(code);
+    final exp = RegExp(r"\$\{(.+?)\}");
+    final match = exp.firstMatch(code);
     if (match == null) throw QRScanException(cause: "Expected pattern does not match");
 
-    var data = match.group(1);
-    var parts = data.split(';');
+    final data = match.group(1);
+    final parts = data.split(';');
     if (parts.length != 3) throw QRScanException(cause: "Coded data is not valid");
 
-    Device dev = Device();
+    final dev = Device();
 
     dev.hostname = parts[0];
     dev.ip = parts[1];
 
-    var metrics = parts[2].split(',');
+    final metrics = parts[2].split(',');
 
     dev.supports = metrics;
 
@@ -381,7 +379,7 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Future<void> _showLocationPicker() async {
-    LocationResult result = await Navigator.of(context).push(
+    final LocationResult result = await Navigator.of(context).push(
         MaterialPageRoute(builder: (context) =>
             PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
             )
@@ -397,7 +395,7 @@ class _DeviceFormState extends State<DeviceForm> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Location wasn't picked, please try again"))
+          const SnackBar(content: Text("Location wasn't picked, please try again"))
       );
     }
   }

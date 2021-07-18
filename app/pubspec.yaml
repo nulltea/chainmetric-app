@@ -7,8 +7,10 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  # Project:
   flutter:
     sdk: flutter
+  lint: ^1.5.3
   # Dart packages:
   tuple: any
   yaml: ^3.1.0

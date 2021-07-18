@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:chainmetric/model/auth_model.dart';
+import 'package:chainmetric/models/auth_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:yaml/yaml.dart';
