@@ -29,7 +29,7 @@ class _CirclePainter extends CustomPainter {
   final Animation<double> _animation;
 
   void circle(Canvas canvas, Rect rect, double value) {
-    final double opacity = (1.0 - (value / 4.0)).clamp(0.0, 1.0);
+    final double opacity = (1.0 - (value / 4.0)).clamp(0.0, 1.0) as double;
     final Color _color = color.withOpacity(opacity);
 
     final double size = rect.width / 2;
@@ -75,16 +75,14 @@ class _RipplesState extends State<Ripples> with TickerProviderStateMixin {
     return Center(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(widget.size),
-        child: Container(
-          child: ScaleTransition(
-            scale: Tween(begin: 0.95, end: 1.0).animate(
-              CurvedAnimation(
-                parent: _controller,
-                curve: const _PulsateCurve(),
-              ),
+        child: ScaleTransition(
+          scale: Tween(begin: 0.95, end: 1.0).animate(
+            CurvedAnimation(
+              parent: _controller,
+              curve: const _PulsateCurve(),
             ),
-            child: widget.child,
           ),
+          child: widget.child,
         ),
       ),
     );

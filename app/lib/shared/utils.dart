@@ -19,11 +19,11 @@ Future showYesNoDialog(BuildContext context, {
       actions: <Widget>[
         TextButton(
           onPressed: _decorateWithDismiss(context, onYes ?? () => print("not implemented")),
-          child: Text("Yes"),
+          child: const Text("Yes"),
         ),
         TextButton(
           onPressed: _decorateWithDismiss(context, onNo ?? () => print("not implemented")),
-          child: Text("No"),
+          child: const Text("No"),
         ),
       ],
     ),
@@ -40,7 +40,7 @@ void Function() decorateWithLoading(BuildContext context, Future Function() fn) 
 
 void dismissDialog(BuildContext context) => Navigator.of(context, rootNavigator: true).pop();
 
-Function _decorateWithDismiss(BuildContext context, Function action) => () {
+void Function() _decorateWithDismiss(BuildContext context, Function action) => () {
     dismissDialog(context);
     action();
   };
@@ -55,7 +55,6 @@ class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {
   CustomMaterialPageRoute({
     WidgetBuilder builder,
     RouteSettings settings,
-    bool maintainState = true,
     bool fullscreenDialog = false,
     this.duration = 300
   }) : super(builder: builder, settings: settings, fullscreenDialog: fullscreenDialog);
@@ -63,7 +62,3 @@ class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {
   @override
   Duration get transitionDuration => Duration(milliseconds: duration);
 }
-
-Function decorateWithDelay(Function func, Duration duration) => () {
-  Future.delayed(duration, func);
-};

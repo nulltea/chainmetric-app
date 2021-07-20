@@ -33,16 +33,19 @@ class MetricReadingPoint {
 
   static num roundValue(num value, int places) {
     if (value is int) return value;
-    double mod = pow(10.0, places);
-    return ((value * mod).round().toDouble() / mod);
+    final mod = pow(10.0, places);
+    return (value * mod).round() / mod;
   }
 }
 
 class MetricReadingsStream extends ListBase<MetricReadingPoint> with MetricReadingPoint {
   List<MetricReadingPoint> _list = [];
+  @override
   set length(int newLength) { _list.length = newLength; }
+  @override
   int get length => _list.length;
   MetricReadingPoint operator [](int index) => _list[index];
+  @override
   void operator []=(int index, MetricReadingPoint value) { _list[index] = value; }
 
   List<num> get _values => _list.map((p) => p.value).toList();
@@ -71,9 +74,9 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint> with MetricReadi
       ? ((_values.where((p) => _meetRequirement(p, requirement)).length / length) * 100).round()
       : 100;
 
-  Duration criticalExposureFor(Requirement requirement, Duration period) => isNotEmpty
-      ? period * _values.where((p) => !_meetRequirement(p, requirement)).length
-      : 0;
+  Duration criticalExposureFor(Requirement requirement, Duration period) => Duration(seconds: isNotEmpty
+      ? period * _values.where((p) => !_meetRequirement(p, requirement)).length as int
+      : 0);
 
   MetricReadingsStream();
   MetricReadingsStream.from(List<MetricReadingPoint> from) {

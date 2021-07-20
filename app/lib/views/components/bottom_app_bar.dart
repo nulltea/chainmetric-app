@@ -10,7 +10,7 @@ class CustomBottomAppBar extends StatefulWidget {
   final List<CustomAppBarItem> items;
 
   CustomBottomAppBar({this.onTabSelected, this.items}) {
-    assert(this.items.length == 2 || this.items.length == 4);
+    assert(items.length == 2 || items.length == 4);
   }
 
   @override
@@ -29,22 +29,19 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> items = List.generate(widget.items.length, (int index) {
+    final items = List.generate(widget.items.length, (int index) {
       return _buildTabIcon(
           index: index, item: widget.items[index], onPressed: _updateIndex);
     });
+
     items.insert(items.length >> 1, _buildMiddleSeparator());
 
     return BottomAppBar(
-      child: Container(
-        height: 60.0,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: items,
-        ),
+      shape: const CircularNotchedRectangle(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: items,
       ),
-      shape: CircularNotchedRectangle(),
     );
   }
 
@@ -55,8 +52,8 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
+          children: const <Widget>[
+             SizedBox(
               height: 24.0,
             ),
           ],

@@ -1,21 +1,21 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 
 class _JumpingDot extends AnimatedWidget {
   final Color color;
   final double fontSize;
   final FontWeight fontWeight;
-  _JumpingDot({Key key, Animation<double> animation, this.color, this.fontSize, this.fontWeight})
+  const _JumpingDot({Key key, Animation<double> animation, this.color, this.fontSize, this.fontWeight})
       : super(key: key, listenable: animation);
 
   @override
   Widget build(BuildContext context) {
-    final Animation<double> animation = listenable;
+    final Animation<double> animation = listenable as Animation<double>;
     return Transform.translate(
       offset: Offset(0, -animation.value),
       child: Text(
         '.',
-        style: TextStyle(color: color, fontSize: fontSize, fontWeight: this.fontWeight),
+        style: TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
       ),
     );
   }
@@ -28,16 +28,17 @@ class JumpingDotsProgressIndicator extends StatefulWidget {
   final double dotSpacing;
   final Color color;
   final int milliseconds;
-  final double beginTweenValue = 0.0;
+  final double beginTweenValue;
   final double endTweenValue;
 
-  JumpingDotsProgressIndicator(
+  const JumpingDotsProgressIndicator(
       {this.numberOfDots = 3,
         this.fontSize = 10.0,
         this.fontWeight = FontWeight.normal,
         this.color = Colors.black,
         this.dotSpacing = 0.0,
-        this.milliseconds = 250})
+        this.milliseconds = 250,
+        this.beginTweenValue = 0.0})
       : endTweenValue = fontSize / 4;
 
   @override
@@ -103,8 +104,9 @@ class _JumpingDotsProgressIndicatorState
         Tween(begin: widget.beginTweenValue, end: widget.endTweenValue)
             .animate(controllers[index])
           ..addStatusListener((AnimationStatus status) {
-            if (status == AnimationStatus.completed)
+            if (status == AnimationStatus.completed) {
               controllers[index].reverse();
+            }
             if (index == numberOfDots - 1 &&
                 status == AnimationStatus.dismissed) {
               controllers[0].forward();

@@ -1,5 +1,5 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:chainmetric/models/asset_model.dart';
+import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 import 'blockchain_adapter.dart';
 

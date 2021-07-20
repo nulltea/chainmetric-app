@@ -1,13 +1,13 @@
-import 'package:flutter/services.dart';
 import 'package:chainmetric/models/auth_model.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 import 'package:yaml/yaml.dart';
 
-const BLOCKCHAIN_CHANNEL = "chainmetric.app.blockchain-native-sdk";
+const blockchainChannel = "chainmetric.app.blockchain-native-sdk";
 
 class Blockchain {
-  static final _nativeSDK = MethodChannel(BLOCKCHAIN_CHANNEL);
+  static final _nativeSDK = MethodChannel(blockchainChannel);
   static Map<String, dynamic> _config;
 
   static Future<void> initWallet() async {

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:chainmetric/shared/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
@@ -9,7 +9,7 @@ class ModalMenuOption extends StatelessWidget {
   final IconData icon;
   final bool enabled;
 
-  ModalMenuOption({
+  const ModalMenuOption({
     this.title,
     this.icon,
     this.action,
@@ -25,7 +25,7 @@ class ModalMenuOption extends StatelessWidget {
           child: ListTile(
               leading: Icon(icon, color: Colors.teal, size: 30),
               title: Text(title,
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 18,
                     fontWeight:
                     FontWeight.bold,
@@ -36,7 +36,7 @@ class ModalMenuOption extends StatelessWidget {
       )
   );
 
-  Function _decorateWithDismiss(BuildContext context, Function action) => () {
+  void Function() _decorateWithDismiss(BuildContext context, Function action) => () {
     dismissDialog(context);
     OverlayScreen().pop();
     action();
@@ -51,7 +51,7 @@ void showModalMenu({@required BuildContext context, @required List<ModalMenuOpti
     builder: (context) => Container(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: EdgeInsets.only(bottom: 25),
+          padding: const EdgeInsets.only(bottom: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: options.where((o) => o.enabled).toList(),
