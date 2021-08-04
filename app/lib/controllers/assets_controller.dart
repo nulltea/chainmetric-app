@@ -6,7 +6,7 @@ import 'blockchain_adapter.dart';
 class AssetsController {
   static Future<AssetsResponse> getAssets({AssetQuery query, int limit, String scrollID}) async {
     query ??= AssetQuery(limit: limit, scrollID: scrollID);
-    String data = await Blockchain.evaluateTransaction(
+    final data = await Blockchain.evaluateTransaction(
         "assets", "Query", JsonMapper.serialize(query));
     try {
       return data != null && data.isNotEmpty
@@ -19,11 +19,11 @@ class AssetsController {
   }
 
   static Future<bool> upsertAsset(Asset asset) async {
-    var jsonData = JsonMapper.serialize(asset);
-    return await Blockchain.trySubmitTransaction("assets", "Upsert", jsonData);
+    final jsonData = JsonMapper.serialize(asset);
+    return Blockchain.trySubmitTransaction("assets", "Upsert", jsonData);
   }
 
   static Future<bool> deleteAsset(String id) async {
-    return await Blockchain.trySubmitTransaction("assets", "Remove", id);
+    return Blockchain.trySubmitTransaction("assets", "Remove", id);
   }
 }

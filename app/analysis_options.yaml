@@ -4,3 +4,4 @@ linter:
   rules:
     # Blindly follow the Flutter code style, which prefers types everywhere
     always_specify_types: false
+    avoid_classes_with_only_static_members: false

@@ -8,11 +8,11 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 import 'gps_adapter.dart';
 
-typedef void DeviceDisconnectFunc();
+typedef DeviceDisconnectFunc = void Function();
 
 class Bluetooth {
   static final driver = FlutterReactiveBle();
-  static final connectionTimeout = Duration(seconds: 15);
+  static const connectionTimeout = Duration(seconds: 15);
 
   static Map<String, PairedDevice> pairedDevices = {};
   static Map<String, DeviceDisconnectFunc> connectedDevices = {};
@@ -60,7 +60,6 @@ class Bluetooth {
           GeoService.serviceUUID: GeoService.characteristicUUIDs
         }
     ).listen((event) {
-      print(event);
       if (event.connectionState == DeviceConnectionState.connected && !triggered) {
         triggered = true;
         connectedDevices[deviceID] = sub.cancel;

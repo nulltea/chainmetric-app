@@ -13,12 +13,12 @@ class Preferences {
     try {
       return JsonMapper.deserialize<Map<String, PairedDevice>>(
           prefs.getString("paired_devices")
-      ) ?? Map<String, PairedDevice>();
-    } on Exception {
-
+      ) ?? <String, PairedDevice>{};
+    } on Exception catch (e) {
+      print(e);
     }
 
-    return Map<String, PairedDevice>();
+    return <String, PairedDevice>{};
   }
 
   static Future<bool> setPairedDevices(Map<String, PairedDevice> value) {

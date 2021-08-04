@@ -5,7 +5,7 @@ import 'blockchain_adapter.dart';
 
 class DevicesController {
   static Future<List<Device>> getDevices() async {
-    String data = await Blockchain.evaluateTransaction("devices", "All");
+    final String data = await Blockchain.evaluateTransaction("devices", "All");
 
     try {
       return data.isNotEmpty
@@ -19,17 +19,17 @@ class DevicesController {
   }
 
   static Future<bool> registerDevice(Device device) {
-    var jsonData = JsonMapper.serialize(device);
+    final jsonData = JsonMapper.serialize(device);
     return Blockchain.trySubmitTransaction("devices", "Register", jsonData);
   }
 
   static Future<bool> sendCommand(String deviceID, DeviceCommand cmd, {List<Object> args}) {
-    var jsonData = JsonMapper.serialize(DeviceCommandRequest(deviceID, cmd, args: args));
+    final jsonData = JsonMapper.serialize(DeviceCommandRequest(deviceID, cmd, args: args));
     return Blockchain.trySubmitTransaction("devices", "Command", jsonData);
   }
 
   static Future<List<DeviceCommandLogEntry>> commandsLog(String deviceID) async {
-    String data = await Blockchain.evaluateTransaction("devices", "CommandsLog", deviceID);
+    final String data = await Blockchain.evaluateTransaction("devices", "CommandsLog", deviceID);
 
     try {
       return data.isNotEmpty

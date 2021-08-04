@@ -7,7 +7,7 @@ import 'package:yaml/yaml.dart';
 const blockchainChannel = "chainmetric.app.blockchain-native-sdk";
 
 class Blockchain {
-  static final _nativeSDK = MethodChannel(blockchainChannel);
+  static const _nativeSDK = MethodChannel(blockchainChannel);
   static Map<String, dynamic> _config;
 
   static Future<void> initWallet() async {
@@ -98,20 +98,16 @@ class Blockchain {
   }
 
   static Future<String> initConfig() async {
-    YamlMap yaml = loadYaml(
+    final yaml = loadYaml(
         await rootBundle.loadString("assets/connection.yaml")
-    );
+    ) as YamlMap;
 
-    _config = Map<String, dynamic>.fromIterable(
-        yaml.keys,
-        key: (key) => key,
-        value: (key) => yaml[key],
-    );
+    _config = { for (var key in yaml.keys) key as String : yaml[key] };
   }
 
   static dynamic getConfigValue(String compositeKey) {
     dynamic value = _config;
-    for (var key in compositeKey.split(".")) {
+    for (final key in compositeKey.split(".")) {
       value = value[key];
     }
     return value;
@@ -119,7 +115,7 @@ class Blockchain {
 
   static Future<String> getConfigString() async {
     final dir = await getApplicationDocumentsDirectory();
-    var raw = await rootBundle.loadString("assets/connection.yaml");
+    final raw = await rootBundle.loadString("assets/connection.yaml");
     return raw.replaceAll("{keystore-path}", dir.path);
   }
 }

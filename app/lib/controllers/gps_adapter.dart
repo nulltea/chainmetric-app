@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
@@ -40,7 +38,7 @@ class GeoService {
   ];
 
   static Future<void> postLocation(String deviceID) async {
-    var hardwareID = Bluetooth.getHardwareID(deviceID);
+    final hardwareID = Bluetooth.getHardwareID(deviceID);
 
     if (!Bluetooth.isConnected(deviceID)) {
       if (await DevicesController.sendCommand(deviceID, DeviceCommand.pairBluetooth)) {
@@ -49,28 +47,28 @@ class GeoService {
       return;
     }
 
-    var eastCoordinateChar = QualifiedCharacteristic(
+    final eastCoordinateChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
         characteristicId: eastCoordinateUUID,
         deviceId: hardwareID
     );
-    var northCoordinateChar = QualifiedCharacteristic(
+    final northCoordinateChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
         characteristicId: northCoordinateUUID,
         deviceId: hardwareID
     );
-    var locationNameChar = QualifiedCharacteristic(
+    final locationNameChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
         characteristicId: locationNameUUID,
         deviceId: hardwareID
     );
 
-    var position = await Geolocator.getCurrentPosition(
+    final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high
     );
 
-    var latitudePayload = Uint8List(8)..buffer.asByteData().setFloat64(0, position.latitude);
-    var longitudePayload = Uint8List(8)..buffer.asByteData().setFloat64(0, position.longitude);
+    final latitudePayload = Uint8List(8)..buffer.asByteData().setFloat64(0, position.latitude);
+    final longitudePayload = Uint8List(8)..buffer.asByteData().setFloat64(0, position.longitude);
 
     await Bluetooth.driver.writeCharacteristicWithoutResponse(
         eastCoordinateChar, value: latitudePayload.toList()
@@ -81,11 +79,11 @@ class GeoService {
     );
 
     var locationName = "Unknown";
-    var placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
     if (placemarks.isNotEmpty) {
       locationName = "${placemarks.first.street} ${placemarks.first.name}";
     }
-    var locationNamePayload = utf8.encode(locationName);
+    final locationNamePayload = utf8.encode(locationName);
 
     await Bluetooth.driver.writeCharacteristicWithoutResponse(
         locationNameChar, value: locationNamePayload
@@ -96,13 +94,13 @@ class GeoService {
     FlutterIsolate.spawn(tryShareLocation, null);
   }
 
-  static void tryShareLocation(Map<String, PairedDevice> devices) async {
+  static Future<void> tryShareLocation(Map<String, PairedDevice> devices) async {
     initJson();
     await Preferences.init();
     await Bluetooth.init();
     await initConfig();
 
-    Timer.periodic(Duration(minutes: 1), (t) {
+    Timer.periodic(const Duration(minutes: 1), (t) {
       Bluetooth.pairedDevices.forEach((deviceID, info) {
         if (!Bluetooth.isConnected(deviceID)) {
           Bluetooth.connectToDevice(deviceID, onConnect: postLocation);

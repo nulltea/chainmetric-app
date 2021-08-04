@@ -34,8 +34,8 @@ class References {
         await rootBundle.loadString("assets/data/default_requirements.json")
     );
 
-    assetTypesMap = Map.fromIterable(assetTypes, key: (at) => at.type, value: (at) => at);
-    metricsMap = Map.fromIterable(metrics, key: (m) => m.metric, value: (m) => m);
-    organizationsMap = Map.fromIterable(organizations, key: (m) => m.mspID, value: (m) => m);
+    assetTypesMap = { for (var at in assetTypes) at.type : at };
+    metricsMap = { for (var m in metrics) m.metric : m };
+    organizationsMap = { for (var m in organizations) m.mspID : m };
   }
 }
