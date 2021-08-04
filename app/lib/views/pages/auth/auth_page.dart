@@ -58,7 +58,7 @@ class _AuthPageState extends State<AuthPage> {
                           child: AutoSizeText(
                             'CHAINMETRIC',
                             textAlign: TextAlign.center,
-                            style: AppTheme.title1.override(fontSize: 32),
+                            style: AppTheme.title1.override(fontFamily: "IBM Plex Mono", fontSize: 32),
                           ),
                         ),
                       )
