@@ -119,7 +119,7 @@ void init() {
 Future<void> initConfig() async {
   final yaml = loadYaml(
       await rootBundle.loadString("assets/config.yaml")
-  ) as YamlMap;
+  );
 
   GlobalConfiguration().loadFromMap(
     { for (var key in yaml.keys) key as String : yaml[key] }
