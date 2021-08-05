@@ -63,7 +63,7 @@ class _AuthPageState extends State<AuthPage> {
                     children: [
                   ...[
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: FormDropDownWidget(
                         height: 50,
                         icon: const Icon(
@@ -73,7 +73,7 @@ class _AuthPageState extends State<AuthPage> {
                         borderColor: Colors.transparent,
                         borderWidth: 0,
                         borderRadius: 8,
-                        margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         items: References.organizations
                             .map<DropdownMenuItem<String>>(
                                 (org) => DropdownMenuItem<String>(
@@ -93,7 +93,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: TextFormField(
                         decoration: const InputDecoration(
                           filled: true,
@@ -115,7 +115,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: TextFormField(
                         obscureText: !privateKeyVisibility,
                         decoration: InputDecoration(
@@ -147,7 +147,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                      padding: const EdgeInsets.only(top: 12),
                       child: FormButtonWidget(
                         onPressed: submitIdentity,
                         text: "LOGIN",

@@ -1,3 +1,4 @@
+import 'package:chainmetric/main_theme.dart';
 import 'package:chainmetric/shared/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -21,38 +22,30 @@ class _MainPageState extends State<MainPage> {
   List<NavigationTabItem> tabs = [
     NavigationTabItem(
         title: "IoT Chain",
-        navBarItem: CustomAppBarItem(icon: Icons.home),
+        navBarItem: CustomAppBarItem(icon: Icons.home_filled),
         tab: HomeTab(),
         buttonIcon: const Icon(Icons.cached, color: Colors.black),
-        pageAction: (ctx) => print("Home")
-    ),
+        pageAction: (ctx) => print("Home")),
     NavigationTabItem(
         title: "Assets",
-        navBarItem: CustomAppBarItem(icon: Icons.shopping_cart),
+        navBarItem: CustomAppBarItem(icon: Icons.shopping_cart_sharp),
         tab: AssetsTab(key: GlobalKey()),
         buttonIcon: const Icon(Icons.add, color: Colors.black),
-        pageAction: (state) => openPage(
-          state.context, const AssetForm(),
-            then: (state as _MainPageState).currentTab().refreshData
-        )
-    ),
+        pageAction: (state) => openPage(state.context, const AssetForm(),
+            then: (state as _MainPageState).currentTab().refreshData)),
     NavigationTabItem(
         title: "Devices",
-        navBarItem: CustomAppBarItem(icon: Icons.memory),
+        navBarItem: CustomAppBarItem(icon: Icons.memory_sharp),
         tab: DevicesTab(key: GlobalKey()),
         buttonIcon: const Icon(Icons.qr_code_scanner, color: Colors.black),
-        pageAction: (state) => openPage(
-            state.context, const DeviceForm(),
-            then: (state as _MainPageState).currentTab().refreshData
-        )
-    ),
+        pageAction: (state) => openPage(state.context, const DeviceForm(),
+            then: (state as _MainPageState).currentTab().refreshData)),
     NavigationTabItem(
         title: "Profile",
-        navBarItem: CustomAppBarItem(icon: Icons.person),
+        navBarItem: CustomAppBarItem(icon: Icons.people_alt_sharp),
         tab: ProfileTab(),
         buttonIcon: const Icon(Icons.person, color: Colors.black),
-        pageAction: (ctx) => print("Profile")
-    ),
+        pageAction: (ctx) => print("Profile")),
   ];
 
   void selectedTab(int index) {
@@ -67,7 +60,11 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(tabs[_currentIndex].title)),
+        title: Text(tabs[_currentIndex].title,
+            style: AppTheme.title2.override(fontSize: 28)),
+        centerTitle: false,
+        automaticallyImplyLeading: false,
+        elevation: 4,
       ),
       body: tabs[_currentIndex].tab,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
