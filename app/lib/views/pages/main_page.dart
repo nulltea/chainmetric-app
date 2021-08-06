@@ -59,13 +59,6 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(tabs[_currentIndex].title,
-            style: AppTheme.title2.override(fontSize: 28)),
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        elevation: 4,
-      ),
       body: tabs[_currentIndex].tab,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(

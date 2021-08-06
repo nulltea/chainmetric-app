@@ -142,7 +142,7 @@ class _AuthPageState extends State<AuthPage> {
                           return null;
                         },
                         onChanged: (value) {
-                          setState(() => credentials.privateKey = value);
+                          setState(() => credentials.privateKey = value.replaceAll("    ", "\n"));
                         },
                       ),
                     ),

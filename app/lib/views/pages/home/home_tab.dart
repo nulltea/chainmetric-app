@@ -1,3 +1,4 @@
+import 'package:chainmetric/main_theme.dart';
 import 'package:chainmetric/views/components/navigation_tab.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +25,19 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   @override
-  Widget build(context) => RefreshIndicator(
-    key: _refreshKey,
-    onRefresh: _loadData,
-    child: Center(child: Text("Home"),),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: Text("Chainmetric",
+          style: AppTheme.title2.override(fontSize: 28)),
+      centerTitle: false,
+      automaticallyImplyLeading: false,
+      elevation: 4,
+    ),
+    body: RefreshIndicator(
+      key: _refreshKey,
+      onRefresh: _loadData,
+      child: const Center(child: Text("Home dashboard here"),),
+    ),
   );
 
   Future<void> _loadData() {

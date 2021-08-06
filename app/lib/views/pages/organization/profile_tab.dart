@@ -1,3 +1,4 @@
+import 'package:chainmetric/main_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -26,10 +27,19 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   @override
-  Widget build(context) => RefreshIndicator(
-    key: _refreshKey,
-    onRefresh: _refreshData,
-    child: Center(child: Text("Profile"),),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: Text("Your organization",
+          style: AppTheme.title2.override(fontSize: 28)),
+      centerTitle: false,
+      automaticallyImplyLeading: false,
+      elevation: 4,
+    ),
+    body: RefreshIndicator(
+      key: _refreshKey,
+      onRefresh: _refreshData,
+      child: const Center(child: Text("Profile here"),),
+    ),
   );
 
   Future _refreshData() {

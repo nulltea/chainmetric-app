@@ -1,3 +1,5 @@
+import 'package:chainmetric/main_theme.dart';
+import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
 import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/controllers/gps_adapter.dart';
@@ -6,10 +8,8 @@ import 'package:chainmetric/shared/utils.dart';
 import 'package:chainmetric/views/components/modal_menu.dart';
 import 'package:chainmetric/views/components/navigation_tab.dart';
 import 'package:chainmetric/views/components/svg_icon.dart';
-import 'package:flutter/material.dart';
-
-import 'device_form.dart';
-import 'device_pairing_page.dart';
+import 'package:chainmetric/views/pages/devices/device_form.dart';
+import 'package:chainmetric/views/pages/devices/device_pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
   DevicesTab({GlobalKey key}) : super(key: key ?? GlobalKey());
@@ -36,13 +36,22 @@ class _DevicesTabState extends State<DevicesTab> {
   }
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator(
-    key: _refreshKey,
-    onRefresh: _refreshData,
-    child: ListView.builder(
-      itemCount: devices.length,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      itemBuilder: _listBuilder,
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: Text("Devices",
+          style: AppTheme.title2.override(fontSize: 28)),
+      centerTitle: false,
+      automaticallyImplyLeading: false,
+      elevation: 4,
+    ),
+    body: RefreshIndicator(
+      key: _refreshKey,
+      onRefresh: _refreshData,
+      child: ListView.builder(
+        itemCount: devices.length,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        itemBuilder: _listBuilder,
+      ),
     ),
   );
 

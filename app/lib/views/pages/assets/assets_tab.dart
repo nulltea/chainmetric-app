@@ -40,58 +40,66 @@ class _AssetsTabState extends State<AssetsTab> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          TextFormField(
-            onChanged: (_) => setState(() {}),
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: "Search for assets...",
-              hintStyle: AppTheme.bodyText1.override(
-                fontFamily: "Roboto Mono",
-              ),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: AppTheme.appBarBG,
-                  width: 4,
-                ),
-                borderRadius: BorderRadius.zero,
-              ),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: AppTheme.appBarBG,
-                  width: 4,
-                ),
-                borderRadius: BorderRadius.zero,
-              ),
-              prefixIcon: const Icon(Icons.search_sharp),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? InkWell(
-                      onTap: () => setState(
-                        () => _searchController.clear(),
-                      ),
-                      child: const Icon(
-                        Icons.clear,
-                        size: 22,
-                      ),
-                    )
-                  : null,
-            ),
-            style: AppTheme.bodyText1.override(
-              fontFamily: "Roboto Mono",
-            ),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: Text("Assets",
+          style: AppTheme.title2.override(fontSize: 28)),
+      centerTitle: false,
+      automaticallyImplyLeading: false,
+      elevation: 4,
+    ),
+    body: RefreshIndicator(
+          key: _refreshKey,
+          onRefresh: _refreshData,
+          child: ListView.builder(
+            itemCount: assets.length,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            itemBuilder: _listBuilder,
           ),
-          RefreshIndicator(
-            key: _refreshKey,
-            onRefresh: _refreshData,
-            child: ListView.builder(
-              itemCount: assets.length,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              itemBuilder: _listBuilder,
-            ),
-          ),
-        ],
-      );
+        ),
+  );
+
+  /*
+  TextFormField(
+                onChanged: (_) => setState(() {}),
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: "Search for assets...",
+                  hintStyle: AppTheme.bodyText1.override(
+                    fontFamily: "Roboto Mono",
+                  ),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppTheme.appBarBG,
+                      width: 4,
+                    ),
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppTheme.appBarBG,
+                      width: 4,
+                    ),
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  prefixIcon: const Icon(Icons.search_sharp),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? InkWell(
+                          onTap: () => setState(
+                            () => _searchController.clear(),
+                          ),
+                          child: const Icon(
+                            Icons.clear,
+                            size: 22,
+                          ),
+                        )
+                      : null,
+                ),
+                style: AppTheme.bodyText1.override(
+                  fontFamily: "Roboto Mono",
+                ),
+              )
+   */
 
   Future<void> _refreshData() {
     _refreshKey.currentState?.show();
