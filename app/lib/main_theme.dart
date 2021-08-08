@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static const Color primaryColor = Color(0xFF04AFD3);
   static const Color secondaryColor = Color(0xFFA74CDF);
-  static const Color tertiaryColor = Color(0xFF6E7681);
+  static const Color tertiaryColor = Colors.white;
 
   static const Color primaryBG = Color(0xFF0D1117);
   static const Color cardBG = Color(0xFF1A1D29);
@@ -32,7 +32,7 @@ class AppTheme {
     "Roboto",
     color: tertiaryColor,
     fontWeight: FontWeight.w500,
-    fontSize: 20,
+    fontSize: 18,
   );
   static TextStyle get subtitle1 => GoogleFonts.getFont(
     "Roboto Mono",
@@ -44,19 +44,19 @@ class AppTheme {
     "Roboto Mono",
     color: tertiaryColor,
     fontWeight: FontWeight.normal,
-    fontSize: 16,
+    fontSize: 15,
   );
   static TextStyle get bodyText1 => GoogleFonts.getFont(
-    "Roboto Mono",
+    "Roboto",
     color: tertiaryColor,
     fontWeight: FontWeight.normal,
     fontSize: 14,
   );
   static TextStyle get bodyText2 => GoogleFonts.getFont(
-    "Roboto Mono",
+    "Roboto",
     color: tertiaryColor,
     fontWeight: FontWeight.normal,
-    fontSize: 14,
+    fontSize: 12,
   );
 }
 

@@ -63,6 +63,7 @@ class _MainPageState extends State<MainPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () => tabs[_currentIndex].pageAction(this),
+        backgroundColor: Theme.of(context).primaryColor,
         child: tabs[_currentIndex].buttonIcon,
       ),
       bottomNavigationBar: CustomBottomAppBar(

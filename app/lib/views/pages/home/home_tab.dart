@@ -28,7 +28,7 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       title: Text("Chainmetric",
-          style: AppTheme.title2.override(fontSize: 28)),
+          style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
       centerTitle: false,
       automaticallyImplyLeading: false,
       elevation: 4,

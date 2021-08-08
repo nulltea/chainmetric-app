@@ -46,30 +46,40 @@ class _AppState extends State<App> {
 
   ThemeData mainTheme() => darkTheme;
 
-  ThemeData darkTheme = ThemeData(
+  ThemeData darkTheme = ThemeData.dark().copyWith(
     brightness: Brightness.dark,
     backgroundColor: AppTheme.primaryBG,
     scaffoldBackgroundColor: AppTheme.primaryBG,
     primaryColor: AppTheme.primaryColor,
-    primarySwatch: Colors.teal,
-    bottomAppBarTheme: const BottomAppBarTheme(
+    bottomAppBarTheme: ThemeData.dark().bottomAppBarTheme.copyWith(
       color: AppTheme.appBarBG,
     ),
-    cardColor: AppTheme.cardBG,
-    textTheme: const TextTheme(
-      headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-      headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-      bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+    textTheme: ThemeData.dark().textTheme.copyWith(
+      headline1: AppTheme.title1,
+      headline2: AppTheme.title2,
+      headline3: AppTheme.title3,
+      subtitle1: AppTheme.subtitle1,
+      subtitle2: AppTheme.subtitle2,
+      bodyText1: AppTheme.bodyText1,
+      bodyText2: AppTheme.bodyText1,
     ),
-    inputDecorationTheme: const InputDecorationTheme(
+    cardColor: AppTheme.cardBG,
+    inputDecorationTheme: ThemeData.dark().inputDecorationTheme.copyWith(
       fillColor: AppTheme.inputBG,
+      hintStyle: AppTheme.subtitle1.copyWith(color: ThemeData.dark().hintColor),
+      labelStyle: AppTheme.subtitle1
+    ),
+    appBarTheme: ThemeData.dark().appBarTheme.copyWith(
+      backgroundColor: AppTheme.primaryColor,
+      actionsIconTheme: ThemeData.dark().iconTheme,
+      titleTextStyle: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28),
     )
   );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "IoTChain client app",
+      title: "Chainmetric admin application",
       theme: mainTheme(),
       darkTheme: darkTheme,
       home: _isLoading
@@ -97,7 +107,7 @@ class _AppState extends State<App> {
   void _initOverlay() {
     OverlayScreen().saveScreens({
       "modal": CustomOverlayScreen(
-        backgroundColor: darkTheme.primaryColor.withAlpha(225),
+        backgroundColor: AppTheme.primaryBG.withAlpha(225),
         content: const Center(),
       ),
       "loading": CustomOverlayScreen(

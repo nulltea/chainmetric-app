@@ -73,7 +73,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             onTap: () => onPressed(index),
             child: Icon(
                     item.icon,
-                    color: _selectedIndex == index ? Theme.of(context).accentColor: Colors.grey,
+                    color: _selectedIndex == index ? Theme.of(context).primaryColor: Colors.grey,
                     size: 24.0,
                   ),
           ),

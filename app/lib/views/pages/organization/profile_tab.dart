@@ -30,7 +30,7 @@ class _ProfileTabState extends State<ProfileTab> {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       title: Text("Your organization",
-          style: AppTheme.title2.override(fontSize: 28)),
+          style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
       centerTitle: false,
       automaticallyImplyLeading: false,
       elevation: 4,

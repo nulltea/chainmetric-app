@@ -9,8 +9,10 @@ import 'package:chainmetric/views/components/navigation_tab.dart';
 import 'package:chainmetric/views/pages/readings/readings_page.dart';
 import 'package:chainmetric/views/pages/requirements/requirements_form.dart';
 import 'package:chainmetric/views/pages/assets/asset_form.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AssetsTab extends NavigationTab {
   AssetsTab({GlobalKey key}) : super(key: key ?? GlobalKey());
@@ -28,6 +30,7 @@ class AssetsTab extends NavigationTab {
 class _AssetsTabState extends State<AssetsTab> {
   List<AssetResponseItem> assets = [];
   String scrollID;
+  bool _searchVisibility = false;
 
   static const _itemsLength = 50;
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -40,15 +43,25 @@ class _AssetsTabState extends State<AssetsTab> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text("Assets",
-          style: AppTheme.title2.override(fontSize: 28)),
-      centerTitle: false,
-      automaticallyImplyLeading: false,
-      elevation: 4,
-    ),
-    body: RefreshIndicator(
+  Widget build(BuildContext context) =>
+      Scaffold(
+        appBar: AppBar(
+          title: Text("Assets",
+              style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
+          centerTitle: false,
+          elevation: 4,
+          actionsIconTheme: Theme.of(context).iconTheme,
+          actions: [
+            IconButton(
+                onPressed: (){
+                  showSearch<int>(
+                    context: context,
+                    delegate: _SearchDemoSearchDelegate(),
+                  );
+                }, icon: const Icon(Icons.search_sharp))
+          ],
+        ),
+        body: RefreshIndicator(
           key: _refreshKey,
           onRefresh: _refreshData,
           child: ListView.builder(
@@ -57,53 +70,12 @@ class _AssetsTabState extends State<AssetsTab> {
             itemBuilder: _listBuilder,
           ),
         ),
-  );
-
-  /*
-  TextFormField(
-                onChanged: (_) => setState(() {}),
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: "Search for assets...",
-                  hintStyle: AppTheme.bodyText1.override(
-                    fontFamily: "Roboto Mono",
-                  ),
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppTheme.appBarBG,
-                      width: 4,
-                    ),
-                    borderRadius: BorderRadius.zero,
-                  ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppTheme.appBarBG,
-                      width: 4,
-                    ),
-                    borderRadius: BorderRadius.zero,
-                  ),
-                  prefixIcon: const Icon(Icons.search_sharp),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? InkWell(
-                          onTap: () => setState(
-                            () => _searchController.clear(),
-                          ),
-                          child: const Icon(
-                            Icons.clear,
-                            size: 22,
-                          ),
-                        )
-                      : null,
-                ),
-                style: AppTheme.bodyText1.override(
-                  fontFamily: "Roboto Mono",
-                ),
-              )
-   */
+      );
 
   Future<void> _refreshData() {
     _refreshKey.currentState?.show();
-    return _fetchAssets().then((value) => setState(() {
+    return _fetchAssets().then((value) =>
+        setState(() {
           assets = value.items;
           scrollID = value.scrollID;
         }));
@@ -121,7 +93,8 @@ class _AssetsTabState extends State<AssetsTab> {
     );
   }
 
-  Widget _assetCard(AssetResponseItem asset) => InkWell(
+  Widget _assetCard(AssetResponseItem asset) =>
+      InkWell(
         onLongPress: () => _showAssetMenu(context, asset),
         child: Card(
           elevation: 5,
@@ -137,12 +110,13 @@ class _AssetsTabState extends State<AssetsTab> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const SizedBox(height: 8),
                 Text(asset.name,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.w600)),
+                    style: AppTheme.title3),
                 Text(asset.sku,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Theme.of(context).hintColor,
+                    style: AppTheme.subtitle2.override(
+                      fontFamily: "Roboto Mono",
+                        color: Theme
+                            .of(context)
+                            .hintColor,
                         fontWeight: FontWeight.w400))
               ]),
               const Spacer(),
@@ -151,31 +125,49 @@ class _AssetsTabState extends State<AssetsTab> {
                 Row(
                   children: [
                     Icon(Icons.corporate_fare,
-                        color: Theme.of(context).hintColor),
+                        color: Theme
+                            .of(context)
+                            .hintColor),
                     const SizedBox(width: 5),
                     Text(References.organizationsMap[asset.holder].name,
-                        style: TextStyle(color: Theme.of(context).hintColor))
+                        style: AppTheme.bodyText2.override(
+                            color: Theme
+                                .of(context)
+                                .hintColor,
+                            fontWeight: FontWeight.w400))
                   ],
                 ),
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    Icon(Icons.location_on, color: Theme.of(context).hintColor),
+                    Icon(Icons.location_on, color: Theme
+                        .of(context)
+                        .hintColor),
                     const SizedBox(width: 5),
                     Text(asset.location.name,
-                        style: TextStyle(color: Theme.of(context).hintColor))
+                        style: AppTheme.bodyText2.override(
+                            color: Theme
+                                .of(context)
+                                .hintColor,
+                            fontWeight: FontWeight.w400))
                   ],
                 ),
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    Icon(Icons.fact_check, color: Theme.of(context).hintColor),
+                    Icon(Icons.fact_check, color: Theme
+                        .of(context)
+                        .hintColor),
                     const SizedBox(width: 5),
                     Text(
                         asset.requirements != null
                             ? "Assigned (${asset.requirements.metrics.length})"
                             : "Not assigned",
-                        style: TextStyle(color: Theme.of(context).hintColor))
+                        style: AppTheme.bodyText2.override(
+                            color: Theme
+                                .of(context)
+                                .hintColor,
+                            fontWeight: FontWeight.w400))
                   ],
                 )
               ]),
@@ -194,16 +186,17 @@ class _AssetsTabState extends State<AssetsTab> {
             ? "Assign requirements"
             : "Edit requirements",
         icon: Icons.fact_check,
-        action: () => openPage(
-            context, RequirementsForm(model: asset.getRequirements()),
-            then: _refreshData),
+        action: () =>
+            openPage(
+                context, RequirementsForm(model: asset.getRequirements()),
+                then: _refreshData),
       ),
       ModalMenuOption(
         title: "Revoke requirements",
         icon: Icons.delete_sweep,
         action: decorateWithLoading(
             context,
-            () =>
+                () =>
                 RequirementsController.revokeRequirements(asset.requirements.id)
                     .whenComplete(_refreshData)),
         enabled: asset.requirements != null,
@@ -219,8 +212,10 @@ class _AssetsTabState extends State<AssetsTab> {
       ModalMenuOption(
           title: "Watch asset",
           icon: Icons.visibility,
-          action: () => openPage(context,
-              ReadingsPage(asset: asset, requirements: asset.requirements))),
+          action: () =>
+              openPage(context,
+                  ReadingsPage(
+                      asset: asset, requirements: asset.requirements))),
       ModalMenuOption(
           title: "Edit asset",
           icon: Icons.edit,
@@ -229,14 +224,65 @@ class _AssetsTabState extends State<AssetsTab> {
       ModalMenuOption(
           title: "Delete asset",
           icon: Icons.delete_forever,
-          action: () => showYesNoDialog(context,
-              title: "Delete ${asset.sku}",
-              message: "Are you sure?",
-              onYes: decorateWithLoading(
-                  context,
-                  () => AssetsController.deleteAsset(asset.id)
-                      .whenComplete(_refreshData)),
-              onNo: () => print("close modal"))),
+          action: () =>
+              showYesNoDialog(context,
+                  title: "Delete ${asset.sku}",
+                  message: "Are you sure?",
+                  onYes: decorateWithLoading(
+                      context,
+                          () =>
+                          AssetsController.deleteAsset(asset.id)
+                              .whenComplete(_refreshData)))),
     ]);
+  }
+}
+
+class _SearchDemoSearchDelegate extends SearchDelegate<int> {
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return Theme.of(context);
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        tooltip: 'Back',
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow,
+          progress: transitionAnimation,
+        ),
+        onPressed: () {
+          close(context, null);
+        }
+    );
+  }
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Container();
+  }
+  @override
+  Widget buildResults(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+
+      ],
+    );
+  }
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return <Widget>[
+      if (query.isEmpty) IconButton(
+        tooltip: 'Voice Search',
+        icon: const Icon(Icons.mic),
+        onPressed: () { },
+      ) else IconButton(
+        tooltip: 'Clear',
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+          showSuggestions(context);
+        },
+      ),
+    ];
   }
 }

@@ -23,13 +23,13 @@ class ModalMenuOption extends StatelessWidget {
       child: InkWell(
           onTap: _decorateWithDismiss(context, action),
           child: ListTile(
-              leading: Icon(icon, color: Colors.teal, size: 30),
+              leading: Icon(icon, color: Theme.of(context).primaryColor, size: 30),
               title: Text(title,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 18,
                     fontWeight:
                     FontWeight.bold,
-                    color: Colors.teal
+                  color: Theme.of(context).primaryColor
                 ),
               )
           )
