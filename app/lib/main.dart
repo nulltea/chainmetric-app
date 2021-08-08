@@ -1,30 +1,28 @@
+import 'package:chainmetric/controllers/blockchain_adapter.dart';
 import 'package:chainmetric/controllers/bluetooth_adapter.dart';
-import 'package:chainmetric/controllers/gps_adapter.dart';
 import 'package:chainmetric/controllers/preferences_adapter.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:chainmetric/model/readings_model.dart';
+import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/main.reflectable.dart';
+import 'package:chainmetric/main_theme.dart';
+import 'package:chainmetric/models/asset_model.dart';
+import 'package:chainmetric/models/device_model.dart';
+import 'package:chainmetric/models/metric_model.dart';
+import 'package:chainmetric/models/organization_model.dart';
+import 'package:chainmetric/models/readings_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
+import 'package:chainmetric/views/components/common/loading_splash.dart';
+import 'package:chainmetric/views/pages/main_page.dart';
+import 'package:chainmetric/views/pages/auth/page.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:chainmetric/model/device_model.dart';
-import 'package:chainmetric/model/metric_model.dart';
-import 'package:chainmetric/model/requirements_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:global_configuration/global_configuration.dart';
 import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 import 'package:yaml/yaml.dart';
 
-import 'controllers/references_adapter.dart';
-import 'main.reflectable.dart';
-import 'package:chainmetric/controllers/blockchain_adapter.dart';
-import 'package:chainmetric/views/auth_page.dart';
-import 'package:chainmetric/views/components/loading_splash.dart';
 
-import 'model/asset_model.dart';
-import 'model/organization_model.dart';
-import 'views/main_page.dart';
-import 'package:flutter/material.dart';
-
-
-void main() async {
+void main() {
   init();
   runApp(App());
 }
@@ -48,40 +46,47 @@ class _AppState extends State<App> {
 
   ThemeData mainTheme() => darkTheme;
 
-  ThemeData darkTheme = ThemeData(
+  ThemeData darkTheme = ThemeData.dark().copyWith(
     brightness: Brightness.dark,
-    backgroundColor: Color.fromARGB(255, 20, 28, 33),
-    scaffoldBackgroundColor: Color.fromARGB(255, 20, 28, 33),
-    primaryColor: Color.fromARGB(255, 24, 43, 50),
-    accentColor: Colors.teal,
-    primarySwatch: Colors.teal,
-    bottomAppBarTheme: BottomAppBarTheme(
-      color: Color.fromARGB(255, 24, 43, 50),
+    backgroundColor: AppTheme.primaryBG,
+    scaffoldBackgroundColor: AppTheme.primaryBG,
+    primaryColor: AppTheme.primaryColor,
+    bottomAppBarTheme: ThemeData.dark().bottomAppBarTheme.copyWith(
+      color: AppTheme.appBarBG,
     ),
-    cardColor: Color.fromARGB(255, 30, 54, 64),
-
-    // Define the default TextTheme. Use this to specify the default
-    // text styling for headlines, titles, bodies of text, and more.
-    textTheme: TextTheme(
-      headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-      headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-      bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+    textTheme: ThemeData.dark().textTheme.copyWith(
+      headline1: AppTheme.title1,
+      headline2: AppTheme.title2,
+      headline3: AppTheme.title3,
+      subtitle1: AppTheme.subtitle1,
+      subtitle2: AppTheme.subtitle2,
+      bodyText1: AppTheme.bodyText1,
+      bodyText2: AppTheme.bodyText1,
     ),
-    inputDecorationTheme: InputDecorationTheme(
-      fillColor: Color.fromARGB(255, 30, 54, 64),
+    cardColor: AppTheme.cardBG,
+    inputDecorationTheme: ThemeData.dark().inputDecorationTheme.copyWith(
+      fillColor: AppTheme.inputBG,
+      hintStyle: AppTheme.subtitle2.copyWith(color: ThemeData.dark().hintColor),
+      labelStyle: AppTheme.subtitle1,
+      helperStyle: AppTheme.subtitle2,
+    ),
+    appBarTheme: ThemeData.dark().appBarTheme.copyWith(
+      backgroundColor: AppTheme.primaryColor,
+      actionsIconTheme: ThemeData.dark().iconTheme,
+      titleTextStyle: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28),
     )
   );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "IoTChain client app",
+      title: "Chainmetric admin application",
       theme: mainTheme(),
       darkTheme: darkTheme,
       home: _isLoading
           ? LoadingSplash()
           : _requireAuth
-              ? AuthPage(submitAuth: _initBackend,)
+              ? AuthPage(submitAuth: _initBackend)
               : MainPage(),
     );
   }
@@ -103,8 +108,8 @@ class _AppState extends State<App> {
   void _initOverlay() {
     OverlayScreen().saveScreens({
       "modal": CustomOverlayScreen(
-        backgroundColor: darkTheme.primaryColor.withAlpha(225),
-        content: Center(),
+        backgroundColor: AppTheme.primaryBG.withAlpha(225),
+        content: const Center(),
       ),
       "loading": CustomOverlayScreen(
         backgroundColor: darkTheme.primaryColor.withAlpha(225),
@@ -123,12 +128,12 @@ void init() {
 }
 
 Future<void> initConfig() async {
-  YamlMap yaml = loadYaml(
+  final yaml = loadYaml(
       await rootBundle.loadString("assets/config.yaml")
   );
 
   GlobalConfiguration().loadFromMap(
-  Map<String, dynamic>.fromIterable(yaml.keys, key: (key) => key, value: (key) => yaml[key])
+    { for (var key in yaml.keys) key as String : yaml[key] }
   );
 }
 
@@ -138,18 +143,18 @@ void initJson() {
       valueDecorators: {
         typeOf<List<String>>(): (value) => value.cast<String>(),
         typeOf<List<Asset>>(): (value) => value.cast<Asset>(),
-        typeOf<List<AssetResponseItem>>(): (value) => value.cast<AssetResponseItem>(),
+        typeOf<List<AssetPresenter>>(): (value) => value.cast<AssetPresenter>(),
         typeOf<List<Device>>(): (value) => value.cast<Device>(),
         typeOf<List<Organization>>(): (value) => value.cast<Organization>(),
         typeOf<List<AssetType>>(): (value) => value.cast<AssetType>(),
         typeOf<List<DeviceProfile>>(): (value) => value.cast<DeviceProfile>(),
         typeOf<List<Metric>>(): (value) => value.cast<Metric>(),
-        typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value),
-        typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value),
+        typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value as Map),
+        typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value as Map),
         typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
-        typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList()),
+        typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList() as List<MetricReadingPoint>),
         typeOf<List<DeviceCommandLogEntry>>(): (value) => value.cast<DeviceCommandLogEntry>(),
-        typeOf<Map<String, PairedDevice>>(): (value) => Map<String, PairedDevice>.from(value),
+        typeOf<Map<String, PairedDevice>>(): (value) => Map<String, PairedDevice>.from(value as Map),
       },
     enumValues: {
         DeviceCommand: EnumDescriptor(

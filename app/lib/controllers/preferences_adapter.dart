@@ -1,4 +1,4 @@
-import 'package:chainmetric/model/device_model.dart';
+import 'package:chainmetric/models/device_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,12 +13,12 @@ class Preferences {
     try {
       return JsonMapper.deserialize<Map<String, PairedDevice>>(
           prefs.getString("paired_devices")
-      ) ?? Map<String, PairedDevice>();
-    } on Exception {
-
+      ) ?? <String, PairedDevice>{};
+    } on Exception catch (e) {
+      print(e);
     }
 
-    return Map<String, PairedDevice>();
+    return <String, PairedDevice>{};
   }
 
   static Future<bool> setPairedDevices(Map<String, PairedDevice> value) {

@@ -1,12 +1,12 @@
+import 'package:chainmetric/models/asset_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:chainmetric/model/asset_model.dart';
 
 import 'blockchain_adapter.dart';
 
 class AssetsController {
-  static Future<AssetsResponse> getAssets({AssetQuery query, int limit, String scrollID}) async {
-    query ??= AssetQuery(limit: limit, scrollID: scrollID);
-    String data = await Blockchain.evaluateTransaction(
+  static Future<AssetsResponse> getAssets({AssetsQuery query, int limit, String scrollID}) async {
+    query ??= AssetsQuery(limit: limit, scrollID: scrollID);
+    final data = await Blockchain.evaluateTransaction(
         "assets", "Query", JsonMapper.serialize(query));
     try {
       return data != null && data.isNotEmpty
@@ -19,11 +19,11 @@ class AssetsController {
   }
 
   static Future<bool> upsertAsset(Asset asset) async {
-    var jsonData = JsonMapper.serialize(asset);
-    return await Blockchain.trySubmitTransaction("assets", "Upsert", jsonData);
+    final jsonData = JsonMapper.serialize(asset);
+    return Blockchain.trySubmitTransaction("assets", "Upsert", jsonData);
   }
 
   static Future<bool> deleteAsset(String id) async {
-    return await Blockchain.trySubmitTransaction("assets", "Remove", id);
+    return Blockchain.trySubmitTransaction("assets", "Remove", id);
   }
 }

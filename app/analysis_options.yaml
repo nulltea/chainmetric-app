@@ -1,0 +1,12 @@
+include: package:lint/analysis_options.yaml
+
+analyzer:
+  strong-mode:
+    implicit-casts: true
+
+linter:
+  rules:
+    # Blindly follow the Flutter code style, which prefers types everywhere
+    always_specify_types: false
+    avoid_classes_with_only_static_members: false
+    always_use_package_imports: true

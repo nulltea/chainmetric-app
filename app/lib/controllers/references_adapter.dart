@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:chainmetric/model/asset_model.dart';
-import 'package:chainmetric/model/device_model.dart';
-import 'package:chainmetric/model/metric_model.dart';
-import 'package:chainmetric/model/organization_model.dart';
-import 'package:chainmetric/model/requirements_model.dart';
+import 'package:chainmetric/models/asset_model.dart';
+import 'package:chainmetric/models/device_model.dart';
+import 'package:chainmetric/models/metric_model.dart';
+import 'package:chainmetric/models/organization_model.dart';
+import 'package:chainmetric/models/requirements_model.dart';
 
 class References {
   static List<Organization> organizations = <Organization>[];
@@ -34,8 +34,8 @@ class References {
         await rootBundle.loadString("assets/data/default_requirements.json")
     );
 
-    assetTypesMap = Map.fromIterable(assetTypes, key: (at) => at.type, value: (at) => at);
-    metricsMap = Map.fromIterable(metrics, key: (m) => m.metric, value: (m) => m);
-    organizationsMap = Map.fromIterable(organizations, key: (m) => m.mspID, value: (m) => m);
+    assetTypesMap = { for (var at in assetTypes) at.type : at };
+    metricsMap = { for (var m in metrics) m.metric : m };
+    organizationsMap = { for (var m in organizations) m.mspID : m };
   }
 }
