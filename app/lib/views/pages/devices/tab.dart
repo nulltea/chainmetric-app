@@ -5,11 +5,11 @@ import 'package:chainmetric/controllers/devices_controller.dart';
 import 'package:chainmetric/controllers/gps_adapter.dart';
 import 'package:chainmetric/models/device_model.dart';
 import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/views/components/modal_menu.dart';
-import 'package:chainmetric/views/components/navigation_tab.dart';
-import 'package:chainmetric/views/components/svg_icon.dart';
-import 'package:chainmetric/views/pages/devices/device_form.dart';
-import 'package:chainmetric/views/pages/devices/device_pairing_page.dart';
+import 'package:chainmetric/views/components/common/modal_menu.dart';
+import 'package:chainmetric/views/components/common/navigation_tab.dart';
+import 'package:chainmetric/views/components/common/svg_icon.dart';
+import 'package:chainmetric/views/pages/devices/form.dart';
+import 'package:chainmetric/views/pages/devices/pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
   DevicesTab({GlobalKey key}) : super(key: key ?? GlobalKey());

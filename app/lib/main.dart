@@ -10,9 +10,9 @@ import 'package:chainmetric/models/metric_model.dart';
 import 'package:chainmetric/models/organization_model.dart';
 import 'package:chainmetric/models/readings_model.dart';
 import 'package:chainmetric/models/requirements_model.dart';
-import 'package:chainmetric/views/components/splash_screen.dart';
+import 'package:chainmetric/views/components/common/loading_splash.dart';
 import 'package:chainmetric/views/pages/main_page.dart';
-import 'package:chainmetric/views/pages/auth/auth_page.dart';
+import 'package:chainmetric/views/pages/auth/page.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -66,8 +66,9 @@ class _AppState extends State<App> {
     cardColor: AppTheme.cardBG,
     inputDecorationTheme: ThemeData.dark().inputDecorationTheme.copyWith(
       fillColor: AppTheme.inputBG,
-      hintStyle: AppTheme.subtitle1.copyWith(color: ThemeData.dark().hintColor),
-      labelStyle: AppTheme.subtitle1
+      hintStyle: AppTheme.subtitle2.copyWith(color: ThemeData.dark().hintColor),
+      labelStyle: AppTheme.subtitle1,
+      helperStyle: AppTheme.subtitle2,
     ),
     appBarTheme: ThemeData.dark().appBarTheme.copyWith(
       backgroundColor: AppTheme.primaryColor,
@@ -142,7 +143,7 @@ void initJson() {
       valueDecorators: {
         typeOf<List<String>>(): (value) => value.cast<String>(),
         typeOf<List<Asset>>(): (value) => value.cast<Asset>(),
-        typeOf<List<AssetResponseItem>>(): (value) => value.cast<AssetResponseItem>(),
+        typeOf<List<AssetPresenter>>(): (value) => value.cast<AssetPresenter>(),
         typeOf<List<Device>>(): (value) => value.cast<Device>(),
         typeOf<List<Organization>>(): (value) => value.cast<Organization>(),
         typeOf<List<AssetType>>(): (value) => value.cast<AssetType>(),

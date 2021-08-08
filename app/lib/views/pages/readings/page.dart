@@ -9,7 +9,7 @@ import 'package:chainmetric/models/readings_model.dart';
 import 'package:chainmetric/models/requirements_model.dart';
 import 'package:chainmetric/shared/extensions.dart';
 import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/views/components/svg_icon.dart';
+import 'package:chainmetric/views/components/common/svg_icon.dart';
 import 'package:charts_common/src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports

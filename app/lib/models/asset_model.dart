@@ -4,7 +4,7 @@ import 'package:chainmetric/models/requirements_model.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
 
-import 'location_model.dart';
+import 'package:chainmetric/models/location_model.dart';
 
 @jsonSerializable
 class Asset {
@@ -22,7 +22,7 @@ class Asset {
 }
 
 @jsonSerializable
-class AssetQuery {
+class AssetsQuery {
   String type;
   String holder;
   String state;
@@ -32,7 +32,7 @@ class AssetQuery {
   @JsonProperty(name: "scroll_id")
   String scrollID;
 
-  AssetQuery({
+  AssetsQuery({
     this.limit,
     this.scrollID,
   });
@@ -40,13 +40,13 @@ class AssetQuery {
 
 @jsonSerializable
 class AssetsResponse {
-  List<AssetResponseItem> items = <AssetResponseItem>[];
+  List<AssetPresenter> items = <AssetPresenter>[];
   @JsonProperty(name: "scroll_id")
   String scrollID;
 }
 
 @jsonSerializable
-class AssetResponseItem extends Asset {
+class AssetPresenter extends Asset {
   Requirements requirements;
   Requirements getRequirements() {
     return requirements ?? Requirements.forAsset(assetID: id);

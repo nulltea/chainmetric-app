@@ -1,5 +1,5 @@
 import 'package:chainmetric/main_theme.dart';
-import 'package:chainmetric/views/components/navigation_tab.dart';
+import 'package:chainmetric/views/components/common/navigation_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomeTab extends NavigationTab {

@@ -4,8 +4,8 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'blockchain_adapter.dart';
 
 class AssetsController {
-  static Future<AssetsResponse> getAssets({AssetQuery query, int limit, String scrollID}) async {
-    query ??= AssetQuery(limit: limit, scrollID: scrollID);
+  static Future<AssetsResponse> getAssets({AssetsQuery query, int limit, String scrollID}) async {
+    query ??= AssetsQuery(limit: limit, scrollID: scrollID);
     final data = await Blockchain.evaluateTransaction(
         "assets", "Query", JsonMapper.serialize(query));
     try {

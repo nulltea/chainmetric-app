@@ -97,7 +97,7 @@ class Blockchain {
     return false;
   }
 
-  static Future<String> initConfig() async {
+  static Future<void> initConfig() async {
     final yaml = loadYaml(
         await rootBundle.loadString("assets/connection.yaml")
     ) as YamlMap;

@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/views/components/form_button_widget.dart';
-import 'package:chainmetric/views/components/form_dropdown_widget.dart';
+import 'package:chainmetric/views/components/common/form_button_widget.dart';
+import 'package:chainmetric/views/components/common/form_dropdown_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/controllers/blockchain_adapter.dart';
 import 'package:chainmetric/models/auth_model.dart';

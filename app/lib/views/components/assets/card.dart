@@ -4,97 +4,21 @@ import 'package:chainmetric/controllers/requirements_controller.dart';
 import 'package:chainmetric/main_theme.dart';
 import 'package:chainmetric/models/asset_model.dart';
 import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/views/components/modal_menu.dart';
-import 'package:chainmetric/views/components/navigation_tab.dart';
-import 'package:chainmetric/views/pages/readings/readings_page.dart';
-import 'package:chainmetric/views/pages/requirements/requirements_form.dart';
-import 'package:chainmetric/views/pages/assets/asset_form.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chainmetric/views/components/common/modal_menu.dart';
+import 'package:chainmetric/views/pages/assets/form.dart';
+import 'package:chainmetric/views/pages/readings/page.dart';
+import 'package:chainmetric/views/pages/requirements/form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-class AssetsTab extends NavigationTab {
-  AssetsTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+class AssetCard extends StatelessWidget {
+  final AssetPresenter asset;
+  final Function() refreshParent;
 
-  _AssetsTabState get _currentState =>
-      (key as GlobalKey)?.currentState as _AssetsTabState;
+  const AssetCard(this.asset, {this.refreshParent, Key key}) : super(key: key);
 
   @override
-  _AssetsTabState createState() => _AssetsTabState();
-
-  @override
-  Future refreshData() => _currentState._refreshData();
-}
-
-class _AssetsTabState extends State<AssetsTab> {
-  List<AssetResponseItem> assets = [];
-  String scrollID;
-  bool _searchVisibility = false;
-
-  static const _itemsLength = 50;
-  final _refreshKey = GlobalKey<RefreshIndicatorState>();
-  final _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshData();
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      Scaffold(
-        appBar: AppBar(
-          title: Text("Assets",
-              style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
-          centerTitle: false,
-          elevation: 4,
-          actionsIconTheme: Theme.of(context).iconTheme,
-          actions: [
-            IconButton(
-                onPressed: (){
-                  showSearch<int>(
-                    context: context,
-                    delegate: _SearchDemoSearchDelegate(),
-                  );
-                }, icon: const Icon(Icons.search_sharp))
-          ],
-        ),
-        body: RefreshIndicator(
-          key: _refreshKey,
-          onRefresh: _refreshData,
-          child: ListView.builder(
-            itemCount: assets.length,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            itemBuilder: _listBuilder,
-          ),
-        ),
-      );
-
-  Future<void> _refreshData() {
-    _refreshKey.currentState?.show();
-    return _fetchAssets().then((value) =>
-        setState(() {
-          assets = value.items;
-          scrollID = value.scrollID;
-        }));
-  }
-
-  Widget _listBuilder(BuildContext context, int index) {
-    if (index >= _itemsLength) return null;
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: Hero(
-        tag: assets[index].id,
-        child: _assetCard(assets[index]),
-      ),
-    );
-  }
-
-  Widget _assetCard(AssetResponseItem asset) =>
-      InkWell(
+  Widget build(BuildContext context) {
+    return InkWell(
         onLongPress: () => _showAssetMenu(context, asset),
         child: Card(
           elevation: 5,
@@ -175,11 +99,9 @@ class _AssetsTabState extends State<AssetsTab> {
           ),
         ),
       );
+  }
 
-  Future<AssetsResponse> _fetchAssets() async =>
-      AssetsController.getAssets(limit: _itemsLength, scrollID: scrollID);
-
-  void _showAssetMenu(BuildContext context, AssetResponseItem asset) {
+   void _showAssetMenu(BuildContext context, AssetPresenter asset) {
     showModalMenu(context: context, options: [
       ModalMenuOption(
         title: asset.requirements == null
@@ -189,7 +111,7 @@ class _AssetsTabState extends State<AssetsTab> {
         action: () =>
             openPage(
                 context, RequirementsForm(model: asset.getRequirements()),
-                then: _refreshData),
+                then: refreshParent),
       ),
       ModalMenuOption(
         title: "Revoke requirements",
@@ -198,7 +120,7 @@ class _AssetsTabState extends State<AssetsTab> {
             context,
                 () =>
                 RequirementsController.revokeRequirements(asset.requirements.id)
-                    .whenComplete(_refreshData)),
+                    .whenComplete(refreshParent)),
         enabled: asset.requirements != null,
       ),
       ModalMenuOption(
@@ -220,7 +142,7 @@ class _AssetsTabState extends State<AssetsTab> {
           title: "Edit asset",
           icon: Icons.edit,
           action: () =>
-              openPage(context, AssetForm(model: asset), then: _refreshData)),
+              openPage(context, AssetForm(model: asset), then: refreshParent)),
       ModalMenuOption(
           title: "Delete asset",
           icon: Icons.delete_forever,
@@ -232,57 +154,7 @@ class _AssetsTabState extends State<AssetsTab> {
                       context,
                           () =>
                           AssetsController.deleteAsset(asset.id)
-                              .whenComplete(_refreshData)))),
+                              .whenComplete(refreshParent)))),
     ]);
-  }
-}
-
-class _SearchDemoSearchDelegate extends SearchDelegate<int> {
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context);
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-        tooltip: 'Back',
-        icon: AnimatedIcon(
-          icon: AnimatedIcons.menu_arrow,
-          progress: transitionAnimation,
-        ),
-        onPressed: () {
-          close(context, null);
-        }
-    );
-  }
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
-  }
-  @override
-  Widget buildResults(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-
-      ],
-    );
-  }
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return <Widget>[
-      if (query.isEmpty) IconButton(
-        tooltip: 'Voice Search',
-        icon: const Icon(Icons.mic),
-        onPressed: () { },
-      ) else IconButton(
-        tooltip: 'Clear',
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-          showSuggestions(context);
-        },
-      ),
-    ];
   }
 }
