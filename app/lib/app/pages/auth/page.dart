@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/views/components/common/form_button_widget.dart';
-import 'package:chainmetric/views/components/common/form_dropdown_widget.dart';
+import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
+import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/controllers/blockchain_adapter.dart';
-import 'package:chainmetric/models/auth.dart';
-import 'package:chainmetric/main_theme.dart';
+import 'package:chainmetric/platform/adapters/blockchain_adapter.dart';
+import 'package:chainmetric/models/identity/auth.dart';
+import 'package:chainmetric/app/theme/theme.dart';
 
 class AuthPage extends StatefulWidget {
   final Function submitAuth;

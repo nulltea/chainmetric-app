@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:chainmetric/controllers/devices_controller.dart';
-import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
 import 'package:chainmetric/models/device/device.dart';
-import 'package:chainmetric/models/location.dart';
+import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/shared/exceptions.dart';
-import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:multi_select_flutter/bottom_sheet/multi_select_bottom_sheet_field.dart';

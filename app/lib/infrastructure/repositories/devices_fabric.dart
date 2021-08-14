@@ -1,7 +1,7 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:chainmetric/models/device/device.dart';
 
-import '../../controllers/blockchain_adapter.dart';
+import '../../platform/adapters/blockchain_adapter.dart';
 
 class DevicesController {
   static Future<List<Device>> getDevices() async {

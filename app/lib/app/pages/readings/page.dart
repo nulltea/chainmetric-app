@@ -1,15 +1,15 @@
 import 'dart:math';
 
-import 'package:chainmetric/controllers/devices_controller.dart';
-import 'package:chainmetric/controllers/readings_controller.dart';
-import 'package:chainmetric/models/asset_model.dart';
+import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/readings_fabric.dart';
+import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/models/device/device.dart';
-import 'package:chainmetric/models/metric.dart';
-import 'package:chainmetric/models/readings.dart';
+import 'package:chainmetric/models/readings/metric.dart';
+import 'package:chainmetric/models/readings/readings.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/shared/extensions.dart';
-import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/views/components/common/svg_icon.dart';
+import 'package:chainmetric/app/utils/utils.dart';
+import 'package:chainmetric/app/widgets/common/svg_icon.dart';
 import 'package:charts_common/src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports

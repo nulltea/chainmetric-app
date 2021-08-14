@@ -1,8 +1,6 @@
-import 'package:chainmetric/main_theme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../components/common/navigation_tab.dart';
+import 'package:chainmetric/app/theme/theme.dart';
+import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
 
 class ProfileTab extends NavigationTab {
   ProfileTab({GlobalKey key}) : super(key: key ?? GlobalKey());

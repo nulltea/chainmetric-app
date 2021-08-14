@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:chainmetric/models/location.dart';
+import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/shared/extensions.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
 import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';

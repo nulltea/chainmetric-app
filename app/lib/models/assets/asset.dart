@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:chainmetric/models/requirements.dart';
+import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
 
-import 'package:chainmetric/models/location.dart';
+import 'package:chainmetric/models/common/location.dart';
 
 @jsonSerializable
 class Asset {

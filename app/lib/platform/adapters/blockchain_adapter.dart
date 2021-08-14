@@ -1,4 +1,4 @@
-import 'package:chainmetric/models/auth.dart';
+import 'package:chainmetric/models/identity/auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';

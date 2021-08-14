@@ -1,12 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:chainmetric/controllers/bluetooth_adapter.dart';
-import 'package:chainmetric/controllers/devices_controller.dart';
-import 'package:chainmetric/controllers/gps_adapter.dart';
+import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
+import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
+import 'package:chainmetric/usecase/location/gps_adapter.dart';
 import 'package:chainmetric/models/device/device.dart';
-import 'package:chainmetric/views/components/common/jumping_dots_indicator.dart';
-import 'package:chainmetric/views/components/common/ripple_animation.dart';
+import 'package:chainmetric/app/widgets/common/jumping_dots_indicator.dart';
+import 'package:chainmetric/app/widgets/common/ripple_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:rect_getter/rect_getter.dart';

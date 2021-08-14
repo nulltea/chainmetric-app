@@ -1,4 +1,4 @@
-import 'package:chainmetric/views/components/common/svg_icon.dart';
+import 'package:chainmetric/app/widgets/common/svg_icon.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:flutter/material.dart';
 

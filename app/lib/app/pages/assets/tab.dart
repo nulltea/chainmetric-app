@@ -1,9 +1,9 @@
-import 'package:chainmetric/controllers/assets_controller.dart';
-import 'package:chainmetric/main_theme.dart';
+import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/models/assets/asset.dart';
-import 'package:chainmetric/views/components/assets/card.dart';
-import 'package:chainmetric/views/components/assets/search_delegate.dart';
-import 'package:chainmetric/views/components/common/navigation_tab.dart';
+import 'package:chainmetric/app/widgets/assets/card.dart';
+import 'package:chainmetric/app/widgets/assets/search_delegate.dart';
+import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

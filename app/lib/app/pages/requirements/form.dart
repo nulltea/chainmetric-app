@@ -1,8 +1,8 @@
-import 'package:chainmetric/controllers/references_adapter.dart';
-import 'package:chainmetric/controllers/requirements_controller.dart';
-import 'package:chainmetric/models/metric.dart';
+import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
+import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
-import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/app/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

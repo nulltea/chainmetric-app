@@ -1,5 +1,5 @@
 
-import 'package:chainmetric/infrastrcture/repositories/assets_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/app/widgets/assets/card.dart';
 import 'package:chainmetric/app/widgets/common/loading_splash.dart';

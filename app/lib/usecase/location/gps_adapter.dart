@@ -2,17 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:global_configuration/global_configuration.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+
 import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
 import 'package:chainmetric/platform/adapters/preferences_adapter.dart';
 import 'package:chainmetric/main.dart';
 import 'package:chainmetric/models/device/device.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:global_configuration/global_configuration.dart';
-
-import '../../infrastrcture/repositories/devices_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
 
 class GeoService {
   static final serviceUUID = Uuid.parse(

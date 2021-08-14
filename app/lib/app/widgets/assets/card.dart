@@ -1,9 +1,9 @@
-import 'package:chainmetric/infrastrcture/repositories/assets_fabric.dart';
-import 'package:chainmetric/infrastrcture/repositories/references_fabric.dart';
-import 'package:chainmetric/infrastrcture/repositories/requirements_fabric.dart';
-import 'package:chainmetric/main_theme.dart';
+import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/models/assets/asset.dart';
-import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
 import 'package:chainmetric/app/pages/assets/form.dart';
 import 'package:chainmetric/app/pages/readings/page.dart';

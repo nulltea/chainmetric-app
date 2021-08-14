@@ -1,15 +1,15 @@
-import 'package:chainmetric/main_theme.dart';
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/controllers/bluetooth_adapter.dart';
-import 'package:chainmetric/controllers/devices_controller.dart';
-import 'package:chainmetric/controllers/gps_adapter.dart';
+import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
+import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
+import 'package:chainmetric/usecase/location/gps_adapter.dart';
 import 'package:chainmetric/models/device/device.dart';
-import 'package:chainmetric/shared/utils.dart';
-import 'package:chainmetric/views/components/common/modal_menu.dart';
-import 'package:chainmetric/views/components/common/navigation_tab.dart';
-import 'package:chainmetric/views/components/common/svg_icon.dart';
-import 'package:chainmetric/views/pages/devices/form.dart';
-import 'package:chainmetric/views/pages/devices/pairing_page.dart';
+import 'package:chainmetric/app/utils/utils.dart';
+import 'package:chainmetric/app/widgets/common/modal_menu.dart';
+import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
+import 'package:chainmetric/app/widgets/common/svg_icon.dart';
+import 'package:chainmetric/app/pages/devices/form.dart';
+import 'package:chainmetric/app/pages/devices/pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
   DevicesTab({GlobalKey key}) : super(key: key ?? GlobalKey());

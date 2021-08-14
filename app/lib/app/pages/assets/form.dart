@@ -1,8 +1,8 @@
-import 'package:chainmetric/controllers/assets_controller.dart';
-import 'package:chainmetric/controllers/references_adapter.dart';
+import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
+import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
 import 'package:chainmetric/models/assets/asset.dart';
-import 'package:chainmetric/models/location.dart';
-import 'package:chainmetric/shared/utils.dart';
+import 'package:chainmetric/models/common/location.dart';
+import 'package:chainmetric/app/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';

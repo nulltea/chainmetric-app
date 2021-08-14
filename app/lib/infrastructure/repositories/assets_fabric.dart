@@ -1,7 +1,7 @@
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
-import '../../controllers/blockchain_adapter.dart';
+import '../../platform/adapters/blockchain_adapter.dart';
 
 class AssetsController {
   static Future<AssetsResponse> getAssets({AssetsQuery query, int limit, String scrollID}) async {
