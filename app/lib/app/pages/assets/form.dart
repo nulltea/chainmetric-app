@@ -13,7 +13,7 @@ import 'package:place_picker/entities/location_result.dart';
 import 'package:place_picker/widgets/place_picker.dart';
 
 class AssetForm extends StatefulWidget {
-  final Asset model;
+  final Asset? model;
 
   const AssetForm({this.model});
 
@@ -60,8 +60,8 @@ class _AssetFormState extends State<AssetForm> {
                             hintText: "Enter an asset name",
                             labelText: "Name",
                           ),
-                          validator: (String value) {
-                            if (value.isEmpty) {
+                          validator: (String? value) {
+                            if (value!.isEmpty) {
                               return "Please provide name for new asset";
                             }
                             return null;
@@ -77,8 +77,8 @@ class _AssetFormState extends State<AssetForm> {
                             hintText: "Enter an SKU code",
                             labelText: "SKU code",
                           ),
-                          validator: (String value) {
-                            if (value.isEmpty) {
+                          validator: (String? value) {
+                            if (value!.isEmpty) {
                               return "Please provide SKU code for new asset";
                             }
                             return null;
@@ -94,20 +94,20 @@ class _AssetFormState extends State<AssetForm> {
                             hintText: "Choose asset type",
                             labelText: "Asset type",
                           ),
-                          items: References.assetTypes
+                          items: References.assetTypes!
                               .map<DropdownMenuItem<String>>(
                                   (type) => DropdownMenuItem<String>(
                                         value: type.type,
                                         child: Text(type.name),
                                       ))
                               .toList(),
-                          validator: (value) {
+                          validator: (dynamic value) {
                             if (value == null || value.isEmpty as bool) {
                               return "Please choose an asset type";
                             }
                             return null;
                           },
-                          onChanged: (String value) {
+                          onChanged: (String? value) {
                             setState(() => asset.type = value);
                           },
                         ),
@@ -118,8 +118,8 @@ class _AssetFormState extends State<AssetForm> {
                             hintText: "Enter an cost",
                             labelText: "Cost",
                           ),
-                          validator: (String value) {
-                            if (value.isEmpty) {
+                          validator: (String? value) {
+                            if (value!.isEmpty) {
                               return "Please provide cost for new asset";
                             }
                             return null;
@@ -176,20 +176,20 @@ class _AssetFormState extends State<AssetForm> {
                             labelText: "Owned by",
                             filled: true,
                           ),
-                          items: References.organizations
+                          items: References.organizations!
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,
-                                        child: Text(org.name),
+                                        child: Text(org.name!),
                                       ))
                               .toList(),
-                          validator: (String value) {
+                          validator: (String? value) {
                             if (value == null || value.isEmpty) {
                               return "Please choose an owner organization";
                             }
                             return null;
                           },
-                          onChanged: (String value) {
+                          onChanged: (String? value) {
                             setState(() => asset.holder = value);
                           },
                         ),
@@ -227,7 +227,7 @@ class _AssetFormState extends State<AssetForm> {
                                   labelText: "Tags",
                                 ),
                                 validator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value!.isEmpty) {
                                     return "Please specify the device location";
                                   }
                                   return null;
@@ -255,7 +255,7 @@ class _AssetFormState extends State<AssetForm> {
                                         "#$tag",
                                       ))
                                   .toList(),
-                              onTap: (value) {
+                              onTap: (dynamic value) {
                                 setState(() => asset.tags.remove(value));
                               },
                             )
@@ -285,7 +285,7 @@ class _AssetFormState extends State<AssetForm> {
   }
 
   Future<void> _submitAsset() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       try {
         if (await AssetsController.upsertAsset(asset)) {
           Navigator.pop(context);
@@ -299,7 +299,7 @@ class _AssetFormState extends State<AssetForm> {
   }
 
   Future<void> _showLocationPicker() async {
-    final LocationResult result = await Navigator.of(context).push(
+    final LocationResult? result = await Navigator.of(context).push(
         MaterialPageRoute(builder: (context) =>
               PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
             )
@@ -309,8 +309,8 @@ class _AssetFormState extends State<AssetForm> {
     if (result != null) {
       setState(() {
         asset.location = Location()
-          ..latitude = result.latLng.latitude
-          ..longitude = result.latLng.longitude
+          ..latitude = result.latLng!.latitude
+          ..longitude = result.latLng!.longitude
           ..name = result.name;
       });
     } else {

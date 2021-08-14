@@ -7,16 +7,16 @@ import 'package:flutter/material.dart';
 
 @jsonSerializable
 class Device {
-  String id;
-  String ip;
-  String mac;
-  String name;
-  String hostname;
-  String profile;
-  List<String> supports = <String>[];
-  String holder;
-  String state;
-  Location location;
+  String? id;
+  late String ip;
+  String? mac;
+  String? name;
+  String? hostname;
+  String? profile;
+  List<String?> supports = <String>[];
+  String? holder;
+  String? state;
+  Location? location;
 
 
   @JsonProperty(ignore: true)
@@ -39,10 +39,10 @@ class Device {
 
 @jsonSerializable
 class DeviceProfile {
-  String name;
-  String profile;
+  late String name;
+  String? profile;
   @JsonProperty(name: "color_hex")
-  String colorHex;
+  late String colorHex;
   Color get color => colorFromHex(colorHex);
 
   Color colorFromHex(String hexColor) {
@@ -57,9 +57,9 @@ class DeviceProfile {
 @jsonSerializable
 class DeviceCommandRequest {
   @JsonProperty(name: "device_id")
-  String deviceID;
+  String? deviceID;
   DeviceCommand command;
-  List<Object> args;
+  List<Object>? args;
 
   DeviceCommandRequest(this.deviceID, this.command, {this.args});
 }
@@ -67,12 +67,12 @@ class DeviceCommandRequest {
 @jsonSerializable
 class DeviceCommandLogEntry {
   @JsonProperty(name: "device_id")
-  String deviceID;
-  DeviceCommand command;
-  List<Object> args;
-  DeviceCommandStatus status;
-  String error;
-  DateTime timestamp;
+  String? deviceID;
+  DeviceCommand? command;
+  List<Object>? args;
+  DeviceCommandStatus? status;
+  String? error;
+  DateTime? timestamp;
 }
 
 @jsonSerializable
@@ -91,8 +91,8 @@ enum DeviceCommandStatus {
 
 @jsonSerializable
 class PairedDevice {
-  String hardwareID;
-  String deviceID;
-  String advertisedName;
-  @JsonProperty(ignore: true) int rssi;
+  String? hardwareID;
+  String? deviceID;
+  String? advertisedName;
+  @JsonProperty(ignore: true) int? rssi;
 }

@@ -3,19 +3,19 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/models/readings/metric.dart';
-import 'package:chainmetric/models/organization/organization.dart';
+import 'package:chainmetric/models/identity/organization.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
 
 class References {
-  static List<Organization> organizations = <Organization>[];
-  static List<AssetType> assetTypes = <AssetType>[];
-  static List<DeviceProfile> deviceProfiles = <DeviceProfile>[];
-  static List<Metric> metrics = <Metric>[];
-  static Map<String, Requirement> defaultRequirements;
+  static List<Organization>? organizations = <Organization>[];
+  static List<AssetType>? assetTypes = <AssetType>[];
+  static List<DeviceProfile>? deviceProfiles = <DeviceProfile>[];
+  static List<Metric>? metrics = <Metric>[];
+  static Map<String, Requirement>? defaultRequirements;
 
-  static Map<String,AssetType> assetTypesMap;
-  static Map<String,Metric> metricsMap;
-  static Map<String,Organization> organizationsMap;
+  static late Map<String?,AssetType> assetTypesMap;
+  static Map<String?,Metric>? metricsMap;
+  static late Map<String?,Organization> organizationsMap;
 
   static Future init() async {
     organizations = JsonMapper.deserialize<List<Organization>>(
@@ -34,8 +34,8 @@ class References {
         await rootBundle.loadString("assets/data/default_requirements.json")
     );
 
-    assetTypesMap = { for (var at in assetTypes) at.type : at };
-    metricsMap = { for (var m in metrics) m.metric : m };
-    organizationsMap = { for (var m in organizations) m.mspID : m };
+    assetTypesMap = { for (var at in assetTypes!) at.type : at };
+    metricsMap = { for (var m in metrics!) m.metric : m };
+    organizationsMap = { for (var m in organizations!) m.mspID : m };
   }
 }

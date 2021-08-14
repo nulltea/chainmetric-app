@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBarItem {
-  IconData icon;
+  IconData? icon;
   CustomAppBarItem({this.icon});
 }
 
 class CustomBottomAppBar extends StatefulWidget {
-  final ValueChanged<int> onTabSelected;
-  final List<CustomAppBarItem> items;
+  final ValueChanged<int>? onTabSelected;
+  final List<CustomAppBarItem?>? items;
 
   CustomBottomAppBar({this.onTabSelected, this.items}) {
-    assert(items.length == 2 || items.length == 4);
+    assert(items!.length == 2 || items!.length == 4);
   }
 
   @override
@@ -18,10 +18,10 @@ class CustomBottomAppBar extends StatefulWidget {
 }
 
 class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
-  int _selectedIndex = 0;
+  int? _selectedIndex = 0;
 
   void _updateIndex(int index) {
-    widget.onTabSelected(index);
+    widget.onTabSelected!(index);
     setState(() {
       _selectedIndex = index;
     });
@@ -29,9 +29,9 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final items = List.generate(widget.items.length, (int index) {
+    final items = List.generate(widget.items!.length, (int index) {
       return _buildTabIcon(
-          index: index, item: widget.items[index], onPressed: _updateIndex);
+          index: index, item: widget.items![index]!, onPressed: _updateIndex);
     });
 
     items.insert(items.length >> 1, _buildMiddleSeparator());
@@ -63,14 +63,14 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   }
 
   Widget _buildTabIcon(
-      {int index, CustomAppBarItem item, ValueChanged<int> onPressed}) {
+      {int? index, required CustomAppBarItem item, ValueChanged<int>? onPressed}) {
     return Expanded(
       child: SizedBox(
         height: 60.0,
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            onTap: () => onPressed(index),
+            onTap: () => onPressed!(index ?? 0),
             child: Icon(
                     item.icon,
                     color: _selectedIndex == index ? Theme.of(context).primaryColor: Colors.grey,

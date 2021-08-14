@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
-void openPage(BuildContext context, Widget page, {Function() then, int duration = 300}) => Navigator.push(
+void openPage(BuildContext context, Widget page, {Function()? then, int duration = 300}) => Navigator.push(
     context,
     CustomMaterialPageRoute(builder: (context) => page, duration: duration)
 ).whenComplete(() => then?.call());
 
 Future showYesNoDialog(BuildContext context, {
-  String title,
-  String message,
-  Function onYes,
-  Function onNo
+  String? title,
+  String? message,
+  Function? onYes,
+  Function? onNo
 }) => showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(message),
+      title: Text(title!),
+      content: Text(message!),
       actions: <Widget>[
         TextButton(
           onPressed: _decorateWithDismiss(context, onYes ?? () => print("not implemented")),
@@ -53,8 +53,8 @@ class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {
   final int duration;
 
   CustomMaterialPageRoute({
-    WidgetBuilder builder,
-    RouteSettings settings,
+    required WidgetBuilder builder,
+    RouteSettings? settings,
     bool fullscreenDialog = false,
     this.duration = 300
   }) : super(builder: builder, settings: settings, fullscreenDialog: fullscreenDialog);

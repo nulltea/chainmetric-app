@@ -32,14 +32,14 @@ class _MainPageState extends State<MainPage> {
         tab: AssetsTab(key: GlobalKey()),
         buttonIcon: const Icon(Icons.add, color: Colors.black),
         pageAction: (state) => openPage(state.context, const AssetForm(),
-            then: (state as _MainPageState).currentTab().refreshData)),
+            then: (state as _MainPageState).currentTab()!.refreshData)),
     NavigationTabItem(
         title: "Devices",
         navBarItem: CustomAppBarItem(icon: Icons.memory_sharp),
         tab: DevicesTab(key: GlobalKey()),
         buttonIcon: const Icon(Icons.qr_code_scanner, color: Colors.black),
         pageAction: (state) => openPage(state.context, const DeviceForm(),
-            then: (state as _MainPageState).currentTab().refreshData)),
+            then: (state as _MainPageState).currentTab()!.refreshData)),
     NavigationTabItem(
         title: "Profile",
         navBarItem: CustomAppBarItem(icon: Icons.people_alt_sharp),
@@ -54,7 +54,7 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  NavigationTab currentTab() => tabs[_currentIndex].tab;
+  NavigationTab? currentTab() => tabs[_currentIndex].tab;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _MainPageState extends State<MainPage> {
       body: tabs[_currentIndex].tab,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => tabs[_currentIndex].pageAction(this),
+        onPressed: () => tabs[_currentIndex].pageAction!(this),
         backgroundColor: Theme.of(context).primaryColor,
         child: tabs[_currentIndex].buttonIcon,
       ),

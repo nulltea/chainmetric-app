@@ -50,20 +50,20 @@ class AssetsSearchDelegate extends SearchDelegate<int> {
   }
 
   @override
-  Widget buildResults(BuildContext context) => FutureBuilder<AssetsResponse>(
+  Widget buildResults(BuildContext context) => FutureBuilder<AssetsResponse?>(
       future: AssetsController.getAssets(query: AssetsQuery()..limit = _itemsLength),
       builder: (context, snapshot) => snapshot.data != null
           ? ListView.builder(
-              itemCount: snapshot.data.items.length,
+              itemCount: snapshot.data!.items.length,
               padding: const EdgeInsets.symmetric(vertical: 12),
-              itemBuilder: _listBuilder(snapshot.data.items))
+              itemBuilder: _listBuilder(snapshot.data!.items) as Widget Function(BuildContext, int))
           : Container(),
     );
 
 
   Function(BuildContext context, int index) _listBuilder(List<AssetPresenter> assets) {
     return (context, index) => Hero(
-      tag: assets[index].id,
+      tag: assets[index].id!,
       child: AssetCard(assets[index]),
     );
   }

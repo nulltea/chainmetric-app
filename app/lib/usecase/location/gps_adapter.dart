@@ -37,7 +37,7 @@ class GeoService {
     locationNameUUID
   ];
 
-  static Future<void> postLocation(String deviceID) async {
+  static Future<void> postLocation(String? deviceID) async {
     final hardwareID = Bluetooth.getHardwareID(deviceID);
 
     if (!Bluetooth.isConnected(deviceID)) {
@@ -50,7 +50,7 @@ class GeoService {
     final eastCoordinateChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
         characteristicId: eastCoordinateUUID,
-        deviceId: hardwareID
+        deviceId: hardwareID!
     );
     final northCoordinateChar = QualifiedCharacteristic(
         serviceId: serviceUUID,
@@ -94,7 +94,7 @@ class GeoService {
     FlutterIsolate.spawn(tryShareLocation, null);
   }
 
-  static Future<void> tryShareLocation(Map<String, PairedDevice> devices) async {
+  static Future<void> tryShareLocation(Map<String, PairedDevice>? devices) async {
     initJson();
     await Preferences.init();
     await Bluetooth.init();

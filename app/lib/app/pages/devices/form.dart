@@ -18,7 +18,7 @@ import 'package:place_picker/widgets/place_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class DeviceForm extends StatefulWidget {
-  final Device model;
+  final Device? model;
 
   const DeviceForm({this.model});
 
@@ -27,8 +27,8 @@ class DeviceForm extends StatefulWidget {
 }
 
 class _DeviceFormState extends State<DeviceForm> {
-  Device device;
-  QRViewController controller;
+  Device? device;
+  QRViewController? controller;
   String scannerTitle = defaultScannerTitle;
   String scannerSubtitle = defaultScannerSubtitle;
   bool flashOn = false;
@@ -87,55 +87,55 @@ class _DeviceFormState extends State<DeviceForm> {
                     children: [
                       ...[
                         TextFormField(
-                          initialValue: device.name,
+                          initialValue: device!.name,
                           decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter an device name",
                             labelText: "Name",
                           ),
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value!.isEmpty) {
                               return "Please provide name for the device";
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            setState(() => device.name = value);
+                            setState(() => device!.name = value);
                           },
                         ),
                         TextFormField(
-                          initialValue: device.hostname,
+                          initialValue: device!.hostname,
                           decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter the device hostname",
                             labelText: "Hostname",
                           ),
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value!.isEmpty) {
                               return "Please provide device hostname";
                             }
                             return null;
                           },
                           onChanged: (value) {
-                            setState(() => device.hostname = value);
+                            setState(() => device!.hostname = value);
                           },
                         ),
                         DropdownButtonFormField(
-                          value: device.profile,
+                          value: device!.profile,
                           decoration: const InputDecoration(
                             filled: true,
                             hintText: "Choose the device profile",
                             labelText: "Profile",
                           ),
-                          items: References.deviceProfiles
+                          items: References.deviceProfiles!
                               .map<DropdownMenuItem<String>>(
                                   (profile) => DropdownMenuItem<String>(
                                         value: profile.profile,
                                         child: Text(profile.name),
                                       ))
                               .toList(),
-                          onChanged: (String value) {
-                            setState(() => device.profile = value);
+                          onChanged: (String? value) {
+                            setState(() => device!.profile = value);
                           },
                         ),
                         Container(
@@ -147,24 +147,27 @@ class _DeviceFormState extends State<DeviceForm> {
                           child: Column(
                             children: [
                               MultiSelectBottomSheetField(
-                                initialValue: device.supports,
+                                initialValue: device!.supports,
                                 title: const Text("Supports metrics"),
                                 buttonText: const Text("Select supported metrics"),
                                 listType: MultiSelectListType.CHIP,
-                                chipColor: Colors.teal.shade800,
+                                colorator: (dynamic v) => Colors.teal.shade800,
                                 selectedColor: Colors.teal,
                                 selectedItemsTextStyle: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                                 buttonIcon: const Icon(Icons.arrow_drop_down),
-                                items: References.metrics
+                                items: References.metrics!
                                     .map((metric) => MultiSelectItem(
                                           metric.metric,
-                                          metric.name,
+                                          metric.name!,
                                         ))
                                     .toList(),
-                                onSelectionChanged: (List<String> value) {
-                                  setState(() => device.supports = value);
+                                onSelectionChanged: (List<String?> value) {
+                                  setState(() => device?.supports = value);
+                                },
+                                onConfirm: (List<String?> value) {
+                                  setState(() => device?.supports = value);
                                 },
                               ),
                               MultiSelectChipDisplay(
@@ -172,41 +175,41 @@ class _DeviceFormState extends State<DeviceForm> {
                                 textStyle: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
-                                items: device.supports
+                                items: device!.supports
                                     .map((metric) => MultiSelectItem(
                                           metric,
-                                          References.metricsMap[metric]?.name ?? "",
+                                          References.metricsMap![metric]?.name ?? "",
                                         ))
                                     .toList(),
-                                onTap: (value) {
-                                  setState(() => device.supports.remove(value));
+                                onTap: (dynamic value) {
+                                  setState(() => device!.supports.remove(value));
                                 },
                               )
                             ],
                           ),
                         ),
                         DropdownButtonFormField(
-                          value: device.holder,
+                          value: device!.holder,
                           decoration: const InputDecoration(
                             hintText: "Choose the holder organization",
                             labelText: "Holder",
                             filled: true,
                           ),
-                          items: References.organizations
+                          items: References.organizations!
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,
-                                        child: Text(org.name),
+                                        child: Text(org.name!),
                                       ))
                               .toList(),
-                          validator: (String value) {
+                          validator: (String? value) {
                             if (value == null || value.isEmpty) {
                               return "Please choose an holder organization";
                             }
                             return null;
                           },
-                          onChanged: (String value) {
-                            setState(() => device.holder = value);
+                          onChanged: (String? value) {
+                            setState(() => device!.holder = value);
                           },
                         ),
                         SizedBox(
@@ -284,7 +287,7 @@ class _DeviceFormState extends State<DeviceForm> {
                   child: IconButton(
                       icon: Icon(flashOn ? Icons.flash_off : Icons.flash_on, size: 30),
                       onPressed: () {
-                        controller.toggleFlash();
+                        controller!.toggleFlash();
                         setState(() => flashOn = !flashOn);
                       }
                   )
@@ -315,7 +318,7 @@ class _DeviceFormState extends State<DeviceForm> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    Timer timer;
+    Timer? timer;
 
     controller.scannedDataStream.listen((scanData) {
       if (scanData != null) {
@@ -329,7 +332,7 @@ class _DeviceFormState extends State<DeviceForm> {
             scannerTitle = e.problem;
             scannerSubtitle = e.cause;
           });
-          if (timer != null) timer.cancel();
+          if (timer != null) timer!.cancel();
           timer = Timer(const Duration(seconds: 5), () {
             setState(() {
               scannerTitle = defaultScannerTitle;
@@ -338,7 +341,7 @@ class _DeviceFormState extends State<DeviceForm> {
           });
           return;
         }
-        controller?.dispose();
+        controller.dispose();
         setState(() => device = dev);
       }
     });
@@ -349,7 +352,7 @@ class _DeviceFormState extends State<DeviceForm> {
     final match = exp.firstMatch(code);
     if (match == null) throw QRScanException(cause: "Expected pattern does not match");
 
-    final data = match.group(1);
+    final data = match.group(1)!;
     final parts = data.split(';');
     if (parts.length != 3) throw QRScanException(cause: "Coded data is not valid");
 
@@ -366,7 +369,7 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Future<void> _submitDevice() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       try {
         if (await DevicesController.registerDevice(device)) {
           Navigator.pop(context);
@@ -379,7 +382,7 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Future<void> _showLocationPicker() async {
-    final LocationResult result = await Navigator.of(context).push(
+    final LocationResult? result = await Navigator.of(context).push(
         MaterialPageRoute(builder: (context) =>
             PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
             )
@@ -388,9 +391,9 @@ class _DeviceFormState extends State<DeviceForm> {
 
     if (result != null) {
       setState(() {
-        device.location = Location()
-          ..latitude = result.latLng.latitude
-          ..longitude = result.latLng.longitude
+        device!.location = Location()
+          ..latitude = result.latLng!.latitude
+          ..longitude = result.latLng!.longitude
           ..name = result.name;
       });
     } else {

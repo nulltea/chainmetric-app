@@ -3,16 +3,16 @@ import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
 
 class ProfileTab extends NavigationTab {
-  ProfileTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+  ProfileTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
 
-  _ProfileTabState get _currentState =>
-      (key as GlobalKey)?.currentState as _ProfileTabState;
+  _ProfileTabState? get _currentState =>
+      (key as GlobalKey?)?.currentState as _ProfileTabState?;
 
   @override
   _ProfileTabState createState() => _ProfileTabState();
 
   @override
-  Future refreshData() => _currentState._refreshData();
+  Future? refreshData() => _currentState!._refreshData();
 }
 
 class _ProfileTabState extends State<ProfileTab> {
@@ -35,12 +35,12 @@ class _ProfileTabState extends State<ProfileTab> {
     ),
     body: RefreshIndicator(
       key: _refreshKey,
-      onRefresh: _refreshData,
+      onRefresh: _refreshData as Future<void> Function(),
       child: const Center(child: Text("Profile here"),),
     ),
   );
 
-  Future _refreshData() {
+  Future? _refreshData() {
     return null;
   }
 }

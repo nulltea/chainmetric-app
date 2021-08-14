@@ -12,22 +12,22 @@ import 'package:chainmetric/app/pages/devices/form.dart';
 import 'package:chainmetric/app/pages/devices/pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
-  DevicesTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+  DevicesTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
 
-  _DevicesTabState get _currentState =>
-      (key as GlobalKey)?.currentState as _DevicesTabState;
+  _DevicesTabState? get _currentState =>
+      (key as GlobalKey?)?.currentState as _DevicesTabState?;
 
   @override
   _DevicesTabState createState() => _DevicesTabState();
 
   @override
-  Future refreshData() => _currentState._refreshData();
+  Future refreshData() => _currentState!._refreshData();
 }
 
 class _DevicesTabState extends State<DevicesTab> {
   static const _itemsLength = 50;
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
-  List<Device> devices = [];
+  List<Device>? devices = [];
 
   @override
   void initState() {
@@ -48,9 +48,9 @@ class _DevicesTabState extends State<DevicesTab> {
       key: _refreshKey,
       onRefresh: _refreshData,
       child: ListView.builder(
-        itemCount: devices.length,
+        itemCount: devices!.length,
         padding: const EdgeInsets.symmetric(vertical: 12),
-        itemBuilder: _listBuilder,
+        itemBuilder: _listBuilder as Widget Function(BuildContext, int),
       ),
     ),
   );
@@ -59,14 +59,14 @@ class _DevicesTabState extends State<DevicesTab> {
     return _fetchDevices().then((value) => setState(() => devices = value));
   }
 
-  Widget _listBuilder(BuildContext context, int index) {
+  Widget? _listBuilder(BuildContext context, int index) {
     if (index >= _itemsLength) return null;
     return SafeArea(
       top: false,
       bottom: false,
       child: Hero(
         tag: index,
-        child: _deviceCard(devices[index]),
+        child: _deviceCard(devices![index]),
       ),
     );
   }
@@ -86,7 +86,7 @@ class _DevicesTabState extends State<DevicesTab> {
             left: 100,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const SizedBox(height: 8),
-              Text(device.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              Text(device.name!, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
               Text(device.ip,
                   style: TextStyle(
                       fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400)),
@@ -121,7 +121,7 @@ class _DevicesTabState extends State<DevicesTab> {
     ),
   );
 
-  Future<List<Device>> _fetchDevices() async => DevicesController.getDevices();
+  Future<List<Device>?> _fetchDevices() async => DevicesController.getDevices();
 
   void _showDeviceMenu(BuildContext context, Device device) {
     showModalMenu(context: context, options: [
@@ -165,7 +165,7 @@ class _DevicesTabState extends State<DevicesTab> {
     ]);
   }
 
-  void _startBluetoothPairing(String deviceID) {
+  void _startBluetoothPairing(String? deviceID) {
     showOverlayPage(context: context, builder: (context) => DevicePairing(deviceID));
   }
 }

@@ -10,9 +10,9 @@ import 'package:chainmetric/models/identity/auth.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 
 class AuthPage extends StatefulWidget {
-  final Function submitAuth;
+  final Function? submitAuth;
 
-  const AuthPage({Key key, this.submitAuth}) : super(key: key);
+  const AuthPage({Key? key, this.submitAuth}) : super(key: key);
 
   @override
   _AuthPageState createState() => _AuthPageState();
@@ -26,10 +26,10 @@ class _AuthPageState extends State<AuthPage> {
   bool privateKeyVisibility = false;
 
   Future<void> submitIdentity() async {
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       try {
         if (await Blockchain.authenticate(credentials)) {
-          widget.submitAuth();
+          widget.submitAuth!();
         }
       } on Exception catch (e) {
         ScaffoldMessenger.of(context)
@@ -74,11 +74,11 @@ class _AuthPageState extends State<AuthPage> {
                         borderWidth: 0,
                         borderRadius: 8,
                         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        items: References.organizations
+                        items: References.organizations!
                             .map<DropdownMenuItem<String>>(
                                 (org) => DropdownMenuItem<String>(
                                       value: org.mspID,
-                                      child: Text(org.name),
+                                      child: Text(org.name!),
                                     ))
                             .toList(),
                         validator: (value) {
@@ -103,7 +103,7 @@ class _AuthPageState extends State<AuthPage> {
                               borderRadius: BorderRadius.all(Radius.circular(8))),
                         ),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return "You must provide certificate to identify you";
                           }
                           return null;
@@ -136,7 +136,7 @@ class _AuthPageState extends State<AuthPage> {
                           ),
                         ),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return "You must provide private key to identify you";
                           }
                           return null;

@@ -8,29 +8,29 @@ import 'package:chainmetric/models/common/location.dart';
 
 @jsonSerializable
 class Asset {
-  String id;
-  String sku;
-  String name;
-  String type;
-  String info;
-  num cost;
-  int amount;
-  String holder;
-  String state;
-  Location location;
+  String? id;
+  String? sku;
+  String? name;
+  String? type;
+  String? info;
+  num? cost;
+  int? amount;
+  String? holder;
+  String? state;
+  late Location location;
   List<String> tags = <String>[];
 }
 
 @jsonSerializable
 class AssetsQuery {
-  String type;
-  String holder;
-  String state;
-  String location;
-  String tag;
-  int limit;
+  String? type;
+  String? holder;
+  String? state;
+  String? location;
+  String? tag;
+  int? limit;
   @JsonProperty(name: "scroll_id")
-  String scrollID;
+  String? scrollID;
 
   AssetsQuery({
     this.limit,
@@ -42,12 +42,12 @@ class AssetsQuery {
 class AssetsResponse {
   List<AssetPresenter> items = <AssetPresenter>[];
   @JsonProperty(name: "scroll_id")
-  String scrollID;
+  String? scrollID;
 }
 
 @jsonSerializable
 class AssetPresenter extends Asset {
-  Requirements requirements;
+  Requirements? requirements;
   Requirements getRequirements() {
     return requirements ?? Requirements.forAsset(assetID: id);
   }
@@ -55,10 +55,10 @@ class AssetPresenter extends Asset {
 
 @jsonSerializable
 class AssetType {
-  String name;
-  String type;
+  late String name;
+  String? type;
   @JsonProperty(name: "color_hex")
-  String colorHex;
+  late String colorHex;
   Color get color => colorFromHex(colorHex);
 
   Color colorFromHex(String hexColor) {

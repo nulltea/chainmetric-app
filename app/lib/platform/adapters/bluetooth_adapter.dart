@@ -12,16 +12,16 @@ class Bluetooth {
   static final driver = FlutterReactiveBle();
   static const connectionTimeout = Duration(seconds: 15);
 
-  static Map<String, PairedDevice> pairedDevices = {};
-  static Map<String, DeviceDisconnectFunc> connectedDevices = {};
+  static Map<String?, PairedDevice> pairedDevices = {};
+  static Map<String?, DeviceDisconnectFunc> connectedDevices = {};
 
   static Future<void> init() {
     pairedDevices = Preferences.getPairedDevices();
     return driver.initialize();
   }
 
-  static Function discoverDevice(String deviceID, {@required Function(DiscoveredDevice) onFound}) {
-    StreamSubscription sub;
+  static Function discoverDevice(String? deviceID, {required Function(DiscoveredDevice) onFound}) {
+    late StreamSubscription sub;
 
     sub = driver.scanForDevices(
         withServices: [  ]
@@ -44,15 +44,15 @@ class Bluetooth {
     return sub.cancel;
   }
 
-  static Function connectToDevice(String deviceID, {@required Function(String) onConnect}) {
-    StreamSubscription sub;
+  static Function connectToDevice(String? deviceID, {required Function(String?) onConnect}) {
+    late StreamSubscription sub;
     bool triggered = false;
 
     assert(isPaired(deviceID), "device was never paired yet");
     assert(!isConnected(deviceID), "device is already connected");
 
     sub = driver.connectToDevice(
-        id: pairedDevices[deviceID].hardwareID,
+        id: pairedDevices[deviceID]!.hardwareID!,
         connectionTimeout: connectionTimeout,
         servicesWithCharacteristicsToDiscover: {
           GeoService.serviceUUID: GeoService.characteristicUUIDs
@@ -69,18 +69,18 @@ class Bluetooth {
     return sub.cancel;
   }
 
-  static Future<void> forgetDevice(String deviceID) async {
-    if (isConnected(deviceID)) connectedDevices[deviceID]();
+  static Future<void> forgetDevice(String? deviceID) async {
+    if (isConnected(deviceID)) connectedDevices[deviceID]!();
     pairedDevices.remove(deviceID);
     Preferences.setPairedDevices(pairedDevices);
   }
 
-  static String getHardwareID(String deviceID) {
+  static String? getHardwareID(String? deviceID) {
     assert(isPaired(deviceID), "device was never paired yet");
-    return pairedDevices[deviceID].hardwareID;
+    return pairedDevices[deviceID]!.hardwareID;
   }
 
-  static bool isPaired(String deviceID) => pairedDevices.containsKey(deviceID);
+  static bool isPaired(String? deviceID) => pairedDevices.containsKey(deviceID);
 
-  static bool isConnected(String deviceID) => connectedDevices.containsKey(deviceID);
+  static bool isConnected(String? deviceID) => connectedDevices.containsKey(deviceID);
 }

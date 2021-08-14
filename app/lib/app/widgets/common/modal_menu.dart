@@ -4,9 +4,9 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
 class ModalMenuOption extends StatelessWidget {
-  final Function() action;
-  final String title;
-  final IconData icon;
+  final Function()? action;
+  final String? title;
+  final IconData? icon;
   final bool enabled;
 
   const ModalMenuOption({
@@ -24,7 +24,7 @@ class ModalMenuOption extends StatelessWidget {
           onTap: _decorateWithDismiss(context, action),
           child: ListTile(
               leading: Icon(icon, color: Theme.of(context).primaryColor, size: 30),
-              title: Text(title,
+              title: Text(title!,
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight:
@@ -36,14 +36,14 @@ class ModalMenuOption extends StatelessWidget {
       )
   );
 
-  void Function() _decorateWithDismiss(BuildContext context, Function action) => () {
+  void Function() _decorateWithDismiss(BuildContext context, Function? action) => () {
     dismissDialog(context);
     OverlayScreen().pop();
-    action();
+    action!();
   };
 }
 
-void showModalMenu({@required BuildContext context, @required List<ModalMenuOption> options}) {
+void showModalMenu({required BuildContext context, required List<ModalMenuOption> options}) {
   OverlayScreen().show(context, identifier: "modal");
   showMaterialModalBottomSheet(
     context: context,
@@ -61,8 +61,8 @@ void showModalMenu({@required BuildContext context, @required List<ModalMenuOpti
 }
 
 void showOverlayPage({
-  @required BuildContext context,
-  @required Widget Function(BuildContext) builder
+  required BuildContext context,
+  required Widget Function(BuildContext) builder
 }) {
   OverlayScreen().show(context, identifier: "modal");
   showMaterialModalBottomSheet(

@@ -8,7 +8,7 @@ const blockchainChannel = "chainmetric.app.blockchain-native-sdk";
 
 class Blockchain {
   static const _nativeSDK = MethodChannel(blockchainChannel);
-  static Map<String, dynamic> _config;
+  static Map<String?, dynamic>? _config;
 
   static Future<void> initWallet() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -21,7 +21,7 @@ class Blockchain {
     }
   }
 
-  static Future<bool> authRequired() async {
+  static Future<bool?> authRequired() async {
     try {
       return await _nativeSDK.invokeMethod("auth_required");
     } on PlatformException catch (e) {
@@ -57,7 +57,7 @@ class Blockchain {
     return false;
   }
 
-  static Future<String> evaluateTransaction(String contract, String method, [String args]) async {
+  static Future<String?> evaluateTransaction(String contract, String method, [String? args]) async {
     try {
       return await _nativeSDK.invokeMethod("transaction_evaluate", {
         "contract": contract,
@@ -70,7 +70,7 @@ class Blockchain {
     return null;
   }
 
-  static Future<String> submitTransaction(String contract, String method, [String args]) async {
+  static Future<String?> submitTransaction(String contract, String method, [String? args]) async {
     try {
       return await _nativeSDK.invokeMethod("transaction_submit", {
         "contract": contract,
@@ -83,7 +83,7 @@ class Blockchain {
     return null;
   }
 
-  static Future<bool> trySubmitTransaction(String contract, String method, [String args]) async {
+  static Future<bool> trySubmitTransaction(String contract, String method, [String? args]) async {
     try {
       await _nativeSDK.invokeMethod("transaction_submit", {
         "contract": contract,
@@ -102,7 +102,7 @@ class Blockchain {
         await rootBundle.loadString("assets/connection.yaml")
     ) as YamlMap;
 
-    _config = { for (var key in yaml.keys) key as String : yaml[key] };
+    _config = { for (var key in yaml.keys) key as String? : yaml[key] };
   }
 
   static dynamic getConfigValue(String compositeKey) {

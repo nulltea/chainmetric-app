@@ -3,16 +3,16 @@ import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomeTab extends NavigationTab {
-  HomeTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+  HomeTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
 
-  _HomeTabState get _currentState =>
-      (key as GlobalKey)?.currentState as _HomeTabState;
+  _HomeTabState? get _currentState =>
+      (key as GlobalKey?)?.currentState as _HomeTabState?;
 
   @override
   _HomeTabState createState() => _HomeTabState();
 
   @override
-  Future refreshData() => _currentState._loadData();
+  Future? refreshData() => _currentState!._loadData();
 }
 
 class _HomeTabState extends State<HomeTab> {
@@ -35,12 +35,12 @@ class _HomeTabState extends State<HomeTab> {
     ),
     body: RefreshIndicator(
       key: _refreshKey,
-      onRefresh: _loadData,
+      onRefresh: _loadData as Future<void> Function(),
       child: const Center(child: Text("Home dashboard here"),),
     ),
   );
 
-  Future<void> _loadData() {
+  Future<void>? _loadData() {
     return null;
   }
 }

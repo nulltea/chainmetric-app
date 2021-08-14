@@ -12,7 +12,7 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:rect_getter/rect_getter.dart';
 
 class DevicePairing extends StatefulWidget {
-  final String deviceID;
+  final String? deviceID;
 
   const DevicePairing(this.deviceID);
 
@@ -21,7 +21,7 @@ class DevicePairing extends StatefulWidget {
 }
 
 class _DevicePairingState extends State<DevicePairing> with TickerProviderStateMixin  {
-  DiscoveredDevice _device;
+  DiscoveredDevice? _device;
 
   String _message = "Getting things ready";
   double _messageSize = 25.0;
@@ -30,17 +30,17 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   double _deviceProximityX = 150;
   double _deviceProximityY = 250;
 
-  Rect _rect;
+  Rect? _rect;
   final _rectGetterKey = RectGetter.createGlobalKey();
 
-  AnimationController _controllerScan;
-  Animation _animationScan;
-  AnimationController _controllerDevice;
-  Animation _animationDevice;
-  Path _path;
+  late AnimationController _controllerScan;
+  late Animation _animationScan;
+  AnimationController? _controllerDevice;
+  late Animation _animationDevice;
+  late Path _path;
 
   final completeAnimation = const Duration(milliseconds: 800);
-  Function _cancelScan;
+  late Function _cancelScan;
 
 
   @override
@@ -139,10 +139,10 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
     }
     return AnimatedPositioned(
       duration: completeAnimation,
-      left: _rect.left,
-      right: MediaQuery.of(context).size.width - _rect.right,
-      top: _rect.top,
-      bottom: MediaQuery.of(context).size.height - _rect.bottom,
+      left: _rect!.left,
+      right: MediaQuery.of(context).size.width - _rect!.right,
+      top: _rect!.top,
+      bottom: MediaQuery.of(context).size.height - _rect!.bottom,
       child: DecoratedBox(
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
@@ -244,10 +244,10 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
         duration: completeAnimation
     );
 
-    _animationDevice = Tween(begin: 0.0, end: 100.0).animate(_controllerDevice)
+    _animationDevice = Tween(begin: 0.0, end: 100.0).animate(_controllerDevice!)
       ..addListener(() {
         setState(() {
-          if (_controllerDevice.isCompleted) {
+          if (_controllerDevice!.isCompleted) {
             _device = device;
           }
         });
@@ -255,12 +255,12 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
 
     setState(() => _rect = RectGetter.getRectFromKey(_rectGetterKey));
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controllerDevice.forward();
-      setState(() => _rect = _rect.inflate(MediaQuery.of(context).size.longestSide));
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _controllerDevice!.forward();
+      setState(() => _rect = _rect!.inflate(MediaQuery.of(context).size.longestSide));
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       setState(() {
         _rect = Rect.fromLTWH(
             MediaQuery.of(context).size.width / 2,
@@ -283,7 +283,7 @@ class _DevicePairingState extends State<DevicePairing> with TickerProviderStateM
   Offset _calculate(double value) {
     final PathMetrics pathMetrics = _path.computeMetrics();
     final PathMetric pathMetric = pathMetrics.elementAt(0);
-    final Tangent pos = pathMetric.getTangentForOffset((pathMetric.length) * value);
+    final Tangent pos = pathMetric.getTangentForOffset((pathMetric.length) * value)!;
     return pos.position;
   }
 

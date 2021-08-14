@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'bottom_app_bar.dart';
 
 class NavigationTabItem {
-  String title;
-  CustomAppBarItem navBarItem;
-  NavigationTab tab;
-  Widget buttonIcon;
-  void Function(State) pageAction;
+  String? title;
+  CustomAppBarItem? navBarItem;
+  NavigationTab? tab;
+  Widget? buttonIcon;
+  void Function(State)? pageAction;
 
   NavigationTabItem({
     this.title,
@@ -19,7 +19,7 @@ class NavigationTabItem {
 }
 
 abstract class NavigationTab extends StatefulWidget {
-  const NavigationTab({Key key}) : super(key: key);
+  const NavigationTab({Key? key}) : super(key: key);
 
-  Future refreshData();
+  Future? refreshData();
 }

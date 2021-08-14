@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 
 class AssetCard extends StatelessWidget {
   final AssetPresenter asset;
-  final Function() refreshParent;
+  final Function()? refreshParent;
 
-  const AssetCard(this.asset, {this.refreshParent, Key key}) : super(key: key);
+  const AssetCard(this.asset, {this.refreshParent, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class AssetCard extends StatelessWidget {
         onLongPress: () => _showAssetMenu(context, asset),
         child: Card(
           elevation: 5,
-          color: References.assetTypesMap[asset.type].color,
+          color: References.assetTypesMap[asset.type]!.color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -33,9 +33,9 @@ class AssetCard extends StatelessWidget {
               const SizedBox(width: 10),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const SizedBox(height: 8),
-                Text(asset.name,
+                Text(asset.name!,
                     style: AppTheme.title3),
-                Text(asset.sku,
+                Text(asset.sku!,
                     style: AppTheme.subtitle2.override(
                       fontFamily: "Roboto Mono",
                         color: Theme
@@ -53,7 +53,7 @@ class AssetCard extends StatelessWidget {
                             .of(context)
                             .hintColor),
                     const SizedBox(width: 5),
-                    Text(References.organizationsMap[asset.holder].name,
+                    Text(References.organizationsMap[asset.holder]!.name!,
                         style: AppTheme.bodyText2.override(
                             color: Theme
                                 .of(context)
@@ -68,7 +68,7 @@ class AssetCard extends StatelessWidget {
                         .of(context)
                         .hintColor),
                     const SizedBox(width: 5),
-                    Text(asset.location.name,
+                    Text(asset.location.name!,
                         style: AppTheme.bodyText2.override(
                             color: Theme
                                 .of(context)
@@ -85,7 +85,7 @@ class AssetCard extends StatelessWidget {
                     const SizedBox(width: 5),
                     Text(
                         asset.requirements != null
-                            ? "Assigned (${asset.requirements.metrics.length})"
+                            ? "Assigned (${asset.requirements!.metrics.length})"
                             : "Not assigned",
                         style: AppTheme.bodyText2.override(
                             color: Theme
@@ -119,8 +119,8 @@ class AssetCard extends StatelessWidget {
         action: decorateWithLoading(
             context,
                 () =>
-                RequirementsController.revokeRequirements(asset.requirements.id)
-                    .whenComplete(refreshParent)),
+                RequirementsController.revokeRequirements(asset.requirements!.id)
+                    .whenComplete(refreshParent!)),
         enabled: asset.requirements != null,
       ),
       ModalMenuOption(
@@ -154,7 +154,7 @@ class AssetCard extends StatelessWidget {
                       context,
                           () =>
                           AssetsController.deleteAsset(asset.id)
-                              .whenComplete(refreshParent)))),
+                              .whenComplete(refreshParent!)))),
     ]);
   }
 }

@@ -22,12 +22,12 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // ignore: im
 const defaultViewportPoints = 25;
 
 class ReadingsPage extends StatefulWidget {
-  final Asset asset;
-  final Requirements requirements;
+  final Asset? asset;
+  final Requirements? requirements;
   final bool pageView;
-  final int pageIndex;
-  final MetricReadings readings;
-  final List<Device> devices;
+  final int? pageIndex;
+  final MetricReadings? readings;
+  final List<Device>? devices;
 
   const ReadingsPage({
     this.asset,
@@ -49,17 +49,17 @@ abstract class _ReadingsState extends State<ReadingsPage> {
 
   final viewportPoints = defaultViewportPoints;
   final refreshKey = GlobalKey<RefreshIndicatorState>();
-  Map<String, Requirement> get requirements => widget.requirements.metrics;
-  List<Device> devicesCache;
+  Map<String?, Requirement?> get requirements => widget.requirements!.metrics;
+  List<Device>? devicesCache;
 
   @override
   void initState() {
     super.initState();
 
     if (widget.readings != null) {
-      readings = widget.readings;
+      readings = widget.readings!;
     } else {
-      SchedulerBinding.instance.addPostFrameCallback((_) => refreshData() );
+      SchedulerBinding.instance!.addPostFrameCallback((_) => refreshData() );
     }
 
     if (widget.devices != null) {
@@ -73,8 +73,11 @@ abstract class _ReadingsState extends State<ReadingsPage> {
   @protected
   Future refreshData() async {
     refreshKey.currentState?.show();
-    return ReadingsController.getReadings(widget.asset.id).then((value) =>
-       setState(() => readings = value)
+    return ReadingsController.getReadings(widget.asset!.id).then((value) {
+        if (value != null) {
+          setState(() => readings = value);
+        }
+      }
     );
   }
 
@@ -82,14 +85,14 @@ abstract class _ReadingsState extends State<ReadingsPage> {
   List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(Metric metric, MetricReadingsStream stream) {
     return [
       charts.Series<MetricReadingPoint, DateTime>(
-        id: metric.metric,
+        id: metric.metric!,
         displayName: metric.name,
-        colorFn: (point, i) => isCritical(stream, i, requirements[metric.metric])
+        colorFn: (point, i) => isCritical(stream, i!, requirements[metric.metric]!)
             ? charts.MaterialPalette.red.shadeDefault
             : charts.MaterialPalette.cyan.shadeDefault,
         domainFn: (point, _) => point.timestamp,
         measureFn: (point, _) => point.value,
-        data: stream,
+        data: stream as List<MetricReadingPoint>,
       )
     ];
   }
@@ -100,16 +103,21 @@ abstract class _ReadingsState extends State<ReadingsPage> {
 
   @protected
   bool isCritical(MetricReadingsStream stream, int index, Requirement requirement) =>
-    !meetRequirement(stream[index].value, requirement) ||
-          (index != stream.length - 1 && !meetRequirement(stream[index + 1].value, requirement));
+    !meetRequirement(stream[index]!.value!, requirement) ||
+          (index != stream.length - 1 && !meetRequirement(stream[index + 1]!.value!, requirement));
 
   @protected
   charts.DateTimeExtents timeViewport(MetricReadingsStream stream) {
-    var start = stream.last.timestamp.subtract(widget.requirements.periodDuration * viewportPoints);
-    if (start.isBefore(stream.first.timestamp)) start = stream.first.timestamp;
+
+    var start = stream.last!.timestamp.subtract(widget.requirements!.periodDuration * viewportPoints);
+
+    if (start.isBefore(stream.first!.timestamp)) {
+      start = stream.first!.timestamp;
+    }
+
     return charts.DateTimeExtents(
         start: start,
-        end: stream.last.timestamp
+        end: stream.last!.timestamp
     );
   }
 
@@ -144,13 +152,13 @@ class _ReadingsListViewState extends _ReadingsState {
       );
 
   Widget _listBuilder(BuildContext context, int index) {
-    final record = readings.streams.entries.elementAt(index);
+    final record = readings.streams!.entries.elementAt(index);
     return SafeArea(
       child: Hero(
-        tag: record.key,
+        tag: record.key!,
         child: InkWell(
           onTap: () => _openPage(index),
-          child: _chartCard(record.key, record.value),
+          child: _chartCard(record.key!, record.value!),
         ),
       ),
     );
@@ -171,7 +179,7 @@ class _ReadingsListViewState extends _ReadingsState {
           ),
           Positioned.fill(
             left: 40,
-            child: Text(metric.name, style: const TextStyle(
+            child: Text(metric.name!, style: const TextStyle(
                 fontSize: 18, fontWeight: FontWeight.w600)
             ),
           ),
@@ -185,7 +193,7 @@ class _ReadingsListViewState extends _ReadingsState {
                   Text("${stream.lastValue}",
                       style: const TextStyle(fontSize: 15)
                   ),
-                  Text(metric.unit,
+                  Text(metric.unit!,
                       style: TextStyle(
                           fontSize: 15,
                           color: Theme.of(context).hintColor
@@ -207,7 +215,8 @@ class _ReadingsListViewState extends _ReadingsState {
     ),
   );
 
-  Widget _buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(fromReadingsStream(metric, stream),
+  Widget _buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(
+    fromReadingsStream(metric, stream),
       animate: true,
       primaryMeasureAxis: const charts.NumericAxisSpec(
           showAxisLine: false,
@@ -250,7 +259,7 @@ class _ReadingsListViewState extends _ReadingsState {
     selectionModels: [
       charts.SelectionModelConfig(
         type: charts.SelectionModelType.info,
-        changedListener: (_) => _openPage(readings.streams.keys.toList().indexOf(metric))
+        changedListener: (_) => _openPage(readings.streams!.keys.toList().indexOf(metric))
       )
     ],
   );
@@ -260,14 +269,14 @@ class _ReadingsListViewState extends _ReadingsState {
       Metric metric,
       MetricReadingsStream stream) => [
       charts.Series<MetricReadingPoint, DateTime>(
-        id: metric.metric,
+        id: metric.metric!,
         displayName: metric.name,
-        colorFn: (point, i) => isCritical(stream, i, requirements[metric.metric])
+        colorFn: (point, i) => isCritical(stream, i!, requirements[metric.metric]!)
             ? charts.MaterialPalette.red.shadeDefault
             : charts.MaterialPalette.cyan.shadeDefault,
         domainFn: (point, _) => point.timestamp,
-        measureFn: (point, _) => point.value <= 0 ? 0: point.value,
-        data: stream,
+        measureFn: (point, _) => point.value! <= 0 ? 0: point.value,
+        data: stream as List<MetricReadingPoint>,
       )
     ];
 
@@ -282,23 +291,23 @@ class _ReadingsListViewState extends _ReadingsState {
 }
 
 class _ReadingsPageViewState extends _ReadingsState {
-  int currentPage;
+  int? currentPage;
   bool scrollLocked = false;
   bool animate = true;
-  Map<Metric, CancelReadingsListening> streamListeners;
-  PageController _controller;
+  late Map<Metric?, CancelReadingsListening> streamListeners;
+  late PageController _controller;
 
   @override
   void initState() {
     super.initState();
-    streamListeners = <Metric, CancelReadingsListening>{};
-    _onPageChanged(widget.pageIndex);
+    streamListeners = <Metric?, CancelReadingsListening>{};
+    _onPageChanged(widget.pageIndex!);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-        title: Text(_currentPageTitle()),
+        title: Text(_currentPageTitle()!),
         centerTitle: true,
         toolbarHeight: 50,
         backgroundColor: Theme.of(context).backgroundColor,
@@ -332,7 +341,7 @@ class _ReadingsPageViewState extends _ReadingsState {
 
   Widget _chartsPageView(BuildContext context) => PageView.builder(
     controller: _controller = PageController(
-        initialPage: widget.pageIndex,
+        initialPage: widget.pageIndex!,
         viewportFraction: 0.93
     ),
     itemCount: readings.streams?.length ?? 0,
@@ -342,9 +351,9 @@ class _ReadingsPageViewState extends _ReadingsState {
   );
 
   Widget _pagerBuilder(BuildContext context, int index) {
-    final record = readings.streams.entries.elementAt(index);
+    final record = readings.streams!.entries.elementAt(index);
     return SafeArea(
-      child: _chartPage(record.key, record.value),
+      child: _chartPage(record.key!, record.value!),
     );
   }
 
@@ -374,15 +383,15 @@ class _ReadingsPageViewState extends _ReadingsState {
                       alignment: Alignment.topLeft,
                       child: Row(
                         children: [
-                          metric.icon(size: 26, color: meetRequirement(stream.lastValue, requirements[metric.metric]) ? Colors.green : Colors.red),
+                          metric.icon(size: 26, color: meetRequirement(stream.lastValue, requirements[metric.metric]!) ? Colors.green : Colors.red),
                           const SizedBox(width: 5),
                           Text("${stream.lastValue}",
-                              style: TextStyle(fontSize: 20, color: meetRequirement(stream.lastValue, requirements[metric.metric]) ? Colors.green : Colors.red)
+                              style: TextStyle(fontSize: 20, color: meetRequirement(stream.lastValue, requirements[metric.metric]!) ? Colors.green : Colors.red)
                           ),
-                          Text(metric.unit,
+                          Text(metric.unit!,
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: meetRequirement(stream.lastValue, requirements[metric.metric]) ? Colors.green.withAlpha(160) : Colors.red.withAlpha(160)
+                                  color: meetRequirement(stream.lastValue, requirements[metric.metric]!) ? Colors.green.withAlpha(160) : Colors.red.withAlpha(160)
                               )
                           ),
                         ],
@@ -391,7 +400,7 @@ class _ReadingsPageViewState extends _ReadingsState {
                   const Spacer(),
                   Text(_isActiveStream(metric)
                       ? "Monitoring now"
-                      : "Last updated \n${stream.last.timestamp.timeAgoSinceDate()}",
+                      : "Last updated \n${stream.last!.timestamp.timeAgoSinceDate()}",
                       style: TextStyle(color: Theme.of(context).hintColor)
                   ),
                   if (_isActiveStream(metric)) ...{
@@ -429,12 +438,12 @@ class _ReadingsPageViewState extends _ReadingsState {
               ListTile(
                   leading: const Icon(Icons.rule),
                   title: const Text("Compliance index"),
-                  trailing: Text("${stream.complianceIndexFor(widget.requirements.metrics[metric.metric])}%")
+                  trailing: Text("${stream.complianceIndexFor(widget.requirements!.metrics[metric.metric])}%")
               ),
               ListTile(
                   leading: const SvgIcon("running_with_errors"),
                   title: const Text("Critical exposure duration"),
-                  trailing: Text(stream.criticalExposureFor(widget.requirements.metrics[metric.metric], widget.requirements.periodDuration).toShortString())
+                  trailing: Text(stream.criticalExposureFor(widget.requirements!.metrics[metric.metric], widget.requirements!.periodDuration).toShortString())
               ),
             ],
           ),
@@ -491,11 +500,11 @@ class _ReadingsPageViewState extends _ReadingsState {
           ),
           charts.RangeAnnotation([
             charts.RangeAnnotationSegment(
-                max(requirements[metric.metric].minLimit, measureViewport(stream).min),
-                min(requirements[metric.metric].maxLimit, measureViewport(stream).max),
+                max(requirements[metric.metric]!.minLimit, measureViewport(stream).min),
+                min(requirements[metric.metric]!.maxLimit, measureViewport(stream).max),
                 charts.RangeAnnotationAxisType.measure,
-                startLabel: "Min (${requirements[metric.metric].minLimit}${metric.unit})",
-                endLabel: "Max (${requirements[metric.metric].maxLimit}${metric.unit})",
+                startLabel: "Min (${requirements[metric.metric]!.minLimit}${metric.unit})",
+                endLabel: "Max (${requirements[metric.metric]!.maxLimit}${metric.unit})",
                 labelStyleSpec: charts.TextStyleSpec(
                   color: toChartColor(Theme.of(context).hintColor),
                 ),
@@ -507,7 +516,7 @@ class _ReadingsPageViewState extends _ReadingsState {
         charts.SelectionModelConfig(
             changedListener: (model) {
               if(model.hasDatumSelection){
-                WithTooltipSymbolRenderer.point = stream[model.selectedDatum[0].index];
+                WithTooltipSymbolRenderer.point = stream[model.selectedDatum[0].index!];
               }
             }
         )
@@ -515,22 +524,22 @@ class _ReadingsPageViewState extends _ReadingsState {
     );
 
   void _onPageChanged(int page) {
-    final metric = readings.streams.entries.elementAt(page).key;
+    final metric = readings.streams!.entries.elementAt(page).key;
 
     // Updating current page for displaying metric name as title
     setStateWithAnimate(() => currentPage = page);
 
     if (!streamListeners.containsKey(metric)) {
-      ReadingsController.getStream(widget.asset.id, metric.metric)
+      ReadingsController.getStream(widget.asset!.id, metric!.metric)
           .then((value) =>
           setStateWithAnimate(() {
-            readings.streams[metric] = value;
+            readings.streams![metric] = value;
           }, animate: false));
 
       ReadingsController.subscribeToStream(
-          widget.asset.id, metric.metric, (point) {
+          widget.asset!.id, metric.metric, (point) {
         setStateWithAnimate(() {
-          readings.streams[metric].add(point);
+          readings.streams![metric]!.add(point);
         }, animate: false);
       }).then((cancel) => streamListeners[metric] = cancel);
     }
@@ -541,28 +550,33 @@ class _ReadingsPageViewState extends _ReadingsState {
       setter();
     });
 
-  bool _isActiveStream(Metric metric) => DateTime.now().difference(readings.streams[metric].last.timestamp).inSeconds < max(widget.requirements.period * 3, 60);
+  bool _isActiveStream(Metric metric) {
+    if (readings.streams?.containsKey(metric) ?? false) return false;
 
-  String _currentPageTitle() =>
-      readings.streams.entries.elementAt(currentPage ?? widget.pageIndex).key.name;
+    final lastUpdated = readings.streams![metric]!.last!.timestamp;
+    return DateTime.now().difference(lastUpdated).inSeconds < max(widget.requirements!.period! * 3, 60);
+  }
+
+  String? _currentPageTitle() =>
+      readings.streams!.entries.elementAt(currentPage ?? widget.pageIndex!).key!.name;
 }
 
 class WithTooltipSymbolRenderer extends charts.CircleSymbolRenderer {
-  static MetricReadingPoint point;
+  static MetricReadingPoint? point;
   final Metric metric;
   final BuildContext context;
-  final Map<String, Device> devicesMap;
+  final Map<String?, Device> devicesMap;
 
-  WithTooltipSymbolRenderer(this.context, this.metric, {List<Device> devices}):
+  WithTooltipSymbolRenderer(this.context, this.metric, {List<Device>? devices}):
     devicesMap = { for (var d in devices ?? <Device>[]) d.id : d };
 
   @override
   void paint(charts.ChartCanvas canvas, Rectangle<num> bounds, {
-      List<int> dashPattern,
-      charts.Color fillColor,
-      charts.FillPatternType fillPattern,
-      charts.Color strokeColor,
-      double strokeWidthPx}) {
+      List<int>? dashPattern,
+      charts.Color? fillColor,
+      charts.FillPatternType? fillPattern,
+      charts.Color? strokeColor,
+      double? strokeWidthPx}) {
     if (point == null) return;
     super.paint(canvas, bounds, dashPattern: dashPattern, fillColor: fillColor, strokeColor: strokeColor, strokeWidthPx: strokeWidthPx);
     canvas.drawBarStack(
@@ -584,23 +598,23 @@ class WithTooltipSymbolRenderer extends charts.CircleSymbolRenderer {
     textStyle.color = charts.MaterialPalette.teal.shadeDefault;
     textStyle.fontSize = 14;
     canvas.drawText(
-        TextElement("Value: ${point.valueRounded}${metric.unit}", style: textStyle),
+        TextElement("Value: ${point!.valueRounded}${metric.unit}", style: textStyle),
         (bounds.left - 70).round(),
         (bounds.top + 40).round()
     );
     canvas.drawText(
-        TextElement("Time: ${DateFormat("dd-MM h:m:s").format(point.timestamp)}", style: textStyle),
+        TextElement("Time: ${DateFormat("dd-MM h:m:s").format(point!.timestamp)}", style: textStyle),
         (bounds.left - 70).round(),
         (bounds.top + 60).round()
     );
     canvas.drawText(
-        TextElement("Location: ${point.location.isNotEmpty ? point.location : "Unknown"}", style: textStyle),
+        TextElement("Location: ${point!.location.isNotEmpty ? point!.location : "Unknown"}", style: textStyle),
         (bounds.left - 70).round(),
         (bounds.top + 80).round()
     );
-    if (devicesMap != null && devicesMap.isNotEmpty) {
+    if (devicesMap.isNotEmpty) {
       canvas.drawText(
-          TextElement("Device: ${devicesMap[point.deviceID].name}", style: textStyle),
+          TextElement("Device: ${devicesMap[point!.deviceID]!.name}", style: textStyle),
           (bounds.left - 70).round(),
           (bounds.top + 100).round()
       );

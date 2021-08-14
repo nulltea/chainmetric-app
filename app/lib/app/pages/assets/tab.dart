@@ -9,21 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class AssetsTab extends NavigationTab {
-  AssetsTab({GlobalKey key}) : super(key: key ?? GlobalKey());
+  AssetsTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
 
-  _AssetsTabState get _currentState =>
-      (key as GlobalKey)?.currentState as _AssetsTabState;
+  _AssetsTabState? get _currentState =>
+      (key as GlobalKey?)?.currentState as _AssetsTabState?;
 
   @override
   _AssetsTabState createState() => _AssetsTabState();
 
   @override
-  Future refreshData() => _currentState._refreshData();
+  Future refreshData() => _currentState!._refreshData();
 }
 
 class _AssetsTabState extends State<AssetsTab> {
   List<AssetPresenter> assets = [];
-  String scrollID;
+  String? scrollID;
 
   static const _itemsLength = 50;
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -57,7 +57,7 @@ class _AssetsTabState extends State<AssetsTab> {
           child: ListView.builder(
             itemCount: assets.length,
             padding: const EdgeInsets.symmetric(vertical: 12),
-            itemBuilder: _listBuilder,
+            itemBuilder: _listBuilder as Widget Function(BuildContext, int),
           ),
         ),
       );
@@ -66,18 +66,18 @@ class _AssetsTabState extends State<AssetsTab> {
     _refreshKey.currentState?.show();
     return AssetsController.getAssets(limit: _itemsLength, scrollID: scrollID).then((value) =>
         setState(() {
-          assets = value.items;
+          assets = value!.items;
           scrollID = value.scrollID;
         }));
   }
 
-  Widget _listBuilder(BuildContext context, int index) {
+  Widget? _listBuilder(BuildContext context, int index) {
     if (index >= _itemsLength) return null;
     return SafeArea(
       top: false,
       bottom: false,
       child: Hero(
-        tag: assets[index].id,
+        tag: assets[index].id!,
         child: AssetCard(assets[index], refreshParent: _refreshData),
       ),
     );

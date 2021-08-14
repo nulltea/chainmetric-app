@@ -11,7 +11,7 @@ import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 
 class RequirementsForm extends StatefulWidget {
-  final Requirements model;
+  final Requirements? model;
 
   const RequirementsForm({this.model});
 
@@ -20,7 +20,7 @@ class RequirementsForm extends StatefulWidget {
 }
 
 class _RequirementsFormState extends State<RequirementsForm> {
-  Requirements requirements;
+  Requirements? requirements;
   final ScrollController _controller = ScrollController();
   final _formKey = GlobalKey<FormState>();
 
@@ -29,10 +29,10 @@ class _RequirementsFormState extends State<RequirementsForm> {
   }
 
   String get periodStr =>
-      "${requirements.periodDuration.inHours}h ${requirements.periodDuration
-          .inMinutes - requirements.periodDuration.inHours * 60}m ${requirements
+      "${requirements!.periodDuration.inHours}h ${requirements!.periodDuration
+          .inMinutes - requirements!.periodDuration.inHours * 60}m ${requirements!
           .periodDuration.inSeconds -
-          requirements.periodDuration.inMinutes * 60}s";
+          requirements!.periodDuration.inMinutes * 60}s";
 
   @override
   void initState() {
@@ -82,46 +82,46 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                   )),
                               MultiSelectBottomSheetField(
                                 initialValue:
-                                requirements.metrics.keys.toList(),
+                                requirements!.metrics.keys.toList(),
                                 title: const Text("Metrics"),
                                 buttonText: const Text("Select metrics"),
                                 listType: MultiSelectListType.CHIP,
-                                chipColor: Colors.teal.shade800,
+                                colorator: (dynamic v) => Colors.teal.shade800,
                                 selectedColor: Colors.teal,
                                 selectedItemsTextStyle: const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                                 buttonIcon: const Icon(Icons.add),
-                                items: References.metrics
+                                items: References.metrics!
                                     .where((metric) =>
-                                !requirements.metrics
+                                !requirements!.metrics
                                     .containsKey(metric.name))
                                     .map((metric) =>
                                     MultiSelectItem(
                                       metric.metric,
-                                      metric.name,
+                                      metric.name!,
                                     ))
                                     .toList(),
                                 onSelectionChanged: (value) {
                                   setState(() =>
-                                      requirements.metrics
+                                      requirements!.metrics
                                           .addEntries(value.map((metric) =>
                                           MapEntry(
-                                              metric as String, References.defaultRequirements[
-                                              metric]))
+                                              metric as String?, References.defaultRequirements![
+                                              metric!]))
                                       )
                                   );
                                 },
                                 onConfirm: (selected) => setState(() {
-                                  final toRemoveKeys = <String>[];
-                                  for (final metric in requirements.metrics.keys) {
+                                  final toRemoveKeys = <String?>[];
+                                  for (final metric in requirements!.metrics.keys) {
                                     if (!selected.contains(metric)) {
                                       toRemoveKeys.add(metric);
                                     }
                                   }
 
                                   for (final key in toRemoveKeys) {
-                                    requirements.metrics.remove(key);
+                                    requirements!.metrics.remove(key);
                                   }
                                 })
                               ),
@@ -133,16 +133,16 @@ class _RequirementsFormState extends State<RequirementsForm> {
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           physics: const AlwaysScrollableScrollPhysics(),
                           controller: _controller,
-                          children: requirements.metrics.entries.map(
+                          children: requirements!.metrics.entries.map(
                                   (kvp) =>
                                   SafeArea(
                                       top: false,
                                       bottom: false,
                                       child: Hero(
-                                          tag: kvp.key,
+                                          tag: kvp.key!,
                                           child: _requirementControl(
-                                              References.metricsMap[kvp.key],
-                                              kvp.value)))).toList(),
+                                              References.metricsMap![kvp.key]!,
+                                              kvp.value!)))).toList(),
 
                         ),
                         SizedBox(
@@ -180,7 +180,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                 padding: const EdgeInsets.only(left: 10, top: 5),
                 child: Stack(fit: StackFit.expand,
                     children: [
-                  Text(metric.name,
+                  Text(metric.name!,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold)),
                   Row(
@@ -190,7 +190,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                         decoration: InputDecoration(
                             filled: true,
                             labelText: "Min",
-                            suffixText: metric.unit.trim()),
+                            suffixText: metric.unit!.trim()),
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
                           setState(() => req.minLimit = num.parse(value));
@@ -220,15 +220,15 @@ class _RequirementsFormState extends State<RequirementsForm> {
       context: context,
       builder: (context) =>
           CupertinoTimerPicker(
-            initialTimerDuration: requirements.periodDuration,
+            initialTimerDuration: requirements!.periodDuration,
             onTimerDurationChanged: (value) =>
-                setState(() => requirements.period = value.inSeconds),
+                setState(() => requirements!.period = value.inSeconds),
           ),
     );
   }
 
   Future<void> _submit() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       try {
         if (await RequirementsController.assignRequirements(requirements)) {
           Navigator.pop(context);

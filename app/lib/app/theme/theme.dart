@@ -62,13 +62,13 @@ class AppTheme {
 
 extension TextStyleHelper on TextStyle {
   TextStyle override(
-      {String fontFamily,
-        Color color,
-        double fontSize,
-        FontWeight fontWeight,
-        FontStyle fontStyle}) =>
+      {String? fontFamily,
+        Color? color,
+        double? fontSize,
+        FontWeight? fontWeight,
+        FontStyle? fontStyle}) =>
       GoogleFonts.getFont(
-        fontFamily ?? fontFamilyFallback[0],
+        fontFamily ?? fontFamilyFallback![0],
         color: color ?? this.color,
         fontSize: fontSize ?? this.fontSize,
         fontWeight: fontWeight ?? this.fontWeight,
