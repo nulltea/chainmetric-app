@@ -12,11 +12,11 @@ const (
 )
 
 type ReadingsContract struct {
-	sdk      *BlockchainSDK
+	sdk      *ChainmentricSDK
 	contract *gateway.Contract
 }
 
-func NewReadingsContract(sdk *BlockchainSDK) *ReadingsContract {
+func NewReadingsContract(sdk *ChainmentricSDK) *ReadingsContract {
 	return &ReadingsContract{
 		sdk:      sdk,
 		contract: sdk.network.GetContract(ReadingsContractName),

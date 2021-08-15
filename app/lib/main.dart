@@ -1,19 +1,22 @@
-import 'package:chainmetric/controllers/blockchain_adapter.dart';
-import 'package:chainmetric/controllers/bluetooth_adapter.dart';
-import 'package:chainmetric/controllers/preferences_adapter.dart';
-import 'package:chainmetric/controllers/references_adapter.dart';
+import 'dart:async';
+
+import 'package:chainmetric/platform/adapters/blockchain_adapter.dart';
+import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
+import 'package:chainmetric/platform/repositories/preferences_repo.dart';
+import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
 import 'package:chainmetric/main.reflectable.dart';
-import 'package:chainmetric/main_theme.dart';
-import 'package:chainmetric/models/asset_model.dart';
-import 'package:chainmetric/models/device_model.dart';
-import 'package:chainmetric/models/metric_model.dart';
-import 'package:chainmetric/models/organization_model.dart';
-import 'package:chainmetric/models/readings_model.dart';
-import 'package:chainmetric/models/requirements_model.dart';
-import 'package:chainmetric/views/components/common/loading_splash.dart';
-import 'package:chainmetric/views/pages/main_page.dart';
-import 'package:chainmetric/views/pages/auth/page.dart';
+import 'package:chainmetric/app/theme/theme.dart';
+import 'package:chainmetric/models/assets/asset.dart';
+import 'package:chainmetric/models/device/device.dart';
+import 'package:chainmetric/models/readings/metric.dart';
+import 'package:chainmetric/models/identity/organization.dart';
+import 'package:chainmetric/models/readings/readings.dart';
+import 'package:chainmetric/models/assets/requirements.dart';
+import 'package:chainmetric/app/widgets/common/loading_splash.dart';
+import 'package:chainmetric/app/pages/main_page.dart';
+import 'package:chainmetric/app/pages/auth/page.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:global_configuration/global_configuration.dart';
@@ -95,7 +98,7 @@ class _AppState extends State<App> {
     await Preferences.init();
     await References.init();
     await Blockchain.initWallet();
-    if (await Blockchain.authRequired()) {
+    if (await (Blockchain.authRequired() as FutureOr<bool>)) {
       setState(() => _isLoading = false);
       return;
     }
@@ -133,10 +136,11 @@ Future<void> initConfig() async {
   );
 
   GlobalConfiguration().loadFromMap(
-    { for (var key in yaml.keys) key as String : yaml[key] }
+    { for (var key in yaml.keys) (key as String?)! : yaml[key] }
   );
 }
 
+/// deprecated
 void initJson() {
   initializeReflectable();
   JsonMapper().useAdapter(JsonMapperAdapter(
@@ -152,7 +156,7 @@ void initJson() {
         typeOf<Map<String, Requirement>>(): (value) => Map<String, Requirement>.from(value as Map),
         typeOf<Map<String, List<MetricReadingPoint>>>(): (value) => Map<String, List<MetricReadingPoint>>.from(value as Map),
         typeOf<List<MetricReadingPoint>>(): (value) => value.cast<MetricReadingPoint>(),
-        typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList() as List<MetricReadingPoint>),
+        typeOf<MetricReadingsStream>(): (value) => MetricReadingsStream.from(value.cast<MetricReadingPoint>().toList() as List<MetricReadingPoint?>?),
         typeOf<List<DeviceCommandLogEntry>>(): (value) => value.cast<DeviceCommandLogEntry>(),
         typeOf<Map<String, PairedDevice>>(): (value) => Map<String, PairedDevice>.from(value as Map),
       },
