@@ -6,5 +6,4 @@ class IdentityService {
   String get apiHost => "https://identity.$organization.org.chainmetric.network";
 
   IdentityService(this.organization);
-
 }

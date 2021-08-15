@@ -1,0 +1,217 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Chainmetric Identity API users to authenticate and save preferences.",
+        "title": "Chainmetric Identity API",
+        "contact": {
+            "name": "Timothy Yalugin",
+            "url": "https://github.com/timoth-y",
+            "email": "timauthx@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://raw.githubusercontent.com/timoth-y/chainmetric-contracts/main/LICENSE"
+        },
+        "version": "1.0"
+    },
+    "host": "identity.chainmetric.network",
+    "basePath": "/",
+    "paths": {
+        "/users/enroll": {
+            "get": {
+                "description": "Generates signing cryptographic identity for user and confirms one.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Enroll new user",
+                "parameters": [
+                    {
+                        "description": "Request to enroll new user",
+                        "name": "register",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.EnrollmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/register": {
+            "get": {
+                "description": "Request user initial registration.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "User registration",
+                "parameters": [
+                    {
+                        "description": "Request to register new user",
+                        "name": "register",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.RegistrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "presenter.HTTPError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "reason": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.EnrollmentRequest": {
+            "type": "object",
+            "required": [
+                "role",
+                "user_id"
+            ],
+            "properties": {
+                "expire_at": {
+                    "description": "Date of user's contract expiration if defined",
+                    "type": "string",
+                    "example": "2006-01-02T15:04:05Z07:00"
+                },
+                "role": {
+                    "description": "Role of the user",
+                    "type": "string",
+                    "example": "admin"
+                },
+                "user_id": {
+                    "description": "User's unique identifier",
+                    "type": "string",
+                    "example": "f4bc94f1-3af4-4ae0-9330-19d86ca42b30"
+                }
+            }
+        },
+        "user.RegistrationRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstname",
+                "lastname"
+            ],
+            "properties": {
+                "email": {
+                    "description": "Email address of the user",
+                    "type": "string",
+                    "example": "john.smith@example.com"
+                },
+                "firstname": {
+                    "description": "First name of the user",
+                    "type": "string",
+                    "example": "John"
+                },
+                "lastname": {
+                    "description": "Last name of the user",
+                    "type": "string",
+                    "example": "Smith"
+                }
+            }
+        },
+        "user.User": {
+            "type": "object",
+            "properties": {
+                "confirmed": {
+                    "description": "User is confirmed by admin.",
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "description": "User initial registration date and time",
+                    "type": "string",
+                    "example": "2021-01-02T15:04:05Z07:00"
+                },
+                "email": {
+                    "description": "Email address of the user",
+                    "type": "string",
+                    "example": "john.smith@example.com"
+                },
+                "expire_at": {
+                    "description": "Date of user's contract expiration if defined",
+                    "type": "string",
+                    "example": "2021-05-02T15:04:05Z07:00"
+                },
+                "firstname": {
+                    "description": "First name of the user",
+                    "type": "string",
+                    "example": "John"
+                },
+                "id": {
+                    "description": "User's unique identifier",
+                    "type": "string",
+                    "example": "f4bc94f1-3af4-4ae0-9330-19d86ca42b30"
+                },
+                "lastname": {
+                    "description": "Last name of the user",
+                    "type": "string",
+                    "example": "Smith"
+                },
+                "role": {
+                    "description": "Role of the user",
+                    "type": "string",
+                    "example": "admin"
+                }
+            }
+        }
+    }
+}
