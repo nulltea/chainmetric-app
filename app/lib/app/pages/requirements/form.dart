@@ -107,8 +107,8 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                       requirements!.metrics
                                           .addEntries(value.map((metric) =>
                                           MapEntry(
-                                              metric as String?, References.defaultRequirements![
-                                              metric!]))
+                                              metric as String, References.defaultRequirements![
+                                              metric]))
                                       )
                                   );
                                 },
@@ -139,7 +139,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                       top: false,
                                       bottom: false,
                                       child: Hero(
-                                          tag: kvp.key!,
+                                          tag: kvp.key,
                                           child: _requirementControl(
                                               References.metricsMap![kvp.key]!,
                                               kvp.value!)))).toList(),

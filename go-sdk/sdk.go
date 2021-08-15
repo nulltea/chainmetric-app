@@ -10,7 +10,7 @@ import (
 
 const userID = "appUser"
 
-type BlockchainSDK struct {
+type ChainmentricSDK struct {
 	wallet *gateway.Wallet
 	gateway *gateway.Gateway
 	network *gateway.Network
@@ -18,11 +18,11 @@ type BlockchainSDK struct {
 	Readings *ReadingsContract
 }
 
-func (sdk *BlockchainSDK) Init() {
+func (sdk *ChainmentricSDK) Init() {
 	sdk.Readings = NewReadingsContract(sdk)
 }
 
-func (sdk *BlockchainSDK) InitWallet(path string) error {
+func (sdk *ChainmentricSDK) InitWallet(path string) error {
 	wallet, err := gateway.NewFileSystemWallet(path)
 	if err != nil {
 		return err
@@ -31,11 +31,11 @@ func (sdk *BlockchainSDK) InitWallet(path string) error {
 	return nil
 }
 
-func (sdk *BlockchainSDK) AuthRequired() bool {
+func (sdk *ChainmentricSDK) AuthRequired() bool {
 	return !sdk.wallet.Exists(userID)
 }
 
-func (sdk *BlockchainSDK) AuthIdentity(orgID, key, cert string) error {
+func (sdk *ChainmentricSDK) AuthIdentity(orgID, key, cert string) error {
 	if !sdk.wallet.Exists(userID) {
 		identity := gateway.NewX509Identity(orgID, cert, key)
 		return sdk.wallet.Put(userID, identity)
@@ -43,7 +43,7 @@ func (sdk *BlockchainSDK) AuthIdentity(orgID, key, cert string) error {
 	return nil
 }
 
-func (sdk *BlockchainSDK) InitConnectionOn(configRaw, channel string) error {
+func (sdk *ChainmentricSDK) InitConnectionOn(configRaw, channel string) error {
 	gw, err := gateway.Connect(
 		gateway.WithConfig(config.FromRaw([]byte(configRaw), "yaml")),
 		gateway.WithIdentity(sdk.wallet, userID),
@@ -58,13 +58,13 @@ func (sdk *BlockchainSDK) InitConnectionOn(configRaw, channel string) error {
 	return nil
 }
 
-func (sdk *BlockchainSDK) EvaluateTransaction(chaincode, transaction string, args string) (string, error) {
+func (sdk *ChainmentricSDK) EvaluateTransaction(chaincode, transaction string, args string) (string, error) {
 	contract := sdk.network.GetContract(chaincode)
 	data, err := contract.EvaluateTransaction(transaction, args)
 	return string(data), errors.Wrap(err, "EvaluateTransaction: execute contract")
 }
 
-func (sdk *BlockchainSDK) SubmitTransaction(chaincode, transaction string, args string) (string, error) {
+func (sdk *ChainmentricSDK) SubmitTransaction(chaincode, transaction string, args string) (string, error) {
 	contract := sdk.network.GetContract(chaincode)
 	data, err := contract.SubmitTransaction(transaction, args)
 	return string(data), errors.Wrap(err, "SubmitTransaction: execute contract")

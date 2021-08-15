@@ -1,9 +1,15 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@jsonSerializable
+part 'organization.g.dart';
+
+@JsonSerializable()
 class Organization {
-  String? name;
-  String? mspID;
+  late final String? name;
+  late final String? mspID;
 
-  Organization({this.name, this.mspID});
+  Organization();
+  Organization.from({this.name, this.mspID});
+
+  factory Organization.fromJson(Map<String, dynamic> json) => _$OrganizationFromJson(json);
+  Map<String, dynamic> toJson() => _$OrganizationToJson(this);
 }

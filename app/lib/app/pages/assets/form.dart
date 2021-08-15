@@ -108,11 +108,11 @@ class _AssetFormState extends State<AssetForm> {
                             return null;
                           },
                           onChanged: (String? value) {
-                            setState(() => asset.type = value);
+                            setState(() => asset.type = value!);
                           },
                         ),
                         TextFormField(
-                          initialValue: asset.cost?.toString() ?? "",
+                          initialValue: asset.cost.toString(),
                           decoration: const InputDecoration(
                             filled: true,
                             hintText: "Enter an cost",

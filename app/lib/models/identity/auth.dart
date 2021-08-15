@@ -1,8 +1,15 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@jsonSerializable
+part "auth.g.dart";
+
+@JsonSerializable()
 class AuthCredentials {
   String? organization;
   String? certificate;
   String? privateKey;
+
+  AuthCredentials();
+
+  factory AuthCredentials.fromJson(Map<String, dynamic> json) => _$AuthCredentialsFromJson(json);
+  Map<String, dynamic> toJson() => _$AuthCredentialsToJson(this);
 }

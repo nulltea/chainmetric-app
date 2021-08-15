@@ -4,41 +4,53 @@ import 'dart:math';
 import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
 import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@jsonSerializable
+part "readings.g.dart";
+
+@JsonSerializable()
 class MetricReadings {
-  @JsonProperty(name: "asset_id")
+  @JsonKey(name: "asset_id")
   String? assetID;
-  @JsonProperty(name: "streams")
+  @JsonKey(name: "streams")
   Map<String, List<MetricReadingPoint?>>? streamsRaw;
 
-  @JsonProperty(ignore: true)
+  MetricReadings();
+
+  @JsonKey(ignore: true)
   Map<Metric?, MetricReadingsStream?>? get streams => References.metricsMap != null
       ? _streams ??= streamsRaw?.map((key, value) => MapEntry(
           References.metricsMap![key],
           MetricReadingsStream.from(streamsRaw![key])))
       : null;
   Map<Metric?, MetricReadingsStream?>? _streams;
+
+  factory MetricReadings.fromJson(Map<String, dynamic> json) => _$MetricReadingsFromJson(json);
+  Map<String, dynamic> toJson() => _$MetricReadingsToJson(this);
 }
 
-@jsonSerializable
+@JsonSerializable()
 class MetricReadingPoint {
-  @JsonProperty(name: "device_id")
+  @JsonKey(name: "device_id")
   late String deviceID;
   late String location;
   late DateTime timestamp;
   num? value;
   num get valueRounded => roundValue(value, 2);
 
+  MetricReadingPoint();
+
   static num roundValue(num? value, int places) {
     if (value is int) return value;
     final mod = pow(10.0, places);
     return (value! * mod).round() / mod;
   }
+
+  factory MetricReadingPoint.fromJson(Map<String, dynamic> json) => _$MetricReadingPointFromJson(json);
+  Map<String, dynamic> toJson() => _$MetricReadingPointToJson(this);
 }
 
-class MetricReadingsStream extends ListBase<MetricReadingPoint?> with MetricReadingPoint {
+class MetricReadingsStream extends ListBase<MetricReadingPoint?> {
   List<MetricReadingPoint?>? _list = [];
   @override
   set length(int newLength) { _list!.length = newLength; }
@@ -83,8 +95,6 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint?> with MetricRead
   MetricReadingsStream.from(List<MetricReadingPoint?>? from) {
     _list = from;
   }
-
-
 
   bool _meetRequirement(num value, Requirement requirement) =>
       requirement.minLimit <= value && value <= requirement.maxLimit;

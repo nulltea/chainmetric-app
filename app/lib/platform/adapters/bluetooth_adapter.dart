@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:chainmetric/platform/adapters/preferences_adapter.dart';
+import 'package:chainmetric/platform/repositories/preferences_repo.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';

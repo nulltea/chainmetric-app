@@ -1,23 +1,33 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@jsonSerializable
+part "requirements.g.dart";
+
+@JsonSerializable()
 class Requirement {
-  @JsonProperty(name: "min_limit")
+  @JsonKey(name: "min_limit")
   late num minLimit;
-  @JsonProperty(name: "max_limit")
+  @JsonKey(name: "max_limit")
   late num maxLimit;
+
+  Requirement();
+
+  factory Requirement.fromJson(Map<String, dynamic> json) => _$RequirementFromJson(json);
+  Map<String, dynamic> toJson() => _$RequirementToJson(this);
 }
 
-@jsonSerializable
+@JsonSerializable()
 class Requirements {
-  String? id;
+  late final String id;
   String? type;
-  @JsonProperty(name: "asset_id")
+  @JsonKey(name: "asset_id")
   String? assetID;
   int? period;
   Duration get periodDuration => Duration(seconds: period ?? 0);
-  Map<String?, Requirement?> metrics = <String?, Requirement?>{};
+  Map<String, Requirement?> metrics = <String, Requirement?>{};
 
   Requirements();
   Requirements.forAsset({this.assetID});
+
+  factory Requirements.fromJson(Map<String, dynamic> json) => _$RequirementsFromJson(json);
+  Map<String, dynamic> toJson() => _$RequirementsToJson(this);
 }

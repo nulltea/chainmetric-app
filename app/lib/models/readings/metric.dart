@@ -1,13 +1,16 @@
 import 'package:chainmetric/app/widgets/common/svg_icon.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:json_annotation/json_annotation.dart';
+
 import 'package:flutter/material.dart';
 
-@jsonSerializable
+part "metric.g.dart";
+
+@JsonSerializable()
 class Metric {
   String? name;
   String? metric;
   String? unit;
-  @JsonProperty(name: "icon")
+  @JsonKey(name: "icon")
   String? iconRaw;
 
   Widget icon({

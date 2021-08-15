@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:chainmetric/platform/adapters/blockchain_adapter.dart';
 import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
-import 'package:chainmetric/platform/adapters/preferences_adapter.dart';
+import 'package:chainmetric/platform/repositories/preferences_repo.dart';
 import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
 import 'package:chainmetric/main.reflectable.dart';
 import 'package:chainmetric/app/theme/theme.dart';
@@ -16,6 +16,7 @@ import 'package:chainmetric/app/widgets/common/loading_splash.dart';
 import 'package:chainmetric/app/pages/main_page.dart';
 import 'package:chainmetric/app/pages/auth/page.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:global_configuration/global_configuration.dart';
@@ -139,6 +140,7 @@ Future<void> initConfig() async {
   );
 }
 
+/// deprecated
 void initJson() {
   initializeReflectable();
   JsonMapper().useAdapter(JsonMapperAdapter(

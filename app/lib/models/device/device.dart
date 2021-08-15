@@ -1,11 +1,13 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
 
 import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/shared/extensions.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@jsonSerializable
+part "device.g.dart";
+
+@JsonSerializable()
 class Device {
   String? id;
   late String ip;
@@ -19,9 +21,9 @@ class Device {
   Location? location;
 
 
-  @JsonProperty(ignore: true)
+  @JsonKey(ignore: true)
   String get stateView => state?.toSentenceCase() ?? "Unknown";
-  @JsonProperty(ignore: true)
+  @JsonKey(ignore: true)
   Icon get stateIcon {
     switch (state) {
       case "online":
@@ -37,11 +39,11 @@ class Device {
   }
 }
 
-@jsonSerializable
+@JsonSerializable()
 class DeviceProfile {
   late String name;
   String? profile;
-  @JsonProperty(name: "color_hex")
+  @JsonKey(name: "color_hex")
   late String colorHex;
   Color get color => colorFromHex(colorHex);
 
@@ -54,9 +56,9 @@ class DeviceProfile {
   }
 }
 
-@jsonSerializable
+@JsonSerializable()
 class DeviceCommandRequest {
-  @JsonProperty(name: "device_id")
+  @JsonKey(name: "device_id")
   String? deviceID;
   DeviceCommand command;
   List<Object>? args;
@@ -64,35 +66,35 @@ class DeviceCommandRequest {
   DeviceCommandRequest(this.deviceID, this.command, {this.args});
 }
 
-@jsonSerializable
+@JsonSerializable()
 class DeviceCommandLogEntry {
-  @JsonProperty(name: "device_id")
+  @JsonKey(name: "device_id")
   String? deviceID;
   DeviceCommand? command;
   List<Object>? args;
+  @JsonKey(unknownEnumValue: DeviceCommandStatus.unknown)
   DeviceCommandStatus? status;
   String? error;
   DateTime? timestamp;
 }
 
-@jsonSerializable
 enum DeviceCommand {
   pause,
   resume,
   pairBluetooth
 }
 
-@jsonSerializable
 enum DeviceCommandStatus {
   completed,
   processing,
-  failed
+  failed,
+  unknown
 }
 
-@jsonSerializable
+@JsonSerializable()
 class PairedDevice {
   String? hardwareID;
   String? deviceID;
   String? advertisedName;
-  @JsonProperty(ignore: true) int? rssi;
+  @JsonKey(ignore: true) int? rssi;
 }

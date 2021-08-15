@@ -1,5 +1,6 @@
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/models/readings/metric.dart';

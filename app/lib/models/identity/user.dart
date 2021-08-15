@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:json_annotation/json_annotation.dart';
 
 part "user.g.dart";
@@ -20,5 +18,5 @@ class User {
   User();
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-  String toJson() => jsonEncode(_$UserToJson(this));
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:dart_json_mapper/dart_json_mapper.dart';
+
 
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/platform/adapters/blockchain_adapter.dart';
