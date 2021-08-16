@@ -16,7 +16,7 @@ targets:
       swagger_dart_code_generator:
         options:
           input_folder: 'assets/swagger'
-          output_folder: 'lib/infrastructure/services'
+          output_folder: 'lib/infrastructure/services/'
           exclude_paths:
             - "exception"
           include_if_null:
