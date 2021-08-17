@@ -9,54 +9,56 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart' as $0;
+
 class User extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'User', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.proto.presenter'), createEmptyInstance: create)
-    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'confirmed')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createdAt', protoName: 'createdAt')
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'email')
-    ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expireAt', protoName: 'expireAt')
-    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'firstname')
-    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
-    ..aOS(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastname')
-    ..aOS(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'role')
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'User', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'firstname')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastname')
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'email')
+    ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'role')
+    ..aOM<$0.Timestamp>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createdAt', protoName: 'createdAt', subBuilder: $0.Timestamp.create)
+    ..aOB(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'confirmed')
+    ..aOM<$0.Timestamp>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expireAt', protoName: 'expireAt', subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
   User._() : super();
   factory User({
-    $core.bool? confirmed,
-    $core.String? createdAt,
-    $core.String? email,
-    $core.String? expireAt,
-    $core.String? firstname,
     $core.String? id,
+    $core.String? firstname,
     $core.String? lastname,
+    $core.String? email,
     $core.String? role,
+    $0.Timestamp? createdAt,
+    $core.bool? confirmed,
+    $0.Timestamp? expireAt,
   }) {
     final _result = create();
-    if (confirmed != null) {
-      _result.confirmed = confirmed;
-    }
-    if (createdAt != null) {
-      _result.createdAt = createdAt;
-    }
-    if (email != null) {
-      _result.email = email;
-    }
-    if (expireAt != null) {
-      _result.expireAt = expireAt;
+    if (id != null) {
+      _result.id = id;
     }
     if (firstname != null) {
       _result.firstname = firstname;
     }
-    if (id != null) {
-      _result.id = id;
-    }
     if (lastname != null) {
       _result.lastname = lastname;
     }
+    if (email != null) {
+      _result.email = email;
+    }
     if (role != null) {
       _result.role = role;
+    }
+    if (createdAt != null) {
+      _result.createdAt = createdAt;
+    }
+    if (confirmed != null) {
+      _result.confirmed = confirmed;
+    }
+    if (expireAt != null) {
+      _result.expireAt = expireAt;
     }
     return _result;
   }
@@ -82,101 +84,105 @@ class User extends $pb.GeneratedMessage {
   static User? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.bool get confirmed => $_getBF(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set confirmed($core.bool v) { $_setBool(0, v); }
+  set id($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasConfirmed() => $_has(0);
+  $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearConfirmed() => clearField(1);
+  void clearId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get createdAt => $_getSZ(1);
+  $core.String get firstname => $_getSZ(1);
   @$pb.TagNumber(2)
-  set createdAt($core.String v) { $_setString(1, v); }
+  set firstname($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasCreatedAt() => $_has(1);
+  $core.bool hasFirstname() => $_has(1);
   @$pb.TagNumber(2)
-  void clearCreatedAt() => clearField(2);
+  void clearFirstname() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get email => $_getSZ(2);
+  $core.String get lastname => $_getSZ(2);
   @$pb.TagNumber(3)
-  set email($core.String v) { $_setString(2, v); }
+  set lastname($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasEmail() => $_has(2);
+  $core.bool hasLastname() => $_has(2);
   @$pb.TagNumber(3)
-  void clearEmail() => clearField(3);
+  void clearLastname() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get email => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set email($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasEmail() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEmail() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get expireAt => $_getSZ(3);
+  $core.String get role => $_getSZ(4);
   @$pb.TagNumber(5)
-  set expireAt($core.String v) { $_setString(3, v); }
+  set role($core.String v) { $_setString(4, v); }
   @$pb.TagNumber(5)
-  $core.bool hasExpireAt() => $_has(3);
+  $core.bool hasRole() => $_has(4);
   @$pb.TagNumber(5)
-  void clearExpireAt() => clearField(5);
+  void clearRole() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.String get firstname => $_getSZ(4);
+  $0.Timestamp get createdAt => $_getN(5);
   @$pb.TagNumber(6)
-  set firstname($core.String v) { $_setString(4, v); }
+  set createdAt($0.Timestamp v) { setField(6, v); }
   @$pb.TagNumber(6)
-  $core.bool hasFirstname() => $_has(4);
+  $core.bool hasCreatedAt() => $_has(5);
   @$pb.TagNumber(6)
-  void clearFirstname() => clearField(6);
+  void clearCreatedAt() => clearField(6);
+  @$pb.TagNumber(6)
+  $0.Timestamp ensureCreatedAt() => $_ensure(5);
 
   @$pb.TagNumber(7)
-  $core.String get id => $_getSZ(5);
+  $core.bool get confirmed => $_getBF(6);
   @$pb.TagNumber(7)
-  set id($core.String v) { $_setString(5, v); }
+  set confirmed($core.bool v) { $_setBool(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasId() => $_has(5);
+  $core.bool hasConfirmed() => $_has(6);
   @$pb.TagNumber(7)
-  void clearId() => clearField(7);
+  void clearConfirmed() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.String get lastname => $_getSZ(6);
+  $0.Timestamp get expireAt => $_getN(7);
   @$pb.TagNumber(8)
-  set lastname($core.String v) { $_setString(6, v); }
+  set expireAt($0.Timestamp v) { setField(8, v); }
   @$pb.TagNumber(8)
-  $core.bool hasLastname() => $_has(6);
+  $core.bool hasExpireAt() => $_has(7);
   @$pb.TagNumber(8)
-  void clearLastname() => clearField(8);
-
-  @$pb.TagNumber(9)
-  $core.String get role => $_getSZ(7);
-  @$pb.TagNumber(9)
-  set role($core.String v) { $_setString(7, v); }
-  @$pb.TagNumber(9)
-  $core.bool hasRole() => $_has(7);
-  @$pb.TagNumber(9)
-  void clearRole() => clearField(9);
+  void clearExpireAt() => clearField(8);
+  @$pb.TagNumber(8)
+  $0.Timestamp ensureExpireAt() => $_ensure(7);
 }
 
 class RegistrationRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'RegistrationRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.proto.presenter'), createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'email')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'firstname')
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastname')
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'RegistrationRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'firstname')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lastname')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'email')
     ..hasRequiredFields = false
   ;
 
   RegistrationRequest._() : super();
   factory RegistrationRequest({
-    $core.String? email,
     $core.String? firstname,
     $core.String? lastname,
+    $core.String? email,
   }) {
     final _result = create();
-    if (email != null) {
-      _result.email = email;
-    }
     if (firstname != null) {
       _result.firstname = firstname;
     }
     if (lastname != null) {
       _result.lastname = lastname;
+    }
+    if (email != null) {
+      _result.email = email;
     }
     return _result;
   }
@@ -202,38 +208,38 @@ class RegistrationRequest extends $pb.GeneratedMessage {
   static RegistrationRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get email => $_getSZ(0);
+  $core.String get firstname => $_getSZ(0);
   @$pb.TagNumber(1)
-  set email($core.String v) { $_setString(0, v); }
+  set firstname($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasEmail() => $_has(0);
+  $core.bool hasFirstname() => $_has(0);
   @$pb.TagNumber(1)
-  void clearEmail() => clearField(1);
+  void clearFirstname() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get firstname => $_getSZ(1);
+  $core.String get lastname => $_getSZ(1);
   @$pb.TagNumber(2)
-  set firstname($core.String v) { $_setString(1, v); }
+  set lastname($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasFirstname() => $_has(1);
+  $core.bool hasLastname() => $_has(1);
   @$pb.TagNumber(2)
-  void clearFirstname() => clearField(2);
+  void clearLastname() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get lastname => $_getSZ(2);
+  $core.String get email => $_getSZ(2);
   @$pb.TagNumber(3)
-  set lastname($core.String v) { $_setString(2, v); }
+  set email($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasLastname() => $_has(2);
+  $core.bool hasEmail() => $_has(2);
   @$pb.TagNumber(3)
-  void clearLastname() => clearField(3);
+  void clearEmail() => clearField(3);
 }
 
 class EnrollmentRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'EnrollmentRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.proto.presenter'), createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'EnrollmentRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'userID', protoName: 'userID')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'role')
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expireAt', protoName: 'expireAt')
+    ..aOM<$0.Timestamp>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expireAt', protoName: 'expireAt', subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false
   ;
 
@@ -241,7 +247,7 @@ class EnrollmentRequest extends $pb.GeneratedMessage {
   factory EnrollmentRequest({
     $core.String? userID,
     $core.String? role,
-    $core.String? expireAt,
+    $0.Timestamp? expireAt,
   }) {
     final _result = create();
     if (userID != null) {
@@ -295,12 +301,14 @@ class EnrollmentRequest extends $pb.GeneratedMessage {
   void clearRole() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get expireAt => $_getSZ(2);
+  $0.Timestamp get expireAt => $_getN(2);
   @$pb.TagNumber(3)
-  set expireAt($core.String v) { $_setString(2, v); }
+  set expireAt($0.Timestamp v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasExpireAt() => $_has(2);
   @$pb.TagNumber(3)
   void clearExpireAt() => clearField(3);
+  @$pb.TagNumber(3)
+  $0.Timestamp ensureExpireAt() => $_ensure(2);
 }
 
