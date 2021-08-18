@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -18,9 +18,9 @@ class MetricReadings {
   MetricReadings();
 
   @JsonKey(ignore: true)
-  Map<Metric?, MetricReadingsStream?>? get streams => References.metricsMap != null
+  Map<Metric?, MetricReadingsStream?>? get streams => LocalData.metricsMap != null
       ? _streams ??= streamsRaw?.map((key, value) => MapEntry(
-          References.metricsMap![key],
+          LocalData.metricsMap![key],
           MetricReadingsStream.from(streamsRaw![key])))
       : null;
   Map<Metric?, MetricReadingsStream?>? _streams;

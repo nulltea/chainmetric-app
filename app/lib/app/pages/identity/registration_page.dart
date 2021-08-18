@@ -1,41 +1,31 @@
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
+import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/models/identity/user.pb.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/platform/adapters/blockchain_adapter.dart';
-import 'package:chainmetric/models/identity/auth.dart';
-import 'package:chainmetric/app/theme/theme.dart';
 
-class AuthPage extends StatefulWidget {
-  final Function? submitAuth;
-
-  const AuthPage({Key? key, this.submitAuth}) : super(key: key);
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
-  _AuthPageState createState() => _AuthPageState();
+  _RegistrationPageState createState() => _RegistrationPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
-  AuthCredentials credentials = AuthCredentials();
+class _RegistrationPageState extends State<RegistrationPage> {
+  RegistrationRequest request = RegistrationRequest();
+  String? organization;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool privateKeyVisibility = false;
-
-  Future<void> submitIdentity() async {
-    if (formKey.currentState!.validate()) {
-      try {
-        if (await Blockchain.authenticate(credentials)) {
-          widget.submitAuth!();
-        }
-      } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
+  @override
+  void initState() {
+    super.initState();
+    organization = LocalData.organizations![0].mspID;
   }
 
   @override
@@ -48,19 +38,19 @@ class _AuthPageState extends State<AuthPage> {
           child: Column(
             children: [
               Container(
-                height: max(100, 250 - MediaQuery.of(context).viewInsets.bottom),
+                height:
+                    max(100, 250 - MediaQuery.of(context).viewInsets.bottom),
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(),
                 child: AutoSizeText(
-                  'CHAINMETRIC',
+                  'Registation',
                   textAlign: TextAlign.center,
-                  style: AppTheme.title1.override(
-                      fontFamily: "IBM Plex Mono", fontSize: 48),
+                  style: AppTheme.title1
+                      .override(fontFamily: "IBM Plex Mono", fontSize: 48),
                 ),
               ),
               Expanded(
-                child: Column(
-                    children: [
+                child: Column(children: [
                   ...[
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -69,26 +59,22 @@ class _AuthPageState extends State<AuthPage> {
                         icon: const Icon(
                           Icons.corporate_fare_sharp,
                         ),
+                        initialOption: organization,
                         elevation: 2,
                         borderColor: Colors.transparent,
                         borderWidth: 0,
                         borderRadius: 8,
-                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        items: References.organizations!
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        items: LocalData.organizations!
                             .map<DropdownMenuItem<String>>(
                                 (org) => DropdownMenuItem<String>(
                                       value: org.mspID,
                                       child: Text(org.name!),
                                     ))
                             .toList(),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "You must specify your organization in order to authenticate";
-                          }
-                          return null;
-                        },
                         onChanged: (value) {
-                          setState(() => credentials.organization = value);
+                          setState(() => organization = value);
                         },
                       ),
                     ),
@@ -97,66 +83,78 @@ class _AuthPageState extends State<AuthPage> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           filled: true,
-                          hintText: "Enter a certificate",
-                          labelText: "Certificate",
+                          hintText: "Enter your first name",
+                          labelText: "Firstname",
                           enabledBorder: UnderlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(8))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "You must provide certificate to identify you";
+                            return "You must provide your initials for registration";
                           }
                           return null;
                         },
                         onChanged: (value) {
-                          setState(() => credentials.certificate = value);
+                          setState(() => request.firstname = value);
                         },
-                        maxLines: 5,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: TextFormField(
-                        obscureText: !privateKeyVisibility,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           filled: true,
-                          hintText: "Enter a private key",
-                          labelText: "Private key",
-                          enabledBorder: const UnderlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(8))),
-                          suffixIcon: InkWell(
-                            onTap: () => setState(
-                              () => privateKeyVisibility = !privateKeyVisibility,
-                            ),
-                            child: Icon(
-                              privateKeyVisibility
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
-                          ),
+                          hintText: "Enter your last name",
+                          labelText: "Lastname",
+                          enabledBorder: UnderlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "You must provide private key to identify you";
+                            return "You must provide your initials for registration";
                           }
                           return null;
                         },
                         onChanged: (value) {
-                          setState(() => credentials.privateKey = value.replaceAll("    ", "\n"));
+                          setState(() => request.lastname = value);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          filled: true,
+                          hintText: "Enter your email address",
+                          labelText: "Email",
+                          enabledBorder: UnderlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8))),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "You must provide your email for registration";
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() => request.email = value);
                         },
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: FormButtonWidget(
-                        onPressed: submitIdentity,
-                        text: "LOGIN",
+                        onPressed: submitRegistration,
+                        text: "REGISTER",
                         options: FormButtonOptions(
                           width: 200,
                           height: 50,
                           color: AppTheme.primaryColor,
-                          textStyle:
-                          AppTheme.subtitle2.override(
+                          textStyle: AppTheme.subtitle2.override(
                             fontFamily: 'Roboto Mono',
                             color: AppTheme.inputBG,
                             fontWeight: FontWeight.bold,
@@ -182,5 +180,18 @@ class _AuthPageState extends State<AuthPage> {
         ),
       ),
     );
+  }
+
+  Future<void> submitRegistration() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      await IdentityService(organization!).register(request);
+    } on Exception catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 }

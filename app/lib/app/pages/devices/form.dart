@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/shared/exceptions.dart';
@@ -127,7 +127,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             hintText: "Choose the device profile",
                             labelText: "Profile",
                           ),
-                          items: References.deviceProfiles!
+                          items: LocalData.deviceProfiles!
                               .map<DropdownMenuItem<String>>(
                                   (profile) => DropdownMenuItem<String>(
                                         value: profile.profile,
@@ -157,7 +157,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                                 buttonIcon: const Icon(Icons.arrow_drop_down),
-                                items: References.metrics!
+                                items: LocalData.metrics!
                                     .map((metric) => MultiSelectItem(
                                           metric.metric,
                                           metric.name!,
@@ -178,7 +178,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                 items: device!.supports
                                     .map((metric) => MultiSelectItem(
                                           metric,
-                                          References.metricsMap![metric]?.name ?? "",
+                                          LocalData.metricsMap![metric]?.name ?? "",
                                         ))
                                     .toList(),
                                 onTap: (dynamic value) {
@@ -195,7 +195,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             labelText: "Holder",
                             filled: true,
                           ),
-                          items: References.organizations!
+                          items: LocalData.organizations!
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,

@@ -1,11 +1,11 @@
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
-import 'package:chainmetric/app/pages/assets/form.dart';
+import 'package:chainmetric/app/pages/assets/asset_form.dart';
 import 'package:chainmetric/app/pages/readings/page.dart';
 import 'package:chainmetric/app/pages/requirements/form.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class AssetCard extends StatelessWidget {
         onLongPress: () => _showAssetMenu(context, asset),
         child: Card(
           elevation: 5,
-          color: References.assetTypesMap[asset.type]!.color,
+          color: LocalData.assetTypesMap[asset.type]!.color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -53,7 +53,7 @@ class AssetCard extends StatelessWidget {
                             .of(context)
                             .hintColor),
                     const SizedBox(width: 5),
-                    Text(References.organizationsMap[asset.holder]!.name!,
+                    Text(LocalData.organizationsMap[asset.holder]!.name!,
                         style: AppTheme.bodyText2.override(
                             color: Theme
                                 .of(context)

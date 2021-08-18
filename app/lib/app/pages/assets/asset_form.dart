@@ -1,5 +1,5 @@
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/app/utils/utils.dart';
@@ -94,7 +94,7 @@ class _AssetFormState extends State<AssetForm> {
                             hintText: "Choose asset type",
                             labelText: "Asset type",
                           ),
-                          items: References.assetTypes!
+                          items: LocalData.assetTypes!
                               .map<DropdownMenuItem<String>>(
                                   (type) => DropdownMenuItem<String>(
                                         value: type.type,
@@ -176,7 +176,7 @@ class _AssetFormState extends State<AssetForm> {
                             labelText: "Owned by",
                             filled: true,
                           ),
-                          items: References.organizations!
+                          items: LocalData.organizations!
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,

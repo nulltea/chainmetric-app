@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:chainmetric/platform/adapters/blockchain_adapter.dart';
+import 'package:chainmetric/platform/adapters/hyperledger_adapter.dart';
 import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
 import 'package:chainmetric/platform/repositories/preferences_repo.dart';
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/main.reflectable.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/models/assets/asset.dart';
@@ -14,7 +14,7 @@ import 'package:chainmetric/models/readings/readings.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/app/widgets/common/loading_splash.dart';
 import 'package:chainmetric/app/pages/main_page.dart';
-import 'package:chainmetric/app/pages/auth/page.dart';
+import 'package:chainmetric/app/pages/identity/login_page.dart';
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 import 'package:flutter/material.dart';
@@ -89,20 +89,20 @@ class _AppState extends State<App> {
       home: _isLoading
           ? LoadingSplash()
           : _requireAuth
-              ? AuthPage(submitAuth: _initBackend)
+              ? LoginPage(submitAuth: _initBackend)
               : MainPage(),
     );
   }
 
   Future<void> _initBackend() async {
     await Preferences.init();
-    await References.init();
-    await Blockchain.initWallet();
-    if (await (Blockchain.authRequired() as FutureOr<bool>)) {
+    await LocalData.init();
+    await Hyperledger.initWallet();
+    if (await (Hyperledger.authRequired() as FutureOr<bool>)) {
       setState(() => _isLoading = false);
       return;
     }
-    await Blockchain.initConnection("supply-channel");
+    await Hyperledger.initConnection("supply-channel");
     setState(() => _requireAuth = _isLoading = false);
 
     await Bluetooth.init();

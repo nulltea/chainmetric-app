@@ -6,7 +6,7 @@ import 'package:yaml/yaml.dart';
 
 const blockchainChannel = "chainmetric.app.blockchain-native-sdk";
 
-class Blockchain {
+class Hyperledger {
   static const _nativeSDK = MethodChannel(blockchainChannel);
   static Map<String?, dynamic>? _config;
 

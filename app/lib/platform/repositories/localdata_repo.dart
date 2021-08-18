@@ -7,7 +7,7 @@ import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/identity/organization.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
 
-class References {
+class LocalData {
   static List<Organization>? organizations = <Organization>[];
   static List<AssetType>? assetTypes = <AssetType>[];
   static List<DeviceProfile>? deviceProfiles = <DeviceProfile>[];

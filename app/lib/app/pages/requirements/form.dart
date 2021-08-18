@@ -1,4 +1,4 @@
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
 import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
@@ -92,7 +92,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                                 buttonIcon: const Icon(Icons.add),
-                                items: References.metrics!
+                                items: LocalData.metrics!
                                     .where((metric) =>
                                 !requirements!.metrics
                                     .containsKey(metric.name))
@@ -107,7 +107,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                       requirements!.metrics
                                           .addEntries(value.map((metric) =>
                                           MapEntry(
-                                              metric as String, References.defaultRequirements![
+                                              metric as String, LocalData.defaultRequirements![
                                               metric]))
                                       )
                                   );
@@ -141,7 +141,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                       child: Hero(
                                           tag: kvp.key,
                                           child: _requirementControl(
-                                              References.metricsMap![kvp.key]!,
+                                              LocalData.metricsMap![kvp.key]!,
                                               kvp.value!)))).toList(),
 
                         ),
