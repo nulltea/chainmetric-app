@@ -93,4 +93,7 @@ class AssetType {
   factory AssetType.fromJson(Map<String, dynamic> json) =>
       _$AssetTypeFromJson(json);
   Map<String, dynamic> toJson() => _$AssetTypeToJson(this);
+
+  static List<AssetType> listFromJson(List<dynamic> json) =>
+      json.map((e) => AssetType.fromJson(e)).toList();
 }

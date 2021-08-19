@@ -11,7 +11,7 @@ class DevicesController {
 
     try {
       return data.isNotEmpty
-          ? json.decode(data).map((json) => Device.fromJson(json)).toList()
+          ? Device.listFromJson(json.decode(data))
           : <Device>[];
     } on Exception catch (e) {
       print(e.toString());
@@ -39,10 +39,7 @@ class DevicesController {
 
     try {
       return data.isNotEmpty
-          ? json
-              .decode(data)
-              .map((json) => DeviceCommandLogEntry.fromJson(json))
-              .toList()
+          ? DeviceCommandLogEntry.listFromJson(json.decode(data))
           : <DeviceCommandLogEntry>[];
     } on Exception catch (e) {
       print(e.toString());

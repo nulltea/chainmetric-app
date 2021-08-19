@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:chainmetric/models/assets/asset.dart';
-import 'package:chainmetric/models/device/device.dart';
-import 'package:chainmetric/models/readings/metric.dart';
-import 'package:chainmetric/models/identity/organization.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
+import 'package:chainmetric/models/device/device.dart';
+import 'package:chainmetric/models/identity/organization.dart';
+import 'package:chainmetric/models/readings/metric.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class LocalData {
   static List<Organization>? organizations = <Organization>[];
@@ -19,30 +19,20 @@ class LocalData {
   static late Map<String?, Organization> organizationsMap;
 
   static Future init() async {
-    organizations = json
-        .decode(await rootBundle.loadString("assets/data/organizations.json"))
-        .map((json) => Organization.fromJson(json))
-        .toList();
+    organizations = Organization.listFromJson(json
+        .decode(await rootBundle.loadString("assets/data/organizations.json")));
 
-    assetTypes = json
-        .decode(await rootBundle.loadString("assets/data/asset_types.json"))
-        .map((json) => AssetType.fromJson(json))
-        .toList();
+    assetTypes = AssetType.listFromJson(json
+        .decode(await rootBundle.loadString("assets/data/asset_types.json")));
 
-    deviceProfiles = json
-        .decode(await rootBundle.loadString("assets/data/device_profiles.json"))
-        .map((json) => DeviceProfile.fromJson(json))
-        .toList();
+    deviceProfiles = DeviceProfile.listFromJson(json.decode(
+        await rootBundle.loadString("assets/data/device_profiles.json")));
 
-    metrics = json
-        .decode(await rootBundle.loadString("assets/data/metrics.json"))
-        .map((json) => Metric.fromJson(json))
-        .toList();
+    metrics = Metric.listFromJson(
+        json.decode(await rootBundle.loadString("assets/data/metrics.json")));
 
-    defaultRequirements = Map<String, Map<String, dynamic>>.from(json.decode(
-            await rootBundle
-                .loadString("assets/data/default_requirements.json")))
-        .map((key, value) => MapEntry(key, Requirement.fromJson(value)));
+    defaultRequirements = Requirement.mapFromJson(json.decode(
+        await rootBundle.loadString("assets/data/default_requirements.json")));
 
     assetTypesMap = {for (var at in assetTypes!) at.type: at};
     metricsMap = {for (var m in metrics!) m.metric: m};

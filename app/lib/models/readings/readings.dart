@@ -21,7 +21,7 @@ class MetricReadings {
   Map<Metric?, MetricReadingsStream?>? get streams =>
       LocalData.metricsMap != null
           ? _streams ??= streamsRaw?.map((key, value) => MapEntry(
-              LocalData.metricsMap![key],
+              LocalData.metricsMap[key],
               MetricReadingsStream.from(streamsRaw![key])))
           : null;
   Map<Metric?, MetricReadingsStream?>? _streams;
@@ -51,6 +51,9 @@ class MetricReadingPoint {
   factory MetricReadingPoint.fromJson(Map<String, dynamic> json) =>
       _$MetricReadingPointFromJson(json);
   Map<String, dynamic> toJson() => _$MetricReadingPointToJson(this);
+
+  static List<MetricReadingPoint> listFromJson(List<dynamic> json) =>
+      json.map((e) => MetricReadingPoint.fromJson(e)).toList();
 }
 
 class MetricReadingsStream extends ListBase<MetricReadingPoint?> {

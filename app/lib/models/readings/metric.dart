@@ -33,4 +33,7 @@ class Metric {
 
   factory Metric.fromJson(Map<String, dynamic> json) => _$MetricFromJson(json);
   Map<String, dynamic> toJson() => _$MetricToJson(this);
+
+  static List<Metric> listFromJson(List<dynamic> json) =>
+      json.map((e) => Metric.fromJson(e)).toList();
 }

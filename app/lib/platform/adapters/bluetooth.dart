@@ -52,7 +52,7 @@ class Bluetooth {
     assert(!isConnected(deviceID), "device is already connected");
 
     sub = driver.connectToDevice(
-        id: pairedDevices[deviceID]!.hardwareID!,
+        id: pairedDevices[deviceID]!.hardwareID,
         connectionTimeout: connectionTimeout,
         servicesWithCharacteristicsToDiscover: {
           GeoService.serviceUUID: GeoService.characteristicUUIDs

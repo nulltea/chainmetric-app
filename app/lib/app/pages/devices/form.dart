@@ -166,10 +166,12 @@ class _DeviceFormState extends State<DeviceForm> {
                                         ))
                                     .toList(),
                                 onSelectionChanged: (List<String?> value) {
-                                  setState(() => device?.supports = value.map((e) => e!).toList());
+                                  setState(() => device?.supports =
+                                      value.map((e) => e!).toList());
                                 },
                                 onConfirm: (List<String?> value) {
-                                  setState(() => device?.supports = value.map((e) => e!).toList());
+                                  setState(() => device?.supports =
+                                      value.map((e) => e!).toList());
                                 },
                               ),
                               MultiSelectChipDisplay(
@@ -180,7 +182,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                 items: device!.supports
                                     .map((metric) => MultiSelectItem(
                                           metric,
-                                          LocalData.metricsMap![metric]?.name ??
+                                          LocalData.metricsMap[metric]?.name ??
                                               "",
                                         ))
                                     .toList(),

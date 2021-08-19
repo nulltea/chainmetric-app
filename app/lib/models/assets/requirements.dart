@@ -14,6 +14,9 @@ class Requirement {
   factory Requirement.fromJson(Map<String, dynamic> json) =>
       _$RequirementFromJson(json);
   Map<String, dynamic> toJson() => _$RequirementToJson(this);
+
+  static Map<String, Requirement> mapFromJson(Map<String, dynamic> json) =>
+      json.map((key, value) => MapEntry(key, Requirement.fromJson(value)));
 }
 
 @JsonSerializable()

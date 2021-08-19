@@ -76,9 +76,7 @@ class ReadingsController {
   }
 
   static Future<void> _unmarshalStream(Tuple2<String, SendPort> args) async {
-    args.item2.send(MetricReadingsStream.from(json
-        .decode(args.item1)
-        .map((json) => MetricReadingPoint.fromJson(json))
-        .toList()));
+    args.item2.send(MetricReadingsStream.from(
+        MetricReadingPoint.listFromJson(json.decode(args.item1))));
   }
 }

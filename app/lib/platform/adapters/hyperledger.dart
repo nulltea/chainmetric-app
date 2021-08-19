@@ -20,7 +20,7 @@ class Hyperledger {
     }
   }
 
-  static Future<bool?> authRequired() async {
+  static Future<bool> authRequired() async {
     try {
       return await _nativeSDK.invokeMethod("auth_required");
     } on PlatformException catch (e) {

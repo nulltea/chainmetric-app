@@ -144,7 +144,7 @@ class _DevicesTabState extends State<DevicesTab> {
               !Bluetooth.isPaired(device.id) ? "Pair device" : "Forget device",
           icon: Icons.bluetooth_searching,
           action: () => !Bluetooth.isPaired(device.id)
-              ? _startBluetoothPairing(device.id!)
+              ? _startBluetoothPairing(device.id)
               : showYesNoDialog(context,
                   title: "Forget ${device.name}",
                   message:

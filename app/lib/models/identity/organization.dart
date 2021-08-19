@@ -13,4 +13,7 @@ class Organization {
   factory Organization.fromJson(Map<String, dynamic> json) =>
       _$OrganizationFromJson(json);
   Map<String, dynamic> toJson() => _$OrganizationToJson(this);
+
+  static List<Organization> listFromJson(List<dynamic> json) =>
+      json.map((e) => Organization.fromJson(e)).toList();
 }

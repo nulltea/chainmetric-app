@@ -89,7 +89,7 @@ class _AppState extends State<App> {
     await Preferences.init();
     await LocalData.init();
     await Hyperledger.initWallet();
-    if (await (Hyperledger.authRequired() as FutureOr<bool>)) {
+    if (await Hyperledger.authRequired()) {
       setState(() => _isLoading = false);
       return;
     }

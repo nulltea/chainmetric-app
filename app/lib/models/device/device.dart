@@ -38,6 +38,9 @@ class Device {
 
   factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceToJson(this);
+
+  static List<Device> listFromJson(List<dynamic> json) =>
+      json.map((e) => Device.fromJson(e)).toList();
 }
 
 @JsonSerializable()
@@ -58,6 +61,9 @@ class DeviceProfile {
   factory DeviceProfile.fromJson(Map<String, dynamic> json) =>
       _$DeviceProfileFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceProfileToJson(this);
+
+  static List<DeviceProfile> listFromJson(List<dynamic> json) =>
+      json.map((e) => DeviceProfile.fromJson(e)).toList();
 }
 
 @JsonSerializable()
@@ -90,6 +96,9 @@ class DeviceCommandLogEntry {
   factory DeviceCommandLogEntry.fromJson(Map<String, dynamic> json) =>
       _$DeviceCommandLogEntryFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceCommandLogEntryToJson(this);
+
+  static List<DeviceCommandLogEntry> listFromJson(List<dynamic> json) =>
+      json.map((e) => DeviceCommandLogEntry.fromJson(e)).toList();
 }
 
 enum DeviceCommand { pause, resume, pairBluetooth }
