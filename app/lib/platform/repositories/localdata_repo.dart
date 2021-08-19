@@ -1,4 +1,4 @@
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:chainmetric/models/assets/asset.dart';
@@ -15,25 +15,29 @@ class LocalData {
   static Map<String, Requirement>? defaultRequirements;
 
   static late Map<String?,AssetType> assetTypesMap;
-  static Map<String?,Metric>? metricsMap;
+  static late Map<String?,Metric> metricsMap;
   static late Map<String?,Organization> organizationsMap;
 
   static Future init() async {
-    organizations = JsonMapper.deserialize<List<Organization>>(
+    organizations = json.decode(
         await rootBundle.loadString("assets/data/organizations.json")
-    );
-    assetTypes = JsonMapper.deserialize<List<AssetType>>(
+    ).map((json) => Organization.fromJson(json)).toList();
+
+    assetTypes = json.decode(
         await rootBundle.loadString("assets/data/asset_types.json")
-    );
-    deviceProfiles = JsonMapper.deserialize<List<DeviceProfile>>(
+    ).map((json) => AssetType.fromJson(json)).toList();
+
+    deviceProfiles = json.decode(
         await rootBundle.loadString("assets/data/device_profiles.json")
-    );
-    metrics = JsonMapper.deserialize<List<Metric>>(
+    ).map((json) => DeviceProfile.fromJson(json)).toList();
+
+    metrics = json.decode(
         await rootBundle.loadString("assets/data/metrics.json")
-    );
-    defaultRequirements = JsonMapper.deserialize<Map<String, Requirement>>(
+    ).map((json) => Metric.fromJson(json)).toList();
+
+    defaultRequirements = Map<String, Map<String, dynamic>>.from(json.decode(
         await rootBundle.loadString("assets/data/default_requirements.json")
-    );
+    )).map((key, value) => MapEntry(key, Requirement.fromJson(value)));
 
     assetTypesMap = { for (var at in assetTypes!) at.type : at };
     metricsMap = { for (var m in metrics!) m.metric : m };

@@ -77,7 +77,7 @@ class _AssetsTabState extends State<AssetsTab> {
       top: false,
       bottom: false,
       child: Hero(
-        tag: assets[index].id!,
+        tag: assets[index].id,
         child: AssetCard(assets[index], refreshParent: _refreshData),
       ),
     );

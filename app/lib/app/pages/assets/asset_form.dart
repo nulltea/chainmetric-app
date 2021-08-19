@@ -148,7 +148,7 @@ class _AssetFormState extends State<AssetForm> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: NumberPicker(
                                   axis: Axis.horizontal,
-                                  value: asset.amount ?? 1,
+                                  value: asset.amount,
                                   minValue: 1,
                                   maxValue: 100,
                                   haptics: true,

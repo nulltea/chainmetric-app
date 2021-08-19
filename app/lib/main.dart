@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:chainmetric/platform/adapters/hyperledger_adapter.dart';
-import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
+import 'package:chainmetric/platform/adapters/hyperledger.dart';
+import 'package:chainmetric/platform/adapters/bluetooth.dart';
 import 'package:chainmetric/platform/repositories/preferences_repo.dart';
 import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/main.reflectable.dart';
@@ -15,7 +15,6 @@ import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/app/widgets/common/loading_splash.dart';
 import 'package:chainmetric/app/pages/main_page.dart';
 import 'package:chainmetric/app/pages/identity/login_page.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -142,7 +141,6 @@ Future<void> initConfig() async {
 
 /// deprecated
 void initJson() {
-  initializeReflectable();
   JsonMapper().useAdapter(JsonMapperAdapter(
       valueDecorators: {
         typeOf<List<String>>(): (value) => value.cast<String>(),

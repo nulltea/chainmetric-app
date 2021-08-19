@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-
+import 'dart:convert';
 
 import 'package:chainmetric/models/device/device.dart';
-import 'package:chainmetric/platform/adapters/hyperledger_adapter.dart';
+import 'package:chainmetric/platform/adapters/hyperledger.dart';
 
 class DevicesController {
   static Future<List<Device>?> getDevices() async {
@@ -11,7 +10,7 @@ class DevicesController {
 
     try {
       return data.isNotEmpty
-          ? JsonMapper.deserialize<List<Device>>(data)
+          ? json.decode(data).map((json) => Device.fromJson(json)).toList()
           : <Device>[];
     } on Exception catch (e) {
       print(e.toString());
@@ -20,13 +19,13 @@ class DevicesController {
     return <Device>[];
   }
 
-  static Future<bool> registerDevice(Device? device) {
-    final jsonData = JsonMapper.serialize(device);
+  static Future<bool> registerDevice(Device device) {
+    final jsonData = json.encode(device.toJson());
     return Hyperledger.trySubmitTransaction("devices", "Register", jsonData);
   }
 
-  static Future<bool> sendCommand(String? deviceID, DeviceCommand cmd, {List<Object>? args}) {
-    final jsonData = JsonMapper.serialize(DeviceCommandRequest(deviceID, cmd, args: args));
+  static Future<bool> sendCommand(String deviceID, DeviceCommand cmd, {List<Object>? args}) {
+    final jsonData = json.encode(DeviceCommandRequest(deviceID, cmd, args: args).toJson());
     return Hyperledger.trySubmitTransaction("devices", "Command", jsonData);
   }
 
@@ -35,7 +34,7 @@ class DevicesController {
 
     try {
       return data.isNotEmpty
-          ? JsonMapper.deserialize<List<DeviceCommandLogEntry>>(data)
+          ? json.decode(data).map((json) => DeviceCommandLogEntry.fromJson(json)).toList()
           : <DeviceCommandLogEntry>[];
     } on Exception catch (e) {
       print(e.toString());

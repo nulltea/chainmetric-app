@@ -369,9 +369,9 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Future<void> _submitDevice() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && device != null) {
       try {
-        if (await DevicesController.registerDevice(device)) {
+        if (await DevicesController.registerDevice(device!)) {
           Navigator.pop(context);
         }
       } on Exception catch (e) {

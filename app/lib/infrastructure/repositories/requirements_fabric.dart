@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:chainmetric/models/assets/requirements.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-import 'package:chainmetric/platform/adapters/hyperledger_adapter.dart';
+import 'package:chainmetric/platform/adapters/hyperledger.dart';
 
 class RequirementsController {
-  static Future<bool> assignRequirements(Requirements? requirements) async {
-    final jsonData = JsonMapper.serialize(requirements);
+  static Future<bool> assignRequirements(Requirements requirements) async {
+    final jsonData = json.encode(requirements.toJson());
     return Hyperledger.trySubmitTransaction("requirements", "Assign", jsonData);
   }
 

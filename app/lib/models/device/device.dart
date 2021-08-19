@@ -20,6 +20,7 @@ class Device {
   String? state;
   Location? location;
 
+  Device();
 
   @JsonKey(ignore: true)
   String get stateView => state?.toSentenceCase() ?? "Unknown";
@@ -28,15 +29,15 @@ class Device {
     switch (state) {
       case "online":
         return Icon(Icons.circle, color: Colors.green.withAlpha(200));
-        break;
       case "offline":
         return Icon(Icons.circle, color: Colors.red.withAlpha(200));
-        break;
       default:
         return Icon(Icons.help, color: Colors.grey.withAlpha(200));
-        break;
     }
   }
+
+  factory Device.fromJson(Map<String, dynamic> json) => _$DeviceFromJson(json);
+  Map<String, dynamic> toJson() => _$DeviceToJson(this);
 }
 
 @JsonSerializable()
@@ -47,23 +48,28 @@ class DeviceProfile {
   late String colorHex;
   Color get color => colorFromHex(colorHex);
 
+  DeviceProfile();
+
   Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');
-    if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
-    }
     return Color(int.parse("FF$hexCode", radix: 16));
   }
+
+  factory DeviceProfile.fromJson(Map<String, dynamic> json) => _$DeviceProfileFromJson(json);
+  Map<String, dynamic> toJson() => _$DeviceProfileToJson(this);
 }
 
 @JsonSerializable()
 class DeviceCommandRequest {
   @JsonKey(name: "device_id")
-  String? deviceID;
-  DeviceCommand command;
+  late String deviceID;
+  late DeviceCommand command;
   List<Object>? args;
 
   DeviceCommandRequest(this.deviceID, this.command, {this.args});
+
+  factory DeviceCommandRequest.fromJson(Map<String, dynamic> json) => _$DeviceCommandRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$DeviceCommandRequestToJson(this);
 }
 
 @JsonSerializable()
@@ -76,6 +82,11 @@ class DeviceCommandLogEntry {
   DeviceCommandStatus? status;
   String? error;
   DateTime? timestamp;
+
+  DeviceCommandLogEntry();
+
+  factory DeviceCommandLogEntry.fromJson(Map<String, dynamic> json) => _$DeviceCommandLogEntryFromJson(json);
+  Map<String, dynamic> toJson() => _$DeviceCommandLogEntryToJson(this);
 }
 
 enum DeviceCommand {
@@ -97,4 +108,9 @@ class PairedDevice {
   String? deviceID;
   String? advertisedName;
   @JsonKey(ignore: true) int? rssi;
+
+  PairedDevice();
+
+  factory PairedDevice.fromJson(Map<String, dynamic> json) => _$PairedDeviceFromJson(json);
+  Map<String, dynamic> toJson() => _$PairedDeviceToJson(this);
 }

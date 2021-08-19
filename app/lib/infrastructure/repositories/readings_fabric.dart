@@ -1,10 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:chainmetric/main.dart';
 import 'package:chainmetric/models/readings/readings.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
-
 import 'package:flutter/services.dart';
 import 'package:streams_channel2/streams_channel2.dart';
 import 'package:tuple/tuple.dart';
@@ -62,7 +61,7 @@ class ReadingsController {
     final subscription = _readingsEvents
         .receiveBroadcastStream("posted.$assetID.$metric")
         .listen((eventArtifact) {
-      listener(JsonMapper.deserialize<MetricReadingPoint>(eventArtifact));
+      listener(MetricReadingPoint.fromJson(json.decode(eventArtifact)));
     }, cancelOnError: false);
 
     return () => subscription.cancel();
@@ -70,12 +69,12 @@ class ReadingsController {
 
   static Future<void> _unmarshalReadings(Tuple2<String, SendPort> args) async {
     initJson();
-    args.item2.send(JsonMapper.deserialize<MetricReadings>(args.item1));
+    args.item2.send(MetricReadings.fromJson(json.decode(args.item1)));
   }
 
   static Future<void> _unmarshalStream(Tuple2<String, SendPort> args) async {
     initJson();
-    args.item2.send(MetricReadingsStream.from(JsonMapper.deserialize<List<MetricReadingPoint?>>(args.item1)));
+    args.item2.send(MetricReadingsStream.from(json.decode(args.item1).map((json) => MetricReadingPoint.fromJson(json)).toList()));
   }
 }
 

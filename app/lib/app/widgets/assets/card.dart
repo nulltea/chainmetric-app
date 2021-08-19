@@ -33,9 +33,9 @@ class AssetCard extends StatelessWidget {
               const SizedBox(width: 10),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const SizedBox(height: 8),
-                Text(asset.name!,
+                Text(asset.name,
                     style: AppTheme.title3),
-                Text(asset.sku!,
+                Text(asset.sku,
                     style: AppTheme.subtitle2.override(
                       fontFamily: "Roboto Mono",
                         color: Theme

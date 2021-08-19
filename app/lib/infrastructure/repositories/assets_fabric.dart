@@ -1,15 +1,16 @@
+import 'dart:convert';
+
 import 'package:chainmetric/models/assets/asset.dart';
-import 'package:chainmetric/platform/adapters/hyperledger_adapter.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'package:chainmetric/platform/adapters/hyperledger.dart';
 
 class AssetsController {
   static Future<AssetsResponse?> getAssets({AssetsQuery? query, int? limit, String? scrollID}) async {
     query ??= AssetsQuery(limit: limit, scrollID: scrollID);
     final data = await Hyperledger.evaluateTransaction(
-        "assets", "Query", JsonMapper.serialize(query));
+        "assets", "Query", json.encode(query.toJson()));
     try {
       return data != null && data.isNotEmpty
-          ? JsonMapper.deserialize<AssetsResponse>(data)
+          ? AssetsResponse.fromJson(json.decode(data))
           : AssetsResponse();
     } on Exception catch (e) {
       print(e.toString());
@@ -18,7 +19,7 @@ class AssetsController {
   }
 
   static Future<bool> upsertAsset(Asset asset) async {
-    final jsonData = JsonMapper.serialize(asset);
+    final jsonData = json.encode(asset.toJson());
     return Hyperledger.trySubmitTransaction("assets", "Upsert", jsonData);
   }
 

@@ -1,5 +1,5 @@
 import 'package:chainmetric/models/device/device.dart';
-import 'package:dart_json_mapper/dart_json_mapper.dart';
+import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

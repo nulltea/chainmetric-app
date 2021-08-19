@@ -13,16 +13,3 @@ targets:
           generic_argument_factories: true
           ignore_unannotated: false
           include_if_null: true
-      swagger_dart_code_generator:
-        options:
-          input_folder: 'assets/swagger'
-          output_folder: 'lib/infrastructure/services/'
-          exclude_paths:
-            - "exception"
-          include_if_null:
-            enabled: true
-            value: false
-    sources:
-      - lib/**
-      - assets/swagger/**
-      - $package$

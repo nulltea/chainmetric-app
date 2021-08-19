@@ -13,6 +13,8 @@ class Metric {
   @JsonKey(name: "icon")
   String? iconRaw;
 
+  Metric();
+
   Widget icon({
     double size = 24,
     Color? color,
@@ -29,4 +31,7 @@ class Metric {
   int? get _iconPoint => iconRaw != null
       ? int.tryParse(iconRaw!)
       : 0;
+
+  factory Metric.fromJson(Map<String, dynamic> json) => _$MetricFromJson(json);
+  Map<String, dynamic> toJson() => _$MetricToJson(this);
 }

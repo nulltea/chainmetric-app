@@ -7,7 +7,7 @@ import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/platform/adapters/hyperledger_adapter.dart';
+import 'package:chainmetric/platform/adapters/hyperledger.dart';
 import 'package:chainmetric/models/identity/auth.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 

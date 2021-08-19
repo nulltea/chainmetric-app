@@ -63,7 +63,7 @@ class AssetsSearchDelegate extends SearchDelegate<int> {
 
   Function(BuildContext context, int index) _listBuilder(List<AssetPresenter> assets) {
     return (context, index) => Hero(
-      tag: assets[index].id!,
+      tag: assets[index].id,
       child: AssetCard(assets[index]),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
+import 'package:chainmetric/platform/adapters/bluetooth.dart';
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
 import 'package:chainmetric/usecase/location/gps_adapter.dart';
 import 'package:chainmetric/models/device/device.dart';
@@ -139,7 +139,7 @@ class _DevicesTabState extends State<DevicesTab> {
               : "Forget device",
           icon: Icons.bluetooth_searching,
           action: () => !Bluetooth.isPaired(device.id)
-              ? _startBluetoothPairing(device.id)
+              ? _startBluetoothPairing(device.id!)
               : showYesNoDialog(context,
               title: "Forget ${device.name}",
               message: "This action will unpair the device from your phone. Are you sure?",
@@ -165,7 +165,7 @@ class _DevicesTabState extends State<DevicesTab> {
     ]);
   }
 
-  void _startBluetoothPairing(String? deviceID) {
+  void _startBluetoothPairing(String deviceID) {
     showOverlayPage(context: context, builder: (context) => DevicePairing(deviceID));
   }
 }
