@@ -19,108 +19,92 @@ class AssetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onLongPress: () => _showAssetMenu(context, asset),
-        child: Card(
-          elevation: 5,
-          color: LocalData.assetTypesMap[asset.type]!.color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Icon(Icons.photo, size: 90),
-              const SizedBox(width: 10),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const SizedBox(height: 8),
-                Text(asset.name,
-                    style: AppTheme.title3),
-                Text(asset.sku,
-                    style: AppTheme.subtitle2.override(
-                      fontFamily: "Roboto Mono",
-                        color: Theme
-                            .of(context)
-                            .hintColor,
-                        fontWeight: FontWeight.w400))
-              ]),
-              const Spacer(),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.corporate_fare,
-                        color: Theme
-                            .of(context)
-                            .hintColor),
-                    const SizedBox(width: 5),
-                    Text(LocalData.organizationsMap[asset.holder]!.name!,
-                        style: AppTheme.bodyText2.override(
-                            color: Theme
-                                .of(context)
-                                .hintColor,
-                            fontWeight: FontWeight.w400))
-                  ],
-                ),
-                const SizedBox(height: 3),
-                Row(
-                  children: [
-                    Icon(Icons.location_on, color: Theme
-                        .of(context)
-                        .hintColor),
-                    const SizedBox(width: 5),
-                    Text(asset.location.name!,
-                        style: AppTheme.bodyText2.override(
-                            color: Theme
-                                .of(context)
-                                .hintColor,
-                            fontWeight: FontWeight.w400))
-                  ],
-                ),
-                const SizedBox(height: 3),
-                Row(
-                  children: [
-                    Icon(Icons.fact_check, color: Theme
-                        .of(context)
-                        .hintColor),
-                    const SizedBox(width: 5),
-                    Text(
-                        asset.requirements != null
-                            ? "Assigned (${asset.requirements!.metrics.length})"
-                            : "Not assigned",
-                        style: AppTheme.bodyText2.override(
-                            color: Theme
-                                .of(context)
-                                .hintColor,
-                            fontWeight: FontWeight.w400))
-                  ],
-                )
-              ]),
-            ]),
-          ),
+      onLongPress: () => _showAssetMenu(context, asset),
+      child: Card(
+        elevation: 5,
+        color: LocalData.assetTypesMap[asset.type]!.color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
         ),
-      );
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Icon(Icons.photo, size: 90),
+            const SizedBox(width: 10),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(height: 8),
+              Text(asset.name, style: AppTheme.title3),
+              Text(asset.sku,
+                  style: AppTheme.subtitle2.override(
+                      fontFamily: "Roboto Mono",
+                      color: Theme.of(context).hintColor,
+                      fontWeight: FontWeight.w400))
+            ]),
+            const Spacer(),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.corporate_fare,
+                      color: Theme.of(context).hintColor),
+                  const SizedBox(width: 5),
+                  Text(LocalData.organizationsMap[asset.holder]!.name!,
+                      style: AppTheme.bodyText2.override(
+                          color: Theme.of(context).hintColor,
+                          fontWeight: FontWeight.w400))
+                ],
+              ),
+              const SizedBox(height: 3),
+              Row(
+                children: [
+                  Icon(Icons.location_on, color: Theme.of(context).hintColor),
+                  const SizedBox(width: 5),
+                  Text(asset.location.name!,
+                      style: AppTheme.bodyText2.override(
+                          color: Theme.of(context).hintColor,
+                          fontWeight: FontWeight.w400))
+                ],
+              ),
+              const SizedBox(height: 3),
+              Row(
+                children: [
+                  Icon(Icons.fact_check, color: Theme.of(context).hintColor),
+                  const SizedBox(width: 5),
+                  Text(
+                      asset.requirements != null
+                          ? "Assigned (${asset.requirements!.metrics.length})"
+                          : "Not assigned",
+                      style: AppTheme.bodyText2.override(
+                          color: Theme.of(context).hintColor,
+                          fontWeight: FontWeight.w400))
+                ],
+              )
+            ]),
+          ]),
+        ),
+      ),
+    );
   }
 
-   void _showAssetMenu(BuildContext context, AssetPresenter asset) {
+  void _showAssetMenu(BuildContext context, AssetPresenter asset) {
     showModalMenu(context: context, options: [
       ModalMenuOption(
         title: asset.requirements == null
             ? "Assign requirements"
             : "Edit requirements",
         icon: Icons.fact_check,
-        action: () =>
-            openPage(
-                context, RequirementsForm(model: asset.getRequirements()),
-                then: refreshParent),
+        action: () => openPage(
+            context, RequirementsForm(model: asset.getRequirements()),
+            then: refreshParent),
       ),
       ModalMenuOption(
         title: "Revoke requirements",
         icon: Icons.delete_sweep,
         action: decorateWithLoading(
             context,
-                () =>
-                RequirementsController.revokeRequirements(asset.requirements!.id)
-                    .whenComplete(refreshParent!)),
+            () => RequirementsController.revokeRequirements(
+                    asset.requirements!.id)
+                .whenComplete(refreshParent!)),
         enabled: asset.requirements != null,
       ),
       ModalMenuOption(
@@ -134,10 +118,8 @@ class AssetCard extends StatelessWidget {
       ModalMenuOption(
           title: "Watch asset",
           icon: Icons.visibility,
-          action: () =>
-              openPage(context,
-                  ReadingsPage(
-                      asset: asset, requirements: asset.requirements))),
+          action: () => openPage(context,
+              ReadingsPage(asset: asset, requirements: asset.requirements))),
       ModalMenuOption(
           title: "Edit asset",
           icon: Icons.edit,
@@ -146,15 +128,13 @@ class AssetCard extends StatelessWidget {
       ModalMenuOption(
           title: "Delete asset",
           icon: Icons.delete_forever,
-          action: () =>
-              showYesNoDialog(context,
-                  title: "Delete ${asset.sku}",
-                  message: "Are you sure?",
-                  onYes: decorateWithLoading(
-                      context,
-                          () =>
-                          AssetsController.deleteAsset(asset.id)
-                              .whenComplete(refreshParent!)))),
+          action: () => showYesNoDialog(context,
+              title: "Delete ${asset.sku}",
+              message: "Are you sure?",
+              onYes: decorateWithLoading(
+                  context,
+                  () => AssetsController.deleteAsset(asset.id)
+                      .whenComplete(refreshParent!)))),
     ]);
   }
 }

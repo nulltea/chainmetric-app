@@ -13,9 +13,8 @@ class Hyperledger {
   static Future<void> initWallet() async {
     final dir = await getApplicationDocumentsDirectory();
     try {
-      await _nativeSDK.invokeMethod("wallet_init", {
-        "path": "${dir.path}/wallet"
-      });
+      await _nativeSDK
+          .invokeMethod("wallet_init", {"path": "${dir.path}/wallet"});
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");
     }
@@ -46,10 +45,8 @@ class Hyperledger {
 
   static Future<bool> initConnection(String channel) async {
     try {
-      await _nativeSDK.invokeMethod("connection_init", {
-        "config": await getConfigString(),
-        "channel": channel
-      });
+      await _nativeSDK.invokeMethod("connection_init",
+          {"config": await getConfigString(), "channel": channel});
       return true;
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");
@@ -57,7 +54,8 @@ class Hyperledger {
     return false;
   }
 
-  static Future<String?> evaluateTransaction(String contract, String method, [String? args]) async {
+  static Future<String?> evaluateTransaction(String contract, String method,
+      [String? args]) async {
     try {
       return await _nativeSDK.invokeMethod("transaction_evaluate", {
         "contract": contract,
@@ -70,7 +68,8 @@ class Hyperledger {
     return null;
   }
 
-  static Future<String?> submitTransaction(String contract, String method, [String? args]) async {
+  static Future<String?> submitTransaction(String contract, String method,
+      [String? args]) async {
     try {
       return await _nativeSDK.invokeMethod("transaction_submit", {
         "contract": contract,
@@ -83,7 +82,8 @@ class Hyperledger {
     return null;
   }
 
-  static Future<bool> trySubmitTransaction(String contract, String method, [String? args]) async {
+  static Future<bool> trySubmitTransaction(String contract, String method,
+      [String? args]) async {
     try {
       await _nativeSDK.invokeMethod("transaction_submit", {
         "contract": contract,
@@ -98,11 +98,10 @@ class Hyperledger {
   }
 
   static Future<void> initConfig() async {
-    final yaml = loadYaml(
-        await rootBundle.loadString("assets/connection.yaml")
-    ) as YamlMap;
+    final yaml = loadYaml(await rootBundle.loadString("assets/connection.yaml"))
+        as YamlMap;
 
-    _config = { for (var key in yaml.keys) key as String? : yaml[key] };
+    _config = {for (var key in yaml.keys) key as String?: yaml[key]};
   }
 
   static dynamic getConfigValue(String compositeKey) {

@@ -34,7 +34,8 @@ class _DeviceFormState extends State<DeviceForm> {
   bool flashOn = false;
 
   static const defaultScannerTitle = "Scan the device QR code";
-  static const defaultScannerSubtitle = "The near by device will automatically display QR code with it's specification";
+  static const defaultScannerSubtitle =
+      "The near by device will automatically display QR code with it's specification";
   final GlobalKey _qrKey = GlobalKey(debugLabel: "QR");
   final _formKey = GlobalKey<FormState>();
 
@@ -149,7 +150,8 @@ class _DeviceFormState extends State<DeviceForm> {
                               MultiSelectBottomSheetField(
                                 initialValue: device!.supports,
                                 title: const Text("Supports metrics"),
-                                buttonText: const Text("Select supported metrics"),
+                                buttonText:
+                                    const Text("Select supported metrics"),
                                 listType: MultiSelectListType.CHIP,
                                 colorator: (dynamic v) => Colors.teal.shade800,
                                 selectedColor: Colors.teal,
@@ -164,10 +166,10 @@ class _DeviceFormState extends State<DeviceForm> {
                                         ))
                                     .toList(),
                                 onSelectionChanged: (List<String?> value) {
-                                  setState(() => device?.supports = value);
+                                  setState(() => device?.supports = value.map((e) => e!).toList());
                                 },
                                 onConfirm: (List<String?> value) {
-                                  setState(() => device?.supports = value);
+                                  setState(() => device?.supports = value.map((e) => e!).toList());
                                 },
                               ),
                               MultiSelectChipDisplay(
@@ -178,11 +180,13 @@ class _DeviceFormState extends State<DeviceForm> {
                                 items: device!.supports
                                     .map((metric) => MultiSelectItem(
                                           metric,
-                                          LocalData.metricsMap![metric]?.name ?? "",
+                                          LocalData.metricsMap![metric]?.name ??
+                                              "",
                                         ))
                                     .toList(),
                                 onTap: (dynamic value) {
-                                  setState(() => device!.supports.remove(value));
+                                  setState(
+                                      () => device!.supports.remove(value));
                                 },
                               )
                             ],
@@ -218,20 +222,23 @@ class _DeviceFormState extends State<DeviceForm> {
                             child: ElevatedButton(
                               onPressed: _showLocationPicker,
                               style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context).inputDecorationTheme.fillColor,
+                                primary: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.location_pin,
+                                  Icon(
+                                    Icons.location_pin,
                                     color: Theme.of(context).hintColor,
                                     size: 26,
                                   ),
                                   const SizedBox(width: 10),
-                                  Text("Pick location",
+                                  Text(
+                                    "Pick location",
                                     style: TextStyle(
                                         fontSize: 17,
-                                        color: Theme.of(context).hintColor
-                                    ),
+                                        color: Theme.of(context).hintColor),
                                   ),
                                 ],
                               ),
@@ -240,7 +247,8 @@ class _DeviceFormState extends State<DeviceForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: decorateWithLoading(context, _submitDevice),
+                              onPressed:
+                                  decorateWithLoading(context, _submitDevice),
                               child: const Text("Register device",
                                   style: TextStyle(fontSize: 20)),
                             )),
@@ -271,46 +279,36 @@ class _DeviceFormState extends State<DeviceForm> {
             ),
           ),
           Positioned.fill(
-            top: 25,
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                  icon: const Icon(Icons.arrow_back, size: 30),
-                  onPressed: () => Navigator.pop(context)
-              )
-            )
-          ),
+              top: 25,
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                      icon: const Icon(Icons.arrow_back, size: 30),
+                      onPressed: () => Navigator.pop(context)))),
           Positioned.fill(
               top: 25,
               child: Align(
-                alignment: Alignment.topRight,
+                  alignment: Alignment.topRight,
                   child: IconButton(
-                      icon: Icon(flashOn ? Icons.flash_off : Icons.flash_on, size: 30),
+                      icon: Icon(flashOn ? Icons.flash_off : Icons.flash_on,
+                          size: 30),
                       onPressed: () {
                         controller!.toggleFlash();
                         setState(() => flashOn = !flashOn);
-                      }
-                  )
-              )
-          ),
+                      }))),
           Positioned.fill(
-            top: -350,
-            child: Center(
-              child: Text(scannerTitle,
-                style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center
-              )
-            )
-          ),
+              top: -350,
+              child: Center(
+                  child: Text(scannerTitle,
+                      style: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center))),
           Positioned.fill(
-            top: 350,
-            child: Center(
-              child: Text(scannerSubtitle,
-                style: const TextStyle(fontSize: 15),
-                textAlign: TextAlign.center
-              )
-            )
-          )
+              top: 350,
+              child: Center(
+                  child: Text(scannerSubtitle,
+                      style: const TextStyle(fontSize: 15),
+                      textAlign: TextAlign.center)))
         ],
       ),
     );
@@ -350,11 +348,13 @@ class _DeviceFormState extends State<DeviceForm> {
   Device _parseQRCode(String code) {
     final exp = RegExp(r"\$\{(.+?)\}");
     final match = exp.firstMatch(code);
-    if (match == null) throw QRScanException(cause: "Expected pattern does not match");
+    if (match == null)
+      throw QRScanException(cause: "Expected pattern does not match");
 
     final data = match.group(1)!;
     final parts = data.split(';');
-    if (parts.length != 3) throw QRScanException(cause: "Coded data is not valid");
+    if (parts.length != 3)
+      throw QRScanException(cause: "Coded data is not valid");
 
     final dev = Device();
 
@@ -382,12 +382,11 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Future<void> _showLocationPicker() async {
-    final LocationResult? result = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) =>
-            PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
-            )
-        )
-    );
+    final LocationResult? result =
+        await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => PlacePicker(
+                  GlobalConfiguration().getValue("geo_location_api_key"),
+                )));
 
     if (result != null) {
       setState(() {
@@ -397,9 +396,8 @@ class _DeviceFormState extends State<DeviceForm> {
           ..name = result.name;
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Location wasn't picked, please try again"))
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Location wasn't picked, please try again")));
     }
   }
 }

@@ -26,19 +26,22 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text("Chainmetric",
-          style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
-      centerTitle: false,
-      automaticallyImplyLeading: false,
-      elevation: 4,
-    ),
-    body: RefreshIndicator(
-      key: _refreshKey,
-      onRefresh: _loadData as Future<void> Function(),
-      child: const Center(child: Text("Home dashboard here"),),
-    ),
-  );
+        appBar: AppBar(
+          title: Text("Chainmetric",
+              style: AppTheme.title2
+                  .override(fontFamily: "IBM Plex Mono", fontSize: 28)),
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          elevation: 4,
+        ),
+        body: RefreshIndicator(
+          key: _refreshKey,
+          onRefresh: _loadData as Future<void> Function(),
+          child: const Center(
+            child: Text("Home dashboard here"),
+          ),
+        ),
+      );
 
   Future<void>? _loadData() {
     return null;

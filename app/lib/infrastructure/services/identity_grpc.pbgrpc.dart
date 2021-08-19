@@ -11,7 +11,8 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:chainmetric/models/identity/user.pb.dart' as $0;
-import 'package:chainmetric/models/generated/google/protobuf/empty.pb.dart' as $1;
+import 'package:chainmetric/models/generated/google/protobuf/empty.pb.dart'
+    as $1;
 export 'identity_grpc.pb.dart';
 
 class IdentityServiceClient extends $grpc.Client {

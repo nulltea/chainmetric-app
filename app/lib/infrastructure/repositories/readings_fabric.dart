@@ -2,14 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
 
-import 'package:chainmetric/main.dart';
 import 'package:chainmetric/models/readings/readings.dart';
 import 'package:flutter/services.dart';
 import 'package:streams_channel2/streams_channel2.dart';
 import 'package:tuple/tuple.dart';
 
-const readingsChannel = "chainmetric.app.blockchain-native-sdk/contracts/readings";
-const readingsEventsChannel = "chainmetric.app.blockchain-native-sdk/events/readings";
+const readingsChannel =
+    "chainmetric.app.blockchain-native-sdk/contracts/readings";
+const readingsEventsChannel =
+    "chainmetric.app.blockchain-native-sdk/events/readings";
 
 typedef ReadingsListener = void Function(MetricReadingPoint? point);
 typedef CancelReadingsListening = void Function();
@@ -22,7 +23,8 @@ class ReadingsController {
     try {
       final String data = await (_readingsContract.invokeMethod("for_asset", {
         "asset": assetID,
-      }) as FutureOr<String>); if (data.isEmpty) {
+      }) as FutureOr<String>);
+      if (data.isEmpty) {
         return null;
       }
       final port = ReceivePort();
@@ -37,12 +39,13 @@ class ReadingsController {
     return null;
   }
 
-  static Future<MetricReadingsStream?> getStream(String? assetID, String? metric) async {
+  static Future<MetricReadingsStream?> getStream(
+      String? assetID, String? metric) async {
     try {
-      final String data = await (_readingsContract.invokeMethod("for_metric", {
-        "asset": assetID,
-        "metric": metric
-      }) as FutureOr<String>); if (data.isEmpty) {
+      final String data = await (_readingsContract
+              .invokeMethod("for_metric", {"asset": assetID, "metric": metric})
+          as FutureOr<String>);
+      if (data.isEmpty) {
         return null;
       }
       final port = ReceivePort();
@@ -57,7 +60,8 @@ class ReadingsController {
     return null;
   }
 
-  static Future<CancelReadingsListening> subscribeToStream(String? assetID, String? metric, ReadingsListener listener) async {
+  static Future<CancelReadingsListening> subscribeToStream(
+      String? assetID, String? metric, ReadingsListener listener) async {
     final subscription = _readingsEvents
         .receiveBroadcastStream("posted.$assetID.$metric")
         .listen((eventArtifact) {
@@ -68,13 +72,13 @@ class ReadingsController {
   }
 
   static Future<void> _unmarshalReadings(Tuple2<String, SendPort> args) async {
-    initJson();
     args.item2.send(MetricReadings.fromJson(json.decode(args.item1)));
   }
 
   static Future<void> _unmarshalStream(Tuple2<String, SendPort> args) async {
-    initJson();
-    args.item2.send(MetricReadingsStream.from(json.decode(args.item1).map((json) => MetricReadingPoint.fromJson(json)).toList()));
+    args.item2.send(MetricReadingsStream.from(json
+        .decode(args.item1)
+        .map((json) => MetricReadingPoint.fromJson(json))
+        .toList()));
   }
 }
-

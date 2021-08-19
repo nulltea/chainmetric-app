@@ -9,13 +9,13 @@ part "device.g.dart";
 
 @JsonSerializable()
 class Device {
-  String? id;
+  late String id;
   late String ip;
-  String? mac;
+  late String mac;
   String? name;
-  String? hostname;
+  late String hostname;
   String? profile;
-  List<String?> supports = <String>[];
+  List<String> supports = <String>[];
   String? holder;
   String? state;
   Location? location;
@@ -55,7 +55,8 @@ class DeviceProfile {
     return Color(int.parse("FF$hexCode", radix: 16));
   }
 
-  factory DeviceProfile.fromJson(Map<String, dynamic> json) => _$DeviceProfileFromJson(json);
+  factory DeviceProfile.fromJson(Map<String, dynamic> json) =>
+      _$DeviceProfileFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceProfileToJson(this);
 }
 
@@ -68,7 +69,8 @@ class DeviceCommandRequest {
 
   DeviceCommandRequest(this.deviceID, this.command, {this.args});
 
-  factory DeviceCommandRequest.fromJson(Map<String, dynamic> json) => _$DeviceCommandRequestFromJson(json);
+  factory DeviceCommandRequest.fromJson(Map<String, dynamic> json) =>
+      _$DeviceCommandRequestFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceCommandRequestToJson(this);
 }
 
@@ -85,32 +87,26 @@ class DeviceCommandLogEntry {
 
   DeviceCommandLogEntry();
 
-  factory DeviceCommandLogEntry.fromJson(Map<String, dynamic> json) => _$DeviceCommandLogEntryFromJson(json);
+  factory DeviceCommandLogEntry.fromJson(Map<String, dynamic> json) =>
+      _$DeviceCommandLogEntryFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceCommandLogEntryToJson(this);
 }
 
-enum DeviceCommand {
-  pause,
-  resume,
-  pairBluetooth
-}
+enum DeviceCommand { pause, resume, pairBluetooth }
 
-enum DeviceCommandStatus {
-  completed,
-  processing,
-  failed,
-  unknown
-}
+enum DeviceCommandStatus { completed, processing, failed, unknown }
 
 @JsonSerializable()
 class PairedDevice {
-  String? hardwareID;
-  String? deviceID;
-  String? advertisedName;
-  @JsonKey(ignore: true) int? rssi;
+  late String hardwareID;
+  late String deviceID;
+  late String advertisedName;
+  @JsonKey(ignore: true)
+  int? rssi;
 
   PairedDevice();
 
-  factory PairedDevice.fromJson(Map<String, dynamic> json) => _$PairedDeviceFromJson(json);
+  factory PairedDevice.fromJson(Map<String, dynamic> json) =>
+      _$PairedDeviceFromJson(json);
   Map<String, dynamic> toJson() => _$PairedDeviceToJson(this);
 }

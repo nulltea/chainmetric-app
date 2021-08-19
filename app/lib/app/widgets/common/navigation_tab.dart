@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'bottom_app_bar.dart';
 
@@ -9,13 +8,12 @@ class NavigationTabItem {
   Widget? buttonIcon;
   void Function(State)? pageAction;
 
-  NavigationTabItem({
-    this.title,
-    this.navBarItem,
-    this.tab,
-    this.buttonIcon,
-    this.pageAction
-  });
+  NavigationTabItem(
+      {this.title,
+      this.navBarItem,
+      this.tab,
+      this.buttonIcon,
+      this.pageAction});
 }
 
 abstract class NavigationTab extends StatefulWidget {

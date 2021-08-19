@@ -35,20 +35,21 @@ class _AssetsTabState extends State<AssetsTab> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text("Assets",
-              style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
+              style: AppTheme.title2
+                  .override(fontFamily: "IBM Plex Mono", fontSize: 28)),
           centerTitle: false,
           elevation: 4,
           actionsIconTheme: Theme.of(context).iconTheme,
           actions: [
             IconButton(
                 onPressed: () => showSearch<int>(
-                    context: context,
-                    delegate: AssetsSearchDelegate(),
-                  ), icon: const Icon(Icons.search_sharp))
+                      context: context,
+                      delegate: AssetsSearchDelegate(),
+                    ),
+                icon: const Icon(Icons.search_sharp))
           ],
         ),
         body: RefreshIndicator(
@@ -64,11 +65,11 @@ class _AssetsTabState extends State<AssetsTab> {
 
   Future<void> _refreshData() {
     _refreshKey.currentState?.show();
-    return AssetsController.getAssets(limit: _itemsLength, scrollID: scrollID).then((value) =>
-        setState(() {
-          assets = value!.items;
-          scrollID = value.scrollID;
-        }));
+    return AssetsController.getAssets(limit: _itemsLength, scrollID: scrollID)
+        .then((value) => setState(() {
+              assets = value!.items;
+              scrollID = value.scrollID;
+            }));
   }
 
   Widget? _listBuilder(BuildContext context, int index) {

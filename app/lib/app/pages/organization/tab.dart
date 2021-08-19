@@ -26,19 +26,22 @@ class _ProfileTabState extends State<ProfileTab> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text("Your organization",
-          style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
-      centerTitle: false,
-      automaticallyImplyLeading: false,
-      elevation: 4,
-    ),
-    body: RefreshIndicator(
-      key: _refreshKey,
-      onRefresh: _refreshData as Future<void> Function(),
-      child: const Center(child: Text("Profile here"),),
-    ),
-  );
+        appBar: AppBar(
+          title: Text("Your organization",
+              style: AppTheme.title2
+                  .override(fontFamily: "IBM Plex Mono", fontSize: 28)),
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          elevation: 4,
+        ),
+        body: RefreshIndicator(
+          key: _refreshKey,
+          onRefresh: _refreshData as Future<void> Function(),
+          child: const Center(
+            child: Text("Profile here"),
+          ),
+        ),
+      );
 
   Future? _refreshData() {
     return null;

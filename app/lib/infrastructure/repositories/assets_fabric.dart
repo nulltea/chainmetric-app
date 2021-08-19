@@ -4,7 +4,8 @@ import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/platform/adapters/hyperledger.dart';
 
 class AssetsController {
-  static Future<AssetsResponse?> getAssets({AssetsQuery? query, int? limit, String? scrollID}) async {
+  static Future<AssetsResponse?> getAssets(
+      {AssetsQuery? query, int? limit, String? scrollID}) async {
     query ??= AssetsQuery(limit: limit, scrollID: scrollID);
     final data = await Hyperledger.evaluateTransaction(
         "assets", "Query", json.encode(query.toJson()));

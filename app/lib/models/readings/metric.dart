@@ -15,22 +15,21 @@ class Metric {
 
   Metric();
 
-  Widget icon({
-    double size = 24,
-    Color? color,
-    Widget fallback = const SvgIcon("sensors")
-  }) => iconRaw?.isNotEmpty ?? false
-      ? _iconPoint != null && _iconPoint != 0
-          ? Icon(IconData(_iconPoint!, fontFamily: "MaterialIcons"),
+  Widget icon(
+          {double size = 24,
+          Color? color,
+          Widget fallback = const SvgIcon("sensors")}) =>
+      iconRaw?.isNotEmpty ?? false
+          ? _iconPoint != null && _iconPoint != 0
+              ? Icon(
+                  IconData(_iconPoint!, fontFamily: "MaterialIcons"),
                   size: size,
                   color: color,
                 )
-          : SvgIcon(iconRaw, size: size, color: color)
-      : fallback;
+              : SvgIcon(iconRaw, size: size, color: color)
+          : fallback;
 
-  int? get _iconPoint => iconRaw != null
-      ? int.tryParse(iconRaw!)
-      : 0;
+  int? get _iconPoint => iconRaw != null ? int.tryParse(iconRaw!) : 0;
 
   factory Metric.fromJson(Map<String, dynamic> json) => _$MetricFromJson(json);
   Map<String, dynamic> toJson() => _$MetricToJson(this);

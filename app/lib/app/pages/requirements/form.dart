@@ -20,19 +20,16 @@ class RequirementsForm extends StatefulWidget {
 }
 
 class _RequirementsFormState extends State<RequirementsForm> {
-  Requirements? requirements;
+  late Requirements requirements;
   final ScrollController _controller = ScrollController();
   final _formKey = GlobalKey<FormState>();
 
   _RequirementsFormState() {
-    requirements = widget.model;
+    requirements = widget.model ?? Requirements();
   }
 
   String get periodStr =>
-      "${requirements!.periodDuration.inHours}h ${requirements!.periodDuration
-          .inMinutes - requirements!.periodDuration.inHours * 60}m ${requirements!
-          .periodDuration.inSeconds -
-          requirements!.periodDuration.inMinutes * 60}s";
+      "${requirements.periodDuration.inHours}h ${requirements.periodDuration.inMinutes - requirements.periodDuration.inHours * 60}m ${requirements.periodDuration.inSeconds - requirements.periodDuration.inMinutes * 60}s";
 
   @override
   void initState() {
@@ -60,15 +57,14 @@ class _RequirementsFormState extends State<RequirementsForm> {
                       ...[
                         Container(
                           decoration: BoxDecoration(
-                            color: Theme
-                                .of(context)
-                                .cardColor,
+                            color: Theme.of(context).cardColor,
                             boxShadow: kElevationToShadow[1],
                             borderRadius: BorderRadius.circular(2.0),
                           ),
                           child: Column(
                             children: [
-                              Padding(padding: const EdgeInsets.all(10.0),
+                              Padding(
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     children: [
                                       const Text("Period"),
@@ -81,50 +77,47 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                     ],
                                   )),
                               MultiSelectBottomSheetField(
-                                initialValue:
-                                requirements!.metrics.keys.toList(),
-                                title: const Text("Metrics"),
-                                buttonText: const Text("Select metrics"),
-                                listType: MultiSelectListType.CHIP,
-                                colorator: (dynamic v) => Colors.teal.shade800,
-                                selectedColor: Colors.teal,
-                                selectedItemsTextStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                                buttonIcon: const Icon(Icons.add),
-                                items: LocalData.metrics!
-                                    .where((metric) =>
-                                !requirements!.metrics
-                                    .containsKey(metric.name))
-                                    .map((metric) =>
-                                    MultiSelectItem(
-                                      metric.metric,
-                                      metric.name!,
-                                    ))
-                                    .toList(),
-                                onSelectionChanged: (value) {
-                                  setState(() =>
-                                      requirements!.metrics
-                                          .addEntries(value.map((metric) =>
-                                          MapEntry(
-                                              metric as String, LocalData.defaultRequirements![
-                                              metric]))
-                                      )
-                                  );
-                                },
-                                onConfirm: (selected) => setState(() {
-                                  final toRemoveKeys = <String?>[];
-                                  for (final metric in requirements!.metrics.keys) {
-                                    if (!selected.contains(metric)) {
-                                      toRemoveKeys.add(metric);
-                                    }
-                                  }
+                                  initialValue:
+                                      requirements.metrics.keys.toList(),
+                                  title: const Text("Metrics"),
+                                  buttonText: const Text("Select metrics"),
+                                  listType: MultiSelectListType.CHIP,
+                                  colorator: (dynamic v) =>
+                                      Colors.teal.shade800,
+                                  selectedColor: Colors.teal,
+                                  selectedItemsTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  buttonIcon: const Icon(Icons.add),
+                                  items: LocalData.metrics!
+                                      .where((metric) => !requirements.metrics
+                                          .containsKey(metric.name))
+                                      .map((metric) => MultiSelectItem(
+                                            metric.metric,
+                                            metric.name!,
+                                          ))
+                                      .toList(),
+                                  onSelectionChanged: (value) {
+                                    setState(() => requirements.metrics
+                                        .addEntries(value.map((metric) =>
+                                            MapEntry(
+                                                metric as String,
+                                                LocalData.defaultRequirements![
+                                                    metric]))));
+                                  },
+                                  onConfirm: (selected) => setState(() {
+                                        final toRemoveKeys = <String?>[];
+                                        for (final metric
+                                            in requirements.metrics.keys) {
+                                          if (!selected.contains(metric)) {
+                                            toRemoveKeys.add(metric);
+                                          }
+                                        }
 
-                                  for (final key in toRemoveKeys) {
-                                    requirements!.metrics.remove(key);
-                                  }
-                                })
-                              ),
+                                        for (final key in toRemoveKeys) {
+                                          requirements.metrics.remove(key);
+                                        }
+                                      })),
                             ],
                           ),
                         ),
@@ -133,17 +126,16 @@ class _RequirementsFormState extends State<RequirementsForm> {
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           physics: const AlwaysScrollableScrollPhysics(),
                           controller: _controller,
-                          children: requirements!.metrics.entries.map(
-                                  (kvp) =>
-                                  SafeArea(
-                                      top: false,
-                                      bottom: false,
-                                      child: Hero(
-                                          tag: kvp.key,
-                                          child: _requirementControl(
-                                              LocalData.metricsMap![kvp.key]!,
-                                              kvp.value!)))).toList(),
-
+                          children: requirements.metrics.entries
+                              .map((kvp) => SafeArea(
+                                  top: false,
+                                  bottom: false,
+                                  child: Hero(
+                                      tag: kvp.key,
+                                      child: _requirementControl(
+                                          LocalData.metricsMap[kvp.key]!,
+                                          kvp.value!))))
+                              .toList(),
                         ),
                         SizedBox(
                             width: double.infinity,
@@ -153,13 +145,12 @@ class _RequirementsFormState extends State<RequirementsForm> {
                               child: const Text("SUBMIT REQUIREMENTS",
                                   style: TextStyle(fontSize: 20)),
                             )),
-                      ].expand((widget) =>
-                      [
-                        widget,
-                        const SizedBox(
-                          height: 24,
-                        )
-                      ])
+                      ].expand((widget) => [
+                            widget,
+                            const SizedBox(
+                              height: 24,
+                            )
+                          ])
                     ]),
               ),
             ),
@@ -169,8 +160,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
     );
   }
 
-  Widget _requirementControl(Metric metric, Requirement req) =>
-      Card(
+  Widget _requirementControl(Metric metric, Requirement req) => Card(
         elevation: 5,
         child: Padding(
           padding: const EdgeInsets.only(top: 10, right: 10),
@@ -178,14 +168,14 @@ class _RequirementsFormState extends State<RequirementsForm> {
             alignment: Alignment.centerLeft,
             child: Padding(
                 padding: const EdgeInsets.only(left: 10, top: 5),
-                child: Stack(fit: StackFit.expand,
-                    children: [
+                child: Stack(fit: StackFit.expand, children: [
                   Text(metric.name!,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold)),
                   Row(
                     children: <Widget>[
-                      Flexible(child: TextFormField(
+                      Flexible(
+                          child: TextFormField(
                         initialValue: req.minLimit.toString(),
                         decoration: InputDecoration(
                             filled: true,
@@ -196,8 +186,11 @@ class _RequirementsFormState extends State<RequirementsForm> {
                           setState(() => req.minLimit = num.parse(value));
                         },
                       )),
-                    const SizedBox(width: 10,),
-                      Flexible(child: TextFormField(
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Flexible(
+                          child: TextFormField(
                         initialValue: req.maxLimit.toString(),
                         decoration: InputDecoration(
                             filled: true,
@@ -218,12 +211,11 @@ class _RequirementsFormState extends State<RequirementsForm> {
   void showPeriodPicker(BuildContext context) {
     showCupertinoModalBottomSheet(
       context: context,
-      builder: (context) =>
-          CupertinoTimerPicker(
-            initialTimerDuration: requirements!.periodDuration,
-            onTimerDurationChanged: (value) =>
-                setState(() => requirements!.period = value.inSeconds),
-          ),
+      builder: (context) => CupertinoTimerPicker(
+        initialTimerDuration: requirements.periodDuration,
+        onTimerDurationChanged: (value) =>
+            setState(() => requirements.period = value.inSeconds),
+      ),
     );
   }
 

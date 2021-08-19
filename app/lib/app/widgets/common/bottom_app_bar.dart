@@ -53,7 +53,7 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
-             SizedBox(
+            SizedBox(
               height: 24.0,
             ),
           ],
@@ -63,7 +63,9 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   }
 
   Widget _buildTabIcon(
-      {int? index, required CustomAppBarItem item, ValueChanged<int>? onPressed}) {
+      {int? index,
+      required CustomAppBarItem item,
+      ValueChanged<int>? onPressed}) {
     return Expanded(
       child: SizedBox(
         height: 60.0,
@@ -72,10 +74,12 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           child: InkWell(
             onTap: () => onPressed!(index ?? 0),
             child: Icon(
-                    item.icon,
-                    color: _selectedIndex == index ? Theme.of(context).primaryColor: Colors.grey,
-                    size: 24.0,
-                  ),
+              item.icon,
+              color: _selectedIndex == index
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey,
+              size: 24.0,
+            ),
           ),
         ),
       ),
