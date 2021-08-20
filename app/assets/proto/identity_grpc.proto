@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package chainmetric.identity.service;
+option go_package = "github.com/timoth-y/chainmetric-contracts/rpc";
+
+import "user.proto";
+import "google/protobuf/empty.proto";
+
+service IdentityService {
+  rpc register(presenter.RegistrationRequest) returns (presenter.User);
+  rpc enroll(presenter.EnrollmentRequest) returns (google.protobuf.Empty);
+}

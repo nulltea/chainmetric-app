@@ -9,12 +9,8 @@ class ModalMenuOption extends StatelessWidget {
   final IconData? icon;
   final bool enabled;
 
-  const ModalMenuOption({
-    this.title,
-    this.icon,
-    this.action,
-    this.enabled = true
-  });
+  const ModalMenuOption(
+      {this.title, this.icon, this.action, this.enabled = true});
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -23,27 +19,27 @@ class ModalMenuOption extends StatelessWidget {
       child: InkWell(
           onTap: _decorateWithDismiss(context, action),
           child: ListTile(
-              leading: Icon(icon, color: Theme.of(context).primaryColor, size: 30),
-              title: Text(title!,
+              leading:
+                  Icon(icon, color: Theme.of(context).primaryColor, size: 30),
+              title: Text(
+                title!,
                 style: TextStyle(
                     fontSize: 18,
-                    fontWeight:
-                    FontWeight.bold,
-                  color: Theme.of(context).primaryColor
-                ),
-              )
-          )
-      )
-  );
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor),
+              ))));
 
-  void Function() _decorateWithDismiss(BuildContext context, Function? action) => () {
-    dismissDialog(context);
-    OverlayScreen().pop();
-    action!();
-  };
+  void Function() _decorateWithDismiss(
+          BuildContext context, Function? action) =>
+      () {
+        dismissDialog(context);
+        OverlayScreen().pop();
+        action!();
+      };
 }
 
-void showModalMenu({required BuildContext context, required List<ModalMenuOption> options}) {
+void showModalMenu(
+    {required BuildContext context, required List<ModalMenuOption> options}) {
   OverlayScreen().show(context, identifier: "modal");
   showMaterialModalBottomSheet(
     context: context,
@@ -60,17 +56,16 @@ void showModalMenu({required BuildContext context, required List<ModalMenuOption
   ).whenComplete(dismissOverlay);
 }
 
-void showOverlayPage({
-  required BuildContext context,
-  required Widget Function(BuildContext) builder
-}) {
+void showOverlayPage(
+    {required BuildContext context,
+    required Widget Function(BuildContext) builder}) {
   OverlayScreen().show(context, identifier: "modal");
   showMaterialModalBottomSheet(
-    context: context,
-    backgroundColor: Theme.of(context).primaryColor.withAlpha(0),
-    builder: builder,
-    expand: true,
-    enableDrag: false,
-    isDismissible: false
-  ).whenComplete(dismissOverlay);
+          context: context,
+          backgroundColor: Theme.of(context).primaryColor.withAlpha(0),
+          builder: builder,
+          expand: true,
+          enableDrag: false,
+          isDismissible: false)
+      .whenComplete(dismissOverlay);
 }

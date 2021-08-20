@@ -21,9 +21,9 @@ class Ripples extends StatefulWidget {
 
 class _CirclePainter extends CustomPainter {
   _CirclePainter(
-      this._animation, {
-        required this.color,
-      }) : super(repaint: _animation);
+    this._animation, {
+    required this.color,
+  }) : super(repaint: _animation);
 
   final Color color;
   final Animation<double>? _animation;

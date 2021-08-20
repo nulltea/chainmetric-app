@@ -52,5 +52,6 @@ lib/main.reflectable.dart
 
 # Main config file
 assets/config.yaml
+assets/certs
 
 *.g.dart

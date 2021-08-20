@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:chainmetric/app/widgets/common/bottom_app_bar.dart';
 import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
-import 'package:chainmetric/app/pages/assets/form.dart';
-import 'package:chainmetric/app/pages/assets/tab.dart';
+import 'package:chainmetric/app/pages/assets/asset_form.dart';
+import 'package:chainmetric/app/pages/assets/assets_tab.dart';
 import 'package:chainmetric/app/pages/devices/form.dart';
 import 'package:chainmetric/app/pages/devices/tab.dart';
 import 'package:chainmetric/app/pages/home/tab.dart';

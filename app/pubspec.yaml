@@ -13,10 +13,8 @@ dependencies:
   # Dart packages:
   tuple: ^2.0.0
   yaml: ^3.1.0
-  reflectable: ^3.0.2
   flutter_isolate: ^2.0.0
-  dart_json_mapper: ^2.1.2
-  json_serializable: ^4.1.4
+  grpc: ^3.0.1
   path_provider: ^2.0.2
   # Flutter add-ons:
   auto_size_text: ^3.0.0-nullsafety.0
@@ -47,8 +45,9 @@ dependencies:
   flutter_reactive_ble: ^3.1.1+1
 
 dev_dependencies:
-  lint: ^1.5.3
   build_runner: ^2.1.1
+  lint: ^1.5.3
+  json_serializable: ^4.1.4
 
 
 flutter:
@@ -56,5 +55,6 @@ flutter:
   assets:
     - assets/data/
     - assets/icons/
+    - assets/certs/
     - assets/config.yaml
     - assets/connection.yaml

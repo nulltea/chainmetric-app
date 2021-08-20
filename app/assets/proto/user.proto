@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package chainmetric.identity.presenter;
+
+option go_package = "github.com/timoth-y/chainmetric-contracts/src/users/api/presenter";
+
+import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+message User {
+  string id = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string email = 4;
+  string role = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  bool confirmed = 7;
+  google.protobuf.Timestamp expireAt = 8;
+}
+
+message RegistrationRequest {
+  string firstname = 1;
+  string lastname = 2;
+  string email = 3 [(validate.rules).string.email = true];
+}
+
+message EnrollmentRequest {
+  string userID = 1 [(validate.rules).string.uuid= true];
+  string role = 2;
+  google.protobuf.Timestamp expireAt = 3;
+}

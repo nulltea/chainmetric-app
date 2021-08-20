@@ -59,7 +59,8 @@ class _FormDropDownWidgetState extends State<FormDropDownWidget> {
           color: widget.borderColor!,
           width: widget.borderWidth!,
         ),
-        color: widget.fillColor ?? Theme.of(context).inputDecorationTheme.fillColor,
+        color: widget.fillColor ??
+            Theme.of(context).inputDecorationTheme.fillColor,
       ),
       child: Padding(
         padding: widget.margin!,

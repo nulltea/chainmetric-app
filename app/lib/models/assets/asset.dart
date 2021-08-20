@@ -36,7 +36,8 @@ class AssetPresenter extends Asset {
 
   AssetPresenter();
 
-  factory AssetPresenter.fromJson(Map<String, dynamic> json) => _$AssetPresenterFromJson(json);
+  factory AssetPresenter.fromJson(Map<String, dynamic> json) =>
+      _$AssetPresenterFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$AssetPresenterToJson(this);
 }
@@ -57,7 +58,8 @@ class AssetsQuery {
     this.scrollID,
   });
 
-  factory AssetsQuery.fromJson(Map<String, dynamic> json) => _$AssetsQueryFromJson(json);
+  factory AssetsQuery.fromJson(Map<String, dynamic> json) =>
+      _$AssetsQueryFromJson(json);
   Map<String, dynamic> toJson() => _$AssetsQueryToJson(this);
 }
 
@@ -69,7 +71,8 @@ class AssetsResponse {
 
   AssetsResponse();
 
-  factory AssetsResponse.fromJson(Map<String, dynamic> json) => _$AssetsResponseFromJson(json);
+  factory AssetsResponse.fromJson(Map<String, dynamic> json) =>
+      _$AssetsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$AssetsResponseToJson(this);
 }
 
@@ -83,11 +86,14 @@ class AssetType {
 
   AssetType();
 
-  Color colorFromHex(String hexColor) => Color(int.parse("FF${
-      hexColor.length == 6
-      ? "FF$hexColor"
-      : hexColor}", radix: 16));
+  Color colorFromHex(String hexColor) =>
+      Color(int.parse("FF${hexColor.length == 6 ? "FF$hexColor" : hexColor}",
+          radix: 16));
 
-  factory AssetType.fromJson(Map<String, dynamic> json) => _$AssetTypeFromJson(json);
+  factory AssetType.fromJson(Map<String, dynamic> json) =>
+      _$AssetTypeFromJson(json);
   Map<String, dynamic> toJson() => _$AssetTypeToJson(this);
+
+  static List<AssetType> listFromJson(List<dynamic> json) =>
+      json.map((e) => AssetType.fromJson(e)).toList();
 }

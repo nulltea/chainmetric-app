@@ -1,5 +1,5 @@
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
-import 'package:chainmetric/infrastructure/repositories/references_fabric.dart';
+import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/app/utils/utils.dart';
@@ -94,7 +94,7 @@ class _AssetFormState extends State<AssetForm> {
                             hintText: "Choose asset type",
                             labelText: "Asset type",
                           ),
-                          items: References.assetTypes!
+                          items: LocalData.assetTypes!
                               .map<DropdownMenuItem<String>>(
                                   (type) => DropdownMenuItem<String>(
                                         value: type.type,
@@ -126,12 +126,15 @@ class _AssetFormState extends State<AssetForm> {
                           },
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
-                            setState(() => asset.cost = num.tryParse(value) ?? 0);
+                            setState(
+                                () => asset.cost = num.tryParse(value) ?? 0);
                           },
                         ),
                         Container(
                             decoration: BoxDecoration(
-                              color: Theme.of(context).inputDecorationTheme.fillColor,
+                              color: Theme.of(context)
+                                  .inputDecorationTheme
+                                  .fillColor,
                               boxShadow: kElevationToShadow[1],
                               borderRadius: BorderRadius.circular(2.0),
                             ),
@@ -141,14 +144,12 @@ class _AssetFormState extends State<AssetForm> {
                               Text("Amount",
                                   style: TextStyle(
                                       color: Theme.of(context).hintColor,
-                                      fontSize: 16
-                                  )
-                              ),
+                                      fontSize: 16)),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: NumberPicker(
                                   axis: Axis.horizontal,
-                                  value: asset.amount ?? 1,
+                                  value: asset.amount,
                                   minValue: 1,
                                   maxValue: 100,
                                   haptics: true,
@@ -176,7 +177,7 @@ class _AssetFormState extends State<AssetForm> {
                             labelText: "Owned by",
                             filled: true,
                           ),
-                          items: References.organizations!
+                          items: LocalData.organizations!
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,
@@ -194,29 +195,32 @@ class _AssetFormState extends State<AssetForm> {
                           },
                         ),
                         SizedBox(
-                          width: double.infinity,
-                          height: 60,
-                          child: ElevatedButton(
-                            onPressed: _showLocationPicker,
-                            style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context).inputDecorationTheme.fillColor,
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.location_pin,
+                            width: double.infinity,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: _showLocationPicker,
+                              style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context)
+                                    .inputDecorationTheme
+                                    .fillColor,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_pin,
                                     color: Theme.of(context).hintColor,
-                                  size: 26,
-                                ),
-                                const SizedBox(width: 10),
-                                Text("Pick location",
+                                    size: 26,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    "Pick location",
                                     style: TextStyle(
                                         fontSize: 17,
-                                        color: Theme.of(context).hintColor
-                                    ),
-                                ),
-                              ],
-                            ),
-                        )),
+                                        color: Theme.of(context).hintColor),
+                                  ),
+                                ],
+                              ),
+                            )),
                         Column(
                           children: [
                             TextFormField(
@@ -265,7 +269,8 @@ class _AssetFormState extends State<AssetForm> {
                             width: double.infinity,
                             height: 45,
                             child: ElevatedButton(
-                              onPressed: decorateWithLoading(context, _submitAsset),
+                              onPressed:
+                                  decorateWithLoading(context, _submitAsset),
                               child: const Text("SUBMIT ASSET",
                                   style: TextStyle(fontSize: 20)),
                             )),
@@ -291,20 +296,18 @@ class _AssetFormState extends State<AssetForm> {
           Navigator.pop(context);
         }
       } on Exception catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.toString()))
-        );
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
   }
 
   Future<void> _showLocationPicker() async {
-    final LocationResult? result = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) =>
-              PlacePicker(GlobalConfiguration().getValue("geo_location_api_key"),
-            )
-        )
-    );
+    final LocationResult? result =
+        await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => PlacePicker(
+                  GlobalConfiguration().getValue("geo_location_api_key"),
+                )));
 
     if (result != null) {
       setState(() {
@@ -314,9 +317,8 @@ class _AssetFormState extends State<AssetForm> {
           ..name = result.name;
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Location wasn't picked, please try again"))
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Location wasn't picked, please try again")));
     }
   }
 }

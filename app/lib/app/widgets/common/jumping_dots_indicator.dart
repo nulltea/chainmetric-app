@@ -5,7 +5,12 @@ class _JumpingDot extends AnimatedWidget {
   final Color? color;
   final double? fontSize;
   final FontWeight? fontWeight;
-  const _JumpingDot({Key? key, required Animation<double> animation, this.color, this.fontSize, this.fontWeight})
+  const _JumpingDot(
+      {Key? key,
+      required Animation<double> animation,
+      this.color,
+      this.fontSize,
+      this.fontWeight})
       : super(key: key, listenable: animation);
 
   @override
@@ -15,7 +20,8 @@ class _JumpingDot extends AnimatedWidget {
       offset: Offset(0, -animation.value),
       child: Text(
         '.',
-        style: TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
+        style:
+            TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
       ),
     );
   }
@@ -33,12 +39,12 @@ class JumpingDotsProgressIndicator extends StatefulWidget {
 
   const JumpingDotsProgressIndicator(
       {this.numberOfDots = 3,
-        this.fontSize = 10.0,
-        this.fontWeight = FontWeight.normal,
-        this.color = Colors.black,
-        this.dotSpacing = 0.0,
-        this.milliseconds = 250,
-        this.beginTweenValue = 0.0})
+      this.fontSize = 10.0,
+      this.fontWeight = FontWeight.normal,
+      this.color = Colors.black,
+      this.dotSpacing = 0.0,
+      this.milliseconds = 250,
+      this.beginTweenValue = 0.0})
       : endTweenValue = fontSize / 4;
 
   @override
@@ -103,19 +109,19 @@ class _JumpingDotsProgressIndicatorState
     animations.add(
         Tween(begin: widget.beginTweenValue, end: widget.endTweenValue)
             .animate(controllers[index])
-          ..addStatusListener((AnimationStatus status) {
-            if (status == AnimationStatus.completed) {
-              controllers[index].reverse();
-            }
-            if (index == numberOfDots! - 1 &&
-                status == AnimationStatus.dismissed) {
-              controllers[0].forward();
-            }
-            if (animations[index].value > widget.endTweenValue / 2 &&
-                index < numberOfDots! - 1) {
-              controllers[index + 1].forward();
-            }
-          }));
+              ..addStatusListener((AnimationStatus status) {
+                if (status == AnimationStatus.completed) {
+                  controllers[index].reverse();
+                }
+                if (index == numberOfDots! - 1 &&
+                    status == AnimationStatus.dismissed) {
+                  controllers[0].forward();
+                }
+                if (animations[index].value > widget.endTweenValue / 2 &&
+                    index < numberOfDots! - 1) {
+                  controllers[index + 1].forward();
+                }
+              }));
   }
 
   @override

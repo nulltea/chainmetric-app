@@ -1,8 +1,8 @@
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/platform/adapters/bluetooth_adapter.dart';
+import 'package:chainmetric/platform/adapters/bluetooth.dart';
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
-import 'package:chainmetric/usecase/location/gps_adapter.dart';
+import 'package:chainmetric/usecase/location/geosharing.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
@@ -37,23 +37,24 @@ class _DevicesTabState extends State<DevicesTab> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text("Devices",
-          style: AppTheme.title2.override(fontFamily: "IBM Plex Mono", fontSize: 28)),
-      centerTitle: false,
-      automaticallyImplyLeading: false,
-      elevation: 4,
-    ),
-    body: RefreshIndicator(
-      key: _refreshKey,
-      onRefresh: _refreshData,
-      child: ListView.builder(
-        itemCount: devices!.length,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        itemBuilder: _listBuilder as Widget Function(BuildContext, int),
-      ),
-    ),
-  );
+        appBar: AppBar(
+          title: Text("Devices",
+              style: AppTheme.title2
+                  .override(fontFamily: "IBM Plex Mono", fontSize: 28)),
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          elevation: 4,
+        ),
+        body: RefreshIndicator(
+          key: _refreshKey,
+          onRefresh: _refreshData,
+          child: ListView.builder(
+            itemCount: devices!.length,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            itemBuilder: _listBuilder as Widget Function(BuildContext, int),
+          ),
+        ),
+      );
 
   Future<void> _refreshData() {
     return _fetchDevices().then((value) => setState(() => devices = value));
@@ -72,54 +73,62 @@ class _DevicesTabState extends State<DevicesTab> {
   }
 
   Widget _deviceCard(Device device) => InkWell(
-    onLongPress: () => _showDeviceMenu(context, device),
-    child: Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Stack(children: [
-          const Icon(Icons.memory, size: 90),
-          Positioned.fill(
-            left: 100,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const SizedBox(height: 8),
-              Text(device.name!, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-              Text(device.ip,
-                  style: TextStyle(
-                      fontSize: 15, color: Theme.of(context).hintColor, fontWeight: FontWeight.w400)),
+        onLongPress: () => _showDeviceMenu(context, device),
+        child: Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Stack(children: [
+              const Icon(Icons.memory, size: 90),
+              Positioned.fill(
+                left: 100,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+                      Text(device.name!,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600)),
+                      Text(device.ip,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Theme.of(context).hintColor,
+                              fontWeight: FontWeight.w400)),
+                    ]),
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(device.stateView,
+                        style: TextStyle(color: Theme.of(context).hintColor)),
+                    const SizedBox(width: 5),
+                    device.stateIcon,
+                  ],
+                )
+              ]),
+              Positioned.fill(
+                left: 100,
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
+                    children: [
+                      SvgIcon("sensors", color: Theme.of(context).hintColor),
+                      const SizedBox(width: 5),
+                      Text("${device.supports.length} metrics supported",
+                          style: TextStyle(color: Theme.of(context).hintColor))
+                    ],
+                  ),
+                ),
+              )
             ]),
           ),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(device.stateView, style: TextStyle(color: Theme.of(context).hintColor)),
-                const SizedBox(width: 5),
-                device.stateIcon,
-              ],
-            )
-          ]),
-          Positioned.fill(
-            left: 100,
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Row(
-                children: [
-                  SvgIcon("sensors", color: Theme.of(context).hintColor),
-                  const SizedBox(width: 5),
-                  Text("${device.supports.length} metrics supported", style: TextStyle(color: Theme.of(context).hintColor))
-                ],
-              ),
-            ),
-          )
-        ]),
-      ),
-    ),
-  );
+        ),
+      );
 
   Future<List<Device>?> _fetchDevices() async => DevicesController.getDevices();
 
@@ -128,44 +137,41 @@ class _DevicesTabState extends State<DevicesTab> {
       ModalMenuOption(
           title: "Configure device",
           icon: Icons.phonelink_setup,
-          action: () => openPage(
-              context, DeviceForm(model: device),
-              then: _refreshData
-          )
-      ),
+          action: () =>
+              openPage(context, DeviceForm(model: device), then: _refreshData)),
       ModalMenuOption(
-          title: !Bluetooth.isPaired(device.id)
-              ? "Pair device"
-              : "Forget device",
+          title:
+              !Bluetooth.isPaired(device.id) ? "Pair device" : "Forget device",
           icon: Icons.bluetooth_searching,
           action: () => !Bluetooth.isPaired(device.id)
               ? _startBluetoothPairing(device.id)
               : showYesNoDialog(context,
-              title: "Forget ${device.name}",
-              message: "This action will unpair the device from your phone. Are you sure?",
-              onYes: () => Bluetooth.forgetDevice(device.id)
-          )
-      ),
-      if (Bluetooth.isPaired(device.id)) ModalMenuOption(
+                  title: "Forget ${device.name}",
+                  message:
+                      "This action will unpair the device from your phone. Are you sure?",
+                  onYes: () => Bluetooth.forgetDevice(device.id))),
+      if (Bluetooth.isPaired(device.id))
+        ModalMenuOption(
             title: "Share location",
             icon: Icons.my_location,
-            action: decorateWithLoading(context, () => GeoService.postLocation(device.id))
-      ),
+            action: decorateWithLoading(
+                context, () => GeoService.postLocation(device.id))),
       ModalMenuOption(
           title: "Unbind device",
           icon: Icons.link_off,
           action: () => showYesNoDialog(context,
-            title: "Unbind ${device.name}",
-            message: "This action will reset the device and remove it from the network. Are you sure?",
-            onYes: decorateWithLoading(context, () => DevicesController.unbindDevice(device.id)
-                .whenComplete(_refreshData)
-            )
-          )
-      ),
+              title: "Unbind ${device.name}",
+              message:
+                  "This action will reset the device and remove it from the network. Are you sure?",
+              onYes: decorateWithLoading(
+                  context,
+                  () => DevicesController.unbindDevice(device.id)
+                      .whenComplete(_refreshData)))),
     ]);
   }
 
-  void _startBluetoothPairing(String? deviceID) {
-    showOverlayPage(context: context, builder: (context) => DevicePairing(deviceID));
+  void _startBluetoothPairing(String deviceID) {
+    showOverlayPage(
+        context: context, builder: (context) => DevicePairing(deviceID));
   }
 }

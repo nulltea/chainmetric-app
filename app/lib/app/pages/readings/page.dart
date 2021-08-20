@@ -10,10 +10,12 @@ import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/shared/extensions.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/svg_icon.dart';
-import 'package:charts_common/src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
+import 'package:charts_common/src/chart/common/canvas_shapes.dart'
+    show CanvasBarStack, CanvasRect;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports
-import 'package:charts_flutter/src/text_style.dart' as style; // ignore: implementation_imports
+import 'package:charts_flutter/src/text_style.dart'
+    as style; // ignore: implementation_imports
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
@@ -39,9 +41,8 @@ class ReadingsPage extends StatefulWidget {
   });
 
   @override
-  State<ReadingsPage> createState() => pageView
-      ? _ReadingsPageViewState()
-      : _ReadingsListViewState();
+  State<ReadingsPage> createState() =>
+      pageView ? _ReadingsPageViewState() : _ReadingsListViewState();
 }
 
 abstract class _ReadingsState extends State<ReadingsPage> {
@@ -59,7 +60,7 @@ abstract class _ReadingsState extends State<ReadingsPage> {
     if (widget.readings != null) {
       readings = widget.readings!;
     } else {
-      SchedulerBinding.instance!.addPostFrameCallback((_) => refreshData() );
+      SchedulerBinding.instance!.addPostFrameCallback((_) => refreshData());
     }
 
     if (widget.devices != null) {
@@ -74,22 +75,23 @@ abstract class _ReadingsState extends State<ReadingsPage> {
   Future refreshData() async {
     refreshKey.currentState?.show();
     return ReadingsController.getReadings(widget.asset!.id).then((value) {
-        if (value != null) {
-          setState(() => readings = value);
-        }
+      if (value != null) {
+        setState(() => readings = value);
       }
-    );
+    });
   }
 
   @protected
-  List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(Metric metric, MetricReadingsStream stream) {
+  List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(
+      Metric metric, MetricReadingsStream stream) {
     return [
       charts.Series<MetricReadingPoint, DateTime>(
         id: metric.metric!,
         displayName: metric.name,
-        colorFn: (point, i) => isCritical(stream, i!, requirements[metric.metric]!)
-            ? charts.MaterialPalette.red.shadeDefault
-            : charts.MaterialPalette.cyan.shadeDefault,
+        colorFn: (point, i) =>
+            isCritical(stream, i!, requirements[metric.metric]!)
+                ? charts.MaterialPalette.red.shadeDefault
+                : charts.MaterialPalette.cyan.shadeDefault,
         domainFn: (point, _) => point.timestamp,
         measureFn: (point, _) => point.value,
         data: stream as List<MetricReadingPoint>,
@@ -102,28 +104,28 @@ abstract class _ReadingsState extends State<ReadingsPage> {
       requirement.minLimit <= value && value <= requirement.maxLimit;
 
   @protected
-  bool isCritical(MetricReadingsStream stream, int index, Requirement requirement) =>
-    !meetRequirement(stream[index]!.value!, requirement) ||
-          (index != stream.length - 1 && !meetRequirement(stream[index + 1]!.value!, requirement));
+  bool isCritical(
+          MetricReadingsStream stream, int index, Requirement requirement) =>
+      !meetRequirement(stream[index]!.value!, requirement) ||
+      (index != stream.length - 1 &&
+          !meetRequirement(stream[index + 1]!.value!, requirement));
 
   @protected
   charts.DateTimeExtents timeViewport(MetricReadingsStream stream) {
-
-    var start = stream.last!.timestamp.subtract(widget.requirements!.periodDuration * viewportPoints);
+    var start = stream.last!.timestamp
+        .subtract(widget.requirements!.periodDuration * viewportPoints);
 
     if (start.isBefore(stream.first!.timestamp)) {
       start = stream.first!.timestamp;
     }
 
-    return charts.DateTimeExtents(
-        start: start,
-        end: stream.last!.timestamp
-    );
+    return charts.DateTimeExtents(start: start, end: stream.last!.timestamp);
   }
 
   @protected
   charts.NumericExtents measureViewport(MetricReadingsStream stream) {
-    return charts.NumericExtents(((stream.minValue / 10).floor() * 10) - 10, ((stream.maxValue / 10).ceil() * 10) + 10);
+    return charts.NumericExtents(((stream.minValue / 10).floor() * 10) - 10,
+        ((stream.maxValue / 10).ceil() * 10) + 10);
   }
 }
 
@@ -132,20 +134,17 @@ class _ReadingsListViewState extends _ReadingsState {
   int get viewportPoints => 50;
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
-          appBar: AppBar(
-            title: const Text("Metric readings"),
-          ),
-          body: RefreshIndicator(
-            key: refreshKey,
-            onRefresh: refreshData,
-            child: _chartsListView(context),
-          ));
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+        title: const Text("Metric readings"),
+      ),
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: refreshData,
+        child: _chartsListView(context),
+      ));
 
-
-  Widget _chartsListView(BuildContext context) =>
-      ListView.builder(
+  Widget _chartsListView(BuildContext context) => ListView.builder(
         itemCount: readings.streams?.length ?? 0,
         padding: const EdgeInsets.symmetric(vertical: 12),
         itemBuilder: _listBuilder,
@@ -165,129 +164,119 @@ class _ReadingsListViewState extends _ReadingsState {
   }
 
   Widget _chartCard(Metric metric, MetricReadingsStream stream) => Card(
-    elevation: 1,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Stack(
-        children: [
-          Positioned(
-              left: 8,
-              child: metric.icon()
-          ),
-          Positioned.fill(
-            left: 40,
-            child: Text(metric.name!, style: const TextStyle(
-                fontSize: 18, fontWeight: FontWeight.w600)
-            ),
-          ),
-          Positioned(
-            right: 8,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text("${stream.lastValue}",
-                      style: const TextStyle(fontSize: 15)
-                  ),
-                  Text(metric.unit!,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Theme.of(context).hintColor
-                      )
-                  ),
-                ],
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Stack(
+            children: [
+              Positioned(left: 8, child: metric.icon()),
+              Positioned.fill(
+                left: 40,
+                child: Text(metric.name!,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w600)),
               ),
-            ),
+              Positioned(
+                right: 8,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text("${stream.lastValue}",
+                          style: const TextStyle(fontSize: 15)),
+                      Text(metric.unit!,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Theme.of(context).hintColor)),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(height: 80, child: _buildChart(metric, stream)),
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: 80,
-                child: _buildChart(metric, stream)
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
-  Widget _buildChart(Metric metric, MetricReadingsStream stream) => charts.TimeSeriesChart(
-    fromReadingsStream(metric, stream),
-      animate: true,
-      primaryMeasureAxis: const charts.NumericAxisSpec(
-          showAxisLine: false,
-          renderSpec: charts.NoneRenderSpec(
-              axisLineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.transparent
-              )
+  Widget _buildChart(Metric metric, MetricReadingsStream stream) =>
+      charts.TimeSeriesChart(
+        fromReadingsStream(metric, stream),
+        animate: true,
+        primaryMeasureAxis: const charts.NumericAxisSpec(
+            showAxisLine: false,
+            renderSpec: charts.NoneRenderSpec(
+                axisLineStyle: charts.LineStyleSpec(
+                    color: charts.MaterialPalette.transparent))),
+        domainAxis: charts.DateTimeAxisSpec(
+            showAxisLine: false,
+            viewport: timeViewport(stream),
+            renderSpec: const charts.NoneRenderSpec(
+                axisLineStyle: charts.LineStyleSpec(
+                    color: charts.MaterialPalette.transparent))),
+        defaultRenderer: charts.LineRendererConfig(
+            includePoints: false,
+            includeArea: true,
+            roundEndCaps: true,
+            areaOpacity: 0.1,
+            strokeWidthPx: 2,
+            radiusPx: 2),
+        layoutConfig: charts.LayoutConfig(
+          bottomMarginSpec: charts.MarginSpec.fixedPixel(0),
+          leftMarginSpec: charts.MarginSpec.fixedPixel(0),
+          rightMarginSpec: charts.MarginSpec.fixedPixel(0),
+          topMarginSpec: charts.MarginSpec.fixedPixel(20),
+        ),
+        behaviors: [
+          charts.LinePointHighlighter(
+            defaultRadiusPx: 0,
+            showHorizontalFollowLine:
+                charts.LinePointHighlighterFollowLineType.none,
+            showVerticalFollowLine:
+                charts.LinePointHighlighterFollowLineType.none,
           )
-      ),
-      domainAxis: charts.DateTimeAxisSpec(
-          showAxisLine: false,
-          viewport: timeViewport(stream),
-          renderSpec: const charts.NoneRenderSpec(
-              axisLineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.transparent
-              )
-          )
-      ),
-      defaultRenderer: charts.LineRendererConfig(
-        includePoints: false,
-        includeArea: true,
-        roundEndCaps: true,
-        areaOpacity: 0.1,
-        strokeWidthPx: 2,
-        radiusPx: 2
-      ),
-    layoutConfig: charts.LayoutConfig(
-      bottomMarginSpec: charts.MarginSpec.fixedPixel(0),
-      leftMarginSpec: charts.MarginSpec.fixedPixel(0),
-      rightMarginSpec: charts.MarginSpec.fixedPixel(0),
-      topMarginSpec: charts.MarginSpec.fixedPixel(20),
-    ),
-    behaviors: [
-      charts.LinePointHighlighter(
-        defaultRadiusPx: 0,
-        showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.none,
-        showVerticalFollowLine: charts.LinePointHighlighterFollowLineType.none,
-      )
-    ],
-    selectionModels: [
-      charts.SelectionModelConfig(
-        type: charts.SelectionModelType.info,
-        changedListener: (_) => _openPage(readings.streams!.keys.toList().indexOf(metric))
-      )
-    ],
-  );
+        ],
+        selectionModels: [
+          charts.SelectionModelConfig(
+              type: charts.SelectionModelType.info,
+              changedListener: (_) =>
+                  _openPage(readings.streams!.keys.toList().indexOf(metric)))
+        ],
+      );
 
   @override
   List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(
-      Metric metric,
-      MetricReadingsStream stream) => [
-      charts.Series<MetricReadingPoint, DateTime>(
-        id: metric.metric!,
-        displayName: metric.name,
-        colorFn: (point, i) => isCritical(stream, i!, requirements[metric.metric]!)
-            ? charts.MaterialPalette.red.shadeDefault
-            : charts.MaterialPalette.cyan.shadeDefault,
-        domainFn: (point, _) => point.timestamp,
-        measureFn: (point, _) => point.value! <= 0 ? 0: point.value,
-        data: stream as List<MetricReadingPoint>,
-      )
-    ];
+          Metric metric, MetricReadingsStream stream) =>
+      [
+        charts.Series<MetricReadingPoint, DateTime>(
+          id: metric.metric!,
+          displayName: metric.name,
+          colorFn: (point, i) =>
+              isCritical(stream, i!, requirements[metric.metric]!)
+                  ? charts.MaterialPalette.red.shadeDefault
+                  : charts.MaterialPalette.cyan.shadeDefault,
+          domainFn: (point, _) => point.timestamp,
+          measureFn: (point, _) => point.value! <= 0 ? 0 : point.value,
+          data: stream as List<MetricReadingPoint>,
+        )
+      ];
 
-  void _openPage(int index) => openPage(context, ReadingsPage(
-    asset: widget.asset,
-    requirements: widget.requirements,
-    pageView: true,
-    pageIndex: index,
-    readings: readings,
-    devices: devicesCache,
-  ));
+  void _openPage(int index) => openPage(
+      context,
+      ReadingsPage(
+        asset: widget.asset,
+        requirements: widget.requirements,
+        pageView: true,
+        pageIndex: index,
+        readings: readings,
+        devices: devicesCache,
+      ));
 }
 
 class _ReadingsPageViewState extends _ReadingsState {
@@ -306,32 +295,30 @@ class _ReadingsPageViewState extends _ReadingsState {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: Text(_currentPageTitle()!),
-        centerTitle: true,
-        toolbarHeight: 50,
-        backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 0,
-        leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => Navigator.of(context).pop()
+        appBar: AppBar(
+          title: Text(_currentPageTitle()!),
+          centerTitle: true,
+          toolbarHeight: 50,
+          backgroundColor: Theme.of(context).backgroundColor,
+          elevation: 0,
+          leading: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop()),
         ),
-      ),
-      body: _chartsPageView(context),
-    bottomNavigationBar: Align(
-      alignment: Alignment.topCenter,
-      child: SmoothPageIndicator(
-          controller: _controller,
-          count: readings.streams?.length ?? 0,
-          effect: ExpandingDotsEffect(
-            dotColor: Theme.of(context).cardColor,
-            activeDotColor: Theme.of(context).primaryColor,
-            dotHeight: 14,
-            dotWidth: 14,
-          )
-      ),
-    ),
-    );
+        body: _chartsPageView(context),
+        bottomNavigationBar: Align(
+          alignment: Alignment.topCenter,
+          child: SmoothPageIndicator(
+              controller: _controller,
+              count: readings.streams?.length ?? 0,
+              effect: ExpandingDotsEffect(
+                dotColor: Theme.of(context).cardColor,
+                activeDotColor: Theme.of(context).primaryColor,
+                dotHeight: 14,
+                dotWidth: 14,
+              )),
+        ),
+      );
 
   @override
   void dispose() {
@@ -340,15 +327,15 @@ class _ReadingsPageViewState extends _ReadingsState {
   }
 
   Widget _chartsPageView(BuildContext context) => PageView.builder(
-    controller: _controller = PageController(
-        initialPage: widget.pageIndex!,
-        viewportFraction: 0.93
-    ),
-    itemCount: readings.streams?.length ?? 0,
-    itemBuilder: _pagerBuilder,
-    onPageChanged: _onPageChanged,
-    physics: scrollLocked ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
-  );
+        controller: _controller = PageController(
+            initialPage: widget.pageIndex!, viewportFraction: 0.93),
+        itemCount: readings.streams?.length ?? 0,
+        itemBuilder: _pagerBuilder,
+        onPageChanged: _onPageChanged,
+        physics: scrollLocked
+            ? const NeverScrollableScrollPhysics()
+            : const AlwaysScrollableScrollPhysics(),
+      );
 
   Widget _pagerBuilder(BuildContext context, int index) {
     final record = readings.streams!.entries.elementAt(index);
@@ -357,102 +344,110 @@ class _ReadingsPageViewState extends _ReadingsState {
     );
   }
 
-  Widget _chartPage(Metric metric, MetricReadingsStream stream) => GestureDetector(
-      onTapDown:(v) => setState(() {
-        animate = false;
-        if (v.localPosition.dy < 350) {
-          scrollLocked = true;
-        } else {
-          scrollLocked = false;
-        }
-      }),
-      child: Card(
-        elevation: 5,
-        margin: const EdgeInsets.only(left: 4, right: 4, bottom: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Align(
-                      alignment: Alignment.topLeft,
-                      child: Row(
-                        children: [
-                          metric.icon(size: 26, color: meetRequirement(stream.lastValue, requirements[metric.metric]!) ? Colors.green : Colors.red),
-                          const SizedBox(width: 5),
-                          Text("${stream.lastValue}",
-                              style: TextStyle(fontSize: 20, color: meetRequirement(stream.lastValue, requirements[metric.metric]!) ? Colors.green : Colors.red)
-                          ),
-                          Text(metric.unit!,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: meetRequirement(stream.lastValue, requirements[metric.metric]!) ? Colors.green.withAlpha(160) : Colors.red.withAlpha(160)
-                              )
-                          ),
-                        ],
-                      )
-                  ),
-                  const Spacer(),
-                  Text(_isActiveStream(metric)
-                      ? "Monitoring now"
-                      : "Last updated \n${stream.last!.timestamp.timeAgoSinceDate()}",
-                      style: TextStyle(color: Theme.of(context).hintColor)
-                  ),
-                  if (_isActiveStream(metric)) ...{
-                    const SizedBox(width: 5),
-                    Icon(Icons.circle, color: Colors.green.withAlpha(160))
-                  }
-                ],
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                  height: 300,
-                  child: _buildChart(metric, stream)),
-              const SizedBox(height: 15),
-              const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Statistics",
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)
-                  )
-              ),
-              ListTile(
-                  leading: const Icon(Icons.trending_up),
-                  title: const Text("Highest value"),
-                  trailing: Text("${stream.maxValue}${metric.unit}")
-              ),
-              ListTile(
-                  leading: const Icon(Icons.trending_down),
-                  title: const Text("Lowest value"),
-                  trailing: Text("${stream.minValue}${metric.unit}")
-              ),
-              ListTile(
-                  leading: const Icon(Icons.functions),
-                  title: const Text("Average value"),
-                  trailing: Text("${stream.avgValue}${metric.unit}")
-              ),
-              ListTile(
-                  leading: const Icon(Icons.rule),
-                  title: const Text("Compliance index"),
-                  trailing: Text("${stream.complianceIndexFor(widget.requirements!.metrics[metric.metric])}%")
-              ),
-              ListTile(
-                  leading: const SvgIcon("running_with_errors"),
-                  title: const Text("Critical exposure duration"),
-                  trailing: Text(stream.criticalExposureFor(widget.requirements!.metrics[metric.metric], widget.requirements!.periodDuration).toShortString())
-              ),
-            ],
+  Widget _chartPage(Metric metric, MetricReadingsStream stream) =>
+      GestureDetector(
+        onTapDown: (v) => setState(() {
+          animate = false;
+          if (v.localPosition.dy < 350) {
+            scrollLocked = true;
+          } else {
+            scrollLocked = false;
+          }
+        }),
+        child: Card(
+          elevation: 5,
+          margin: const EdgeInsets.only(left: 4, right: 4, bottom: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          children: [
+                            metric.icon(
+                                size: 26,
+                                color: meetRequirement(stream.lastValue,
+                                        requirements[metric.metric]!)
+                                    ? Colors.green
+                                    : Colors.red),
+                            const SizedBox(width: 5),
+                            Text("${stream.lastValue}",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: meetRequirement(stream.lastValue,
+                                            requirements[metric.metric]!)
+                                        ? Colors.green
+                                        : Colors.red)),
+                            Text(metric.unit!,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: meetRequirement(stream.lastValue,
+                                            requirements[metric.metric]!)
+                                        ? Colors.green.withAlpha(160)
+                                        : Colors.red.withAlpha(160))),
+                          ],
+                        )),
+                    const Spacer(),
+                    Text(
+                        _isActiveStream(metric)
+                            ? "Monitoring now"
+                            : "Last updated \n${stream.last!.timestamp.timeAgoSinceDate()}",
+                        style: TextStyle(color: Theme.of(context).hintColor)),
+                    if (_isActiveStream(metric)) ...{
+                      const SizedBox(width: 5),
+                      Icon(Icons.circle, color: Colors.green.withAlpha(160))
+                    }
+                  ],
+                ),
+                const SizedBox(height: 15),
+                SizedBox(height: 300, child: _buildChart(metric, stream)),
+                const SizedBox(height: 15),
+                const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Statistics",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w600))),
+                ListTile(
+                    leading: const Icon(Icons.trending_up),
+                    title: const Text("Highest value"),
+                    trailing: Text("${stream.maxValue}${metric.unit}")),
+                ListTile(
+                    leading: const Icon(Icons.trending_down),
+                    title: const Text("Lowest value"),
+                    trailing: Text("${stream.minValue}${metric.unit}")),
+                ListTile(
+                    leading: const Icon(Icons.functions),
+                    title: const Text("Average value"),
+                    trailing: Text("${stream.avgValue}${metric.unit}")),
+                ListTile(
+                    leading: const Icon(Icons.rule),
+                    title: const Text("Compliance index"),
+                    trailing: Text(
+                        "${stream.complianceIndexFor(widget.requirements!.metrics[metric.metric])}%")),
+                ListTile(
+                    leading: const SvgIcon("running_with_errors"),
+                    title: const Text("Critical exposure duration"),
+                    trailing: Text(stream
+                        .criticalExposureFor(
+                            widget.requirements!.metrics[metric.metric],
+                            widget.requirements!.periodDuration)
+                        .toShortString())),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
 
   Widget _buildChart(Metric metric, MetricReadingsStream stream) =>
-      charts.TimeSeriesChart(fromReadingsStream(metric, stream),
+      charts.TimeSeriesChart(
+        fromReadingsStream(metric, stream),
         animate: animate,
         primaryMeasureAxis: charts.NumericAxisSpec(
             showAxisLine: false,
@@ -466,8 +461,8 @@ class _ReadingsPageViewState extends _ReadingsState {
                 color: toChartColor(Theme.of(context).hintColor),
               ),
             ),
-            tickFormatterSpec: charts.BasicNumericTickFormatterSpec((v) => "$v${metric.unit}")
-        ),
+            tickFormatterSpec: charts.BasicNumericTickFormatterSpec(
+                (v) => "$v${metric.unit}")),
         domainAxis: charts.DateTimeAxisSpec(
             showAxisLine: false,
             viewport: timeViewport(stream),
@@ -479,9 +474,7 @@ class _ReadingsPageViewState extends _ReadingsState {
                 lineStyle: charts.LineStyleSpec(
                   thickness: 0,
                   color: toChartColor(Theme.of(context).hintColor),
-                )
-            )
-        ),
+                ))),
         defaultRenderer: charts.LineRendererConfig(
           includePoints: true,
           includeArea: true,
@@ -496,15 +489,20 @@ class _ReadingsPageViewState extends _ReadingsState {
           charts.SelectNearest(),
           charts.DomainHighlighter(),
           charts.LinePointHighlighter(
-              symbolRenderer: WithTooltipSymbolRenderer(context, metric, devices: devicesCache),
+            symbolRenderer: WithTooltipSymbolRenderer(context, metric,
+                devices: devicesCache),
           ),
           charts.RangeAnnotation([
             charts.RangeAnnotationSegment(
-                max(requirements[metric.metric]!.minLimit, measureViewport(stream).min),
-                min(requirements[metric.metric]!.maxLimit, measureViewport(stream).max),
+                max(requirements[metric.metric]!.minLimit,
+                    measureViewport(stream).min),
+                min(requirements[metric.metric]!.maxLimit,
+                    measureViewport(stream).max),
                 charts.RangeAnnotationAxisType.measure,
-                startLabel: "Min (${requirements[metric.metric]!.minLimit}${metric.unit})",
-                endLabel: "Max (${requirements[metric.metric]!.maxLimit}${metric.unit})",
+                startLabel:
+                    "Min (${requirements[metric.metric]!.minLimit}${metric.unit})",
+                endLabel:
+                    "Max (${requirements[metric.metric]!.maxLimit}${metric.unit})",
                 labelStyleSpec: charts.TextStyleSpec(
                   color: toChartColor(Theme.of(context).hintColor),
                 ),
@@ -512,16 +510,15 @@ class _ReadingsPageViewState extends _ReadingsState {
                 color: const charts.Color(r: 12, g: 110, b: 76, a: 100)),
           ], defaultLabelPosition: charts.AnnotationLabelPosition.auto),
         ],
-      selectionModels: [
-        charts.SelectionModelConfig(
-            changedListener: (model) {
-              if(model.hasDatumSelection){
-                WithTooltipSymbolRenderer.point = stream[model.selectedDatum[0].index!];
-              }
+        selectionModels: [
+          charts.SelectionModelConfig(changedListener: (model) {
+            if (model.hasDatumSelection) {
+              WithTooltipSymbolRenderer.point =
+                  stream[model.selectedDatum[0].index!];
             }
-        )
-      ],
-    );
+          })
+        ],
+      );
 
   void _onPageChanged(int page) {
     final metric = readings.streams!.entries.elementAt(page).key;
@@ -531,13 +528,12 @@ class _ReadingsPageViewState extends _ReadingsState {
 
     if (!streamListeners.containsKey(metric)) {
       ReadingsController.getStream(widget.asset!.id, metric!.metric)
-          .then((value) =>
-          setStateWithAnimate(() {
-            readings.streams![metric] = value;
-          }, animate: false));
+          .then((value) => setStateWithAnimate(() {
+                readings.streams![metric] = value;
+              }, animate: false));
 
-      ReadingsController.subscribeToStream(
-          widget.asset!.id, metric.metric, (point) {
+      ReadingsController.subscribeToStream(widget.asset!.id, metric.metric,
+          (point) {
         setStateWithAnimate(() {
           readings.streams![metric]!.add(point);
         }, animate: false);
@@ -545,20 +541,24 @@ class _ReadingsPageViewState extends _ReadingsState {
     }
   }
 
-  void setStateWithAnimate(void Function() setter, {bool animate = true}) => setState(() {
-      this.animate = animate;
-      setter();
-    });
+  void setStateWithAnimate(void Function() setter, {bool animate = true}) =>
+      setState(() {
+        this.animate = animate;
+        setter();
+      });
 
   bool _isActiveStream(Metric metric) {
     if (readings.streams?.containsKey(metric) ?? false) return false;
 
     final lastUpdated = readings.streams![metric]!.last!.timestamp;
-    return DateTime.now().difference(lastUpdated).inSeconds < max(widget.requirements!.period! * 3, 60);
+    return DateTime.now().difference(lastUpdated).inSeconds <
+        max(widget.requirements!.period! * 3, 60);
   }
 
-  String? _currentPageTitle() =>
-      readings.streams!.entries.elementAt(currentPage ?? widget.pageIndex!).key!.name;
+  String? _currentPageTitle() => readings.streams!.entries
+      .elementAt(currentPage ?? widget.pageIndex!)
+      .key!
+      .name;
 }
 
 class WithTooltipSymbolRenderer extends charts.CircleSymbolRenderer {
@@ -567,57 +567,60 @@ class WithTooltipSymbolRenderer extends charts.CircleSymbolRenderer {
   final BuildContext context;
   final Map<String?, Device> devicesMap;
 
-  WithTooltipSymbolRenderer(this.context, this.metric, {List<Device>? devices}):
-    devicesMap = { for (var d in devices ?? <Device>[]) d.id : d };
+  WithTooltipSymbolRenderer(this.context, this.metric, {List<Device>? devices})
+      : devicesMap = {for (var d in devices ?? <Device>[]) d.id: d};
 
   @override
-  void paint(charts.ChartCanvas canvas, Rectangle<num> bounds, {
-      List<int>? dashPattern,
+  void paint(charts.ChartCanvas canvas, Rectangle<num> bounds,
+      {List<int>? dashPattern,
       charts.Color? fillColor,
       charts.FillPatternType? fillPattern,
       charts.Color? strokeColor,
       double? strokeWidthPx}) {
     if (point == null) return;
-    super.paint(canvas, bounds, dashPattern: dashPattern, fillColor: fillColor, strokeColor: strokeColor, strokeWidthPx: strokeWidthPx);
-    canvas.drawBarStack(
-      CanvasBarStack([
-        CanvasRect(Rectangle(bounds.left.round() - 80, bounds.top.round() + 30,
-            bounds.width.round() + 160, bounds.height.round() + 85),
-            fill: toChartColor(Theme.of(context).primaryColor.withAlpha(180))
-          )
-        ],
+    super.paint(canvas, bounds,
+        dashPattern: dashPattern,
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        strokeWidthPx: strokeWidthPx);
+    canvas.drawBarStack(CanvasBarStack([
+      CanvasRect(
+          Rectangle(bounds.left.round() - 80, bounds.top.round() + 30,
+              bounds.width.round() + 160, bounds.height.round() + 85),
+          fill: toChartColor(Theme.of(context).primaryColor.withAlpha(180)))
+    ],
         radius: 12,
         roundBottomLeft: true,
         roundBottomRight: true,
         roundTopLeft: true,
         roundTopRight: true,
-        stackedBarPadding: 10
-      )
-    );
+        stackedBarPadding: 10));
     final textStyle = style.TextStyle();
     textStyle.color = charts.MaterialPalette.teal.shadeDefault;
     textStyle.fontSize = 14;
     canvas.drawText(
-        TextElement("Value: ${point!.valueRounded}${metric.unit}", style: textStyle),
+        TextElement("Value: ${point!.valueRounded}${metric.unit}",
+            style: textStyle),
         (bounds.left - 70).round(),
-        (bounds.top + 40).round()
-    );
+        (bounds.top + 40).round());
     canvas.drawText(
-        TextElement("Time: ${DateFormat("dd-MM h:m:s").format(point!.timestamp)}", style: textStyle),
+        TextElement(
+            "Time: ${DateFormat("dd-MM h:m:s").format(point!.timestamp)}",
+            style: textStyle),
         (bounds.left - 70).round(),
-        (bounds.top + 60).round()
-    );
+        (bounds.top + 60).round());
     canvas.drawText(
-        TextElement("Location: ${point!.location.isNotEmpty ? point!.location : "Unknown"}", style: textStyle),
+        TextElement(
+            "Location: ${point!.location.isNotEmpty ? point!.location : "Unknown"}",
+            style: textStyle),
         (bounds.left - 70).round(),
-        (bounds.top + 80).round()
-    );
+        (bounds.top + 80).round());
     if (devicesMap.isNotEmpty) {
       canvas.drawText(
-          TextElement("Device: ${devicesMap[point!.deviceID]!.name}", style: textStyle),
+          TextElement("Device: ${devicesMap[point!.deviceID]!.name}",
+              style: textStyle),
           (bounds.left - 70).round(),
-          (bounds.top + 100).round()
-      );
+          (bounds.top + 100).round());
     }
   }
 }

@@ -11,8 +11,12 @@ class Requirement {
 
   Requirement();
 
-  factory Requirement.fromJson(Map<String, dynamic> json) => _$RequirementFromJson(json);
+  factory Requirement.fromJson(Map<String, dynamic> json) =>
+      _$RequirementFromJson(json);
   Map<String, dynamic> toJson() => _$RequirementToJson(this);
+
+  static Map<String, Requirement> mapFromJson(Map<String, dynamic> json) =>
+      json.map((key, value) => MapEntry(key, Requirement.fromJson(value)));
 }
 
 @JsonSerializable()
@@ -28,6 +32,7 @@ class Requirements {
   Requirements();
   Requirements.forAsset({this.assetID});
 
-  factory Requirements.fromJson(Map<String, dynamic> json) => _$RequirementsFromJson(json);
+  factory Requirements.fromJson(Map<String, dynamic> json) =>
+      _$RequirementsFromJson(json);
   Map<String, dynamic> toJson() => _$RequirementsToJson(this);
 }
