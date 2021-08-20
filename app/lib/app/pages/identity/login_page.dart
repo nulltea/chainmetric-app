@@ -55,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: FormDropDownWidget(
                         height: 50,
+                        initialOption: credentials.organization,
                         icon: const Icon(
                           Icons.corporate_fare_sharp,
                         ),
@@ -172,12 +173,18 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                   onPressed: () => openPage(context, const RegistrationPage()),
-                  child: const Text("New here? Request registration then"))
+                  child: const Text("New here? Request registration here"))
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    credentials.organization = LocalData.organizations![0].mspID;
   }
 
   Future<void> submitIdentity() async {

@@ -1,3 +1,4 @@
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 
@@ -72,3 +73,12 @@ class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {
   @override
   Duration get transitionDuration => Duration(milliseconds: duration);
 }
+
+void displayError(BuildContext context, Exception e) =>
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+        elevation: 6.0,
+        backgroundColor: AppTheme.error,
+        behavior: SnackBarBehavior.floating,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)))));

@@ -13,6 +13,7 @@ class LocalData {
   static List<DeviceProfile>? deviceProfiles = <DeviceProfile>[];
   static List<Metric>? metrics = <Metric>[];
   static Map<String, Requirement>? defaultRequirements;
+  static List<String>? userRoles;
 
   static late Map<String?, AssetType> assetTypesMap;
   static late Map<String?, Metric> metricsMap;
@@ -33,6 +34,9 @@ class LocalData {
 
     defaultRequirements = Requirement.mapFromJson(json.decode(
         await rootBundle.loadString("assets/data/default_requirements.json")));
+
+    userRoles = List<String>.from(json
+        .decode(await rootBundle.loadString("assets/data/user_roles.json")));
 
     assetTypesMap = {for (var at in assetTypes!) at.type: at};
     metricsMap = {for (var m in metrics!) m.metric: m};

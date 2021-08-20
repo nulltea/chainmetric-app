@@ -1,0 +1,37 @@
+{
+  "Admin": {
+    "identity": {
+      "view": true,
+      "manage": true,
+      "enroll": true
+    }
+  },
+  "Engineer": {
+    "identity": {
+      "view": true,
+      "manage": true,
+      "enroll": false
+    }
+  },
+  "Vendor Manager": {
+    "identity": {
+      "view": true,
+      "manage": true,
+      "enroll": false
+    }
+  },
+  "Agent": {
+    "identity": {
+      "view": true,
+      "manage": false,
+      "enroll": false
+    }
+  },
+  "Contractor": {
+    "identity": {
+      "view": true,
+      "manage": false,
+      "enroll": false
+    }
+  }
+}

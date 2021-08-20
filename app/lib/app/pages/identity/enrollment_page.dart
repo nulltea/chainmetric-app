@@ -7,20 +7,23 @@ import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
+import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart';
 import 'package:chainmetric/models/identity/user.pb.dart';
 import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 
-class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+class EnrollmentPage extends StatefulWidget {
+  const EnrollmentPage({Key? key}) : super(key: key);
 
   @override
-  _RegistrationPageState createState() => _RegistrationPageState();
+  _EnrollmentPageState createState() => _EnrollmentPageState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
-  RegistrationRequest request = RegistrationRequest();
+class _EnrollmentPageState extends State<EnrollmentPage> {
+  EnrollmentRequest request = EnrollmentRequest();
   String? organization;
+  bool isTransient = false;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -55,97 +58,78 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         icon: const Icon(
                           Icons.corporate_fare_sharp,
                         ),
-                        initialOption: organization,
+                        initialOption: request.role,
                         elevation: 2,
                         borderColor: Colors.transparent,
                         borderWidth: 0,
                         borderRadius: 8,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
-                        items: LocalData.organizations!
+                        items: LocalData.userRoles!
                             .map<DropdownMenuItem<String>>(
-                                (org) => DropdownMenuItem<String>(
-                                      value: org.mspID,
-                                      child: Text(org.name!),
+                                (role) => DropdownMenuItem<String>(
+                                      value: role,
+                                      child: Text(role),
                                     ))
                             .toList(),
                         onChanged: (value) {
-                          setState(() => organization = value);
+                          setState(() => request.role = value!);
                         },
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          filled: true,
-                          hintText: "Enter your first name",
-                          labelText: "Firstname",
-                          enabledBorder: UnderlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "You must provide your initials for registration";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          setState(() => request.firstname = value);
-                        },
+                      child: Row(
+                        children: [
+                          const Text("Temporary contractor"),
+                          Checkbox(
+                            value: isTransient,
+                            activeColor: Theme.of(context).primaryColor,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6))),
+                            onChanged: (value) {
+                              setState(() {
+                                isTransient = value!;
+                                if (!isTransient) request.expireAt.clear();
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          filled: true,
-                          hintText: "Enter your last name",
-                          labelText: "Lastname",
-                          enabledBorder: UnderlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
+                    Visibility(
+                      visible: isTransient,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            filled: true,
+                            hintText: "Enter your expiry date",
+                            labelText: "Expiry date",
+                            enabledBorder: UnderlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                          ),
+                          keyboardType: TextInputType.datetime,
+                          validator: (value) {
+                            if (isTransient && value!.isEmpty) {
+                              return "You must provide your expiry date for temporary contractors";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() => request.expireAt = Timestamp(
+                                seconds: Int64(DateTime.parse(value).second)));
+                          },
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "You must provide your initials for registration";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          setState(() => request.lastname = value);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          filled: true,
-                          hintText: "Enter your email address",
-                          labelText: "Email",
-                          enabledBorder: UnderlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "You must provide your email for registration";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          setState(() => request.email = value);
-                        },
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: FormButtonWidget(
                         onPressed: submitRegistration,
-                        text: "REGISTER",
+                        text: "CONFIRM",
                         options: FormButtonOptions(
                           width: 200,
                           height: 50,
@@ -181,7 +165,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
-    organization = LocalData.organizations![0].mspID;
+    request.role = "Engineer";
   }
 
   Future<void> submitRegistration() async {
@@ -193,7 +177,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       await IdentityService(organization!,
               certificate: await CerificatesResolver(organization!)
                   .resolveBytes("identity-client"))
-          .register(request);
+          .enroll(request);
     } on Exception catch (e) {
       utils.displayError(context, e);
     }

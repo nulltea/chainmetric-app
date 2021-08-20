@@ -4,7 +4,7 @@ import 'package:chainmetric/platform/repositories/preferences_repo.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:chainmetric/usecase/location/gps_adapter.dart';
+import 'package:chainmetric/usecase/location/geosharing.dart';
 
 typedef DeviceDisconnectFunc = void Function();
 

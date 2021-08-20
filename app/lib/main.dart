@@ -8,6 +8,7 @@ import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/loading_splash.dart';
 import 'package:chainmetric/app/pages/main_page.dart';
 import 'package:chainmetric/app/pages/identity/login_page.dart';
+import 'package:chainmetric/usecase/privileges/resolver.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -88,6 +89,7 @@ class _AppState extends State<App> {
   Future<void> _initBackend() async {
     await Preferences.init();
     await LocalData.init();
+    await Privileges.init();
     await Hyperledger.initWallet();
     if (await Hyperledger.authRequired()) {
       setState(() => _isLoading = false);

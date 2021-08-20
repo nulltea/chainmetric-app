@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:chainmetric/platform/adapters/bluetooth.dart';
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
-import 'package:chainmetric/usecase/location/gps_adapter.dart';
+import 'package:chainmetric/usecase/location/geosharing.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/app/widgets/common/jumping_dots_indicator.dart';
 import 'package:chainmetric/app/widgets/common/ripple_animation.dart';

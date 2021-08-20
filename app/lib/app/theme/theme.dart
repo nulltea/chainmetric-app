@@ -12,6 +12,8 @@ class AppTheme {
   static const Color inputBG = Color(0xFF1A1D29);
   static const Color appBarBG = Color(0xFF1A1D29);
 
+  static const Color error = Colors.red;
+
   String primaryFontFamily = "Poppins";
   String secondaryFontFamily = "Roboto";
 
