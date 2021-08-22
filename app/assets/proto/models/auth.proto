@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package chainmetric.identity.presenter;
+
+option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
+
+import "validate/validate.proto";
+
+message AuthRequest {
+  string email = 1 [(validate.rules).string = {email: true}];
+  string passwordHash = 2 [(validate.rules).string = {min_bytes: 8 }];
+}
+
+message SetPasswordRequest {
+  string passwordHash = 2 [(validate.rules).string = {min_bytes: 8 }];
+}
+
+message AuthResponse {
+  string secretToken = 1;
+  string accessToken = 2;
+}

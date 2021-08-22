@@ -8,7 +8,7 @@ import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
 import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart';
-import 'package:chainmetric/models/identity/user.pb.dart';
+import 'package:chainmetric/models/identity/enrollment.pb.dart';
 import 'package:chainmetric/platform/repositories/localdata_repo.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';

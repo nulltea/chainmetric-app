@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package chainmetric.identity.presenter;
+
+option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+  string id = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string email = 4;
+  string role = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  bool confirmed = 7;
+  google.protobuf.Timestamp expireAt = 8;
+}
