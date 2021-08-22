@@ -31,18 +31,6 @@ func (sdk *ChainmentricSDK) InitWallet(path string) error {
 	return nil
 }
 
-func (sdk *ChainmentricSDK) AuthRequired() bool {
-	return !sdk.wallet.Exists(userID)
-}
-
-func (sdk *ChainmentricSDK) AuthIdentity(orgID, key, cert string) error {
-	if !sdk.wallet.Exists(userID) {
-		identity := gateway.NewX509Identity(orgID, cert, key)
-		return sdk.wallet.Put(userID, identity)
-	}
-	return nil
-}
-
 func (sdk *ChainmentricSDK) InitConnectionOn(configRaw, channel string) error {
 	gw, err := gateway.Connect(
 		gateway.WithConfig(config.FromRaw([]byte(configRaw), "yaml")),
