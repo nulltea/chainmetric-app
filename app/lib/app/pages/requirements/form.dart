@@ -1,4 +1,4 @@
-import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
 import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/assets/requirements.dart';

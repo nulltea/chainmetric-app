@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
-import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/shared/exceptions.dart';

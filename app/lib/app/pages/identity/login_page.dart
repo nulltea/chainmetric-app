@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/app/pages/identity/registration_page.dart';
 import 'package:chainmetric/app/utils/utils.dart';
-import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:flutter/material.dart';

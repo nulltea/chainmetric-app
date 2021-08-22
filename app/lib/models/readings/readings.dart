@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:json_annotation/json_annotation.dart';

@@ -8,7 +8,8 @@ import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
 import 'package:chainmetric/models/identity/enrollment.pb.dart';
-import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
+import 'package:chainmetric/platform/repositories/preferences_shared.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -190,10 +191,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
 
     try {
-      await IdentityService(organization!,
+      final response = await IdentityService(organization!,
               certificate: await CerificatesResolver(organization!)
                   .resolveBytes("identity-client"))
           .register(request);
+
+      Preferences.accessToken = response.accessToken;
     } on Exception catch (e) {
       utils.displayError(context, e);
     }

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:chainmetric/platform/adapters/hyperledger.dart';
 import 'package:chainmetric/platform/adapters/bluetooth.dart';
-import 'package:chainmetric/platform/repositories/preferences_repo.dart';
-import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/platform/repositories/preferences_shared.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/loading_splash.dart';
 import 'package:chainmetric/app/pages/main_page.dart';

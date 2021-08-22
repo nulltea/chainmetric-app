@@ -1,5 +1,5 @@
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
-import 'package:chainmetric/platform/repositories/localdata_repo.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/app/utils/utils.dart';
