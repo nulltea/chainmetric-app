@@ -1,18 +1,21 @@
-package sdk
+package hyperledger
 
 import (
 	"fmt"
 
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 	"github.com/pkg/errors"
-	"github.com/timoth-y/chainmetric-app/go-sdk/internal"
+	"github.com/timoth-y/chainmetric-app/go-sdk/internal/core"
+	"github.com/timoth-y/chainmetric-app/go-sdk/internal/infrastructure/repositories"
 )
 
-func (sdk *ChainmentricSDK) AuthRequired() bool {
+const userID = "appUser"
+
+func (sdk *SDK) AuthRequired() bool {
 	return !sdk.wallet.Exists(userID)
 }
 
-func (sdk *ChainmentricSDK) AuthX509(orgID, key, cert string) error {
+func (sdk *SDK) AuthX509(orgID, key, cert string) error {
 	if !sdk.wallet.Exists(userID) {
 		identity := gateway.NewX509Identity(orgID, cert, key)
 		return sdk.wallet.Put(userID, identity)
@@ -20,8 +23,9 @@ func (sdk *ChainmentricSDK) AuthX509(orgID, key, cert string) error {
 	return nil
 }
 
-func (sdk *ChainmentricSDK) AuthVault(orgID, userID, secretToken string) error {
-	cert, key, err := internal.RequestIdentityVault(fmt.Sprintf("auth/%s/login"), secretToken)
+func (sdk *SDK) AuthVault(orgID, userID, secretToken string) error {
+	cert, key, err := repositories.NewIdentitiesVault(core.Vault, secretToken).
+		RetrieveFrom(fmt.Sprintf("auth/%s/login", userID))
 	if err != nil {
 		return errors.Wrap(err, "failed to get credentials from Vault")
 	}

@@ -1,25 +1,23 @@
-package sdk
+package chainmetric
 
 import (
 	"context"
 
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 	"github.com/pkg/errors"
-)
-
-const (
-	ReadingsContractName = "readings"
+	"github.com/timoth-y/chainmetric-app/go-sdk/bind/events"
+	"github.com/timoth-y/chainmetric-app/go-sdk/bind/hyperledger"
 )
 
 type ReadingsContract struct {
-	sdk      *ChainmentricSDK
+	sdk      *hyperledger.SDK
 	contract *gateway.Contract
 }
 
-func NewReadingsContract(sdk *ChainmentricSDK) *ReadingsContract {
+func NewReadingsContract(sdk *hyperledger.SDK) *ReadingsContract {
 	return &ReadingsContract{
 		sdk:      sdk,
-		contract: sdk.network.GetContract(ReadingsContractName),
+		contract: sdk.GetContract("readings"),
 	}
 }
 
@@ -43,9 +41,9 @@ func (rc *ReadingsContract) CloseEventSocket(eventToken string) error {
 	return errors.Wrap(err, "failed executing 'CloseEventSocket' transaction")
 }
 
-func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel, error) {
+func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*events.EventChannel, error) {
 	var (
-		channel = NewEventsChannel()
+		channel = events.NewChannel()
 	)
 
 	eventToken, err := rc.BindToEventSocket(assetID, metric); if err != nil {
@@ -68,9 +66,7 @@ func (rc *ReadingsContract) SubscribeFor(assetID, metric string) (*EventChannel,
 		for {
 			select {
 			case event := <-notifier:
-				if channel.handler != nil {
-					channel.handler.HandleEvent(string(event.Payload))
-				}
+				channel.HandleEvent(string(event.Payload))
 			case <- ctx.Done():
 				return
 			}

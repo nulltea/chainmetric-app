@@ -1,4 +1,4 @@
-package sdk
+package events
 
 import "context"
 
@@ -7,16 +7,16 @@ type EventHandler interface {
 }
 
 type EventChannel struct {
-	handler EventHandler
-	cancel context.CancelFunc
+	EventHandler
+	cancel  context.CancelFunc
 }
 
-func NewEventsChannel() *EventChannel {
+func NewChannel() *EventChannel {
 	return &EventChannel{}
 }
 
 func (ec *EventChannel) SetHandler(handler EventHandler) {
-	ec.handler = handler
+	ec.EventHandler = handler
 }
 
 func (ec *EventChannel) SetCancel(cancel context.CancelFunc) {
