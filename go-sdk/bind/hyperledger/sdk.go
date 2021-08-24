@@ -3,9 +3,10 @@ package hyperledger
 //go:generate gomobile bind --target=android -tags=mobile -o ../app/android/app/src/main/libs/blockchainSDK.aar
 
 import (
+	"fmt"
+
 	"github.com/hyperledger/fabric-sdk-go/pkg/core/config"
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
-	"github.com/pkg/errors"
 	"github.com/timoth-y/chainmetric-app/go-sdk/bind/chainmetric"
 )
 
@@ -35,11 +36,11 @@ func (sdk *SDK) InitConnectionOn(configRaw, channel string) error {
 		gateway.WithConfig(config.FromRaw([]byte(configRaw), "yaml")),
 		gateway.WithIdentity(sdk.wallet, userID),
 	); if err != nil {
-		return errors.Wrap(err, "InitConnectionFor: connect to gateway")
+		return fmt.Errorf("InitConnectionFor: connect to gateway: %w", err)
 	}
 
 	sdk.network, err = gw.GetNetwork(channel); if err != nil {
-		return errors.Wrap(err, "InitConnectionFor: connect to network")
+		return fmt.Errorf("InitConnectionFor: connect to network: %w", err)
 	}
 
 	return nil

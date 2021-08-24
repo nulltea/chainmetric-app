@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
-	"github.com/pkg/errors"
 	"github.com/timoth-y/chainmetric-app/go-sdk/internal/core"
 	"github.com/timoth-y/chainmetric-app/go-sdk/internal/infrastructure/repositories"
 )
@@ -27,7 +26,7 @@ func (sdk *SDK) AuthVault(orgID, userID, secretToken string) error {
 	cert, key, err := repositories.NewIdentitiesVault(core.Vault, secretToken).
 		RetrieveFrom(fmt.Sprintf("auth/%s/login", userID))
 	if err != nil {
-		return errors.Wrap(err, "failed to get credentials from Vault")
+		return fmt.Errorf("failed to get credentials from Vault: %w", err)
 	}
 
 	identity := gateway.NewX509Identity(orgID, string(cert), string(key))
