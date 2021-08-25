@@ -1,0 +1,233 @@
+# Docs: https://hyperledger-fabric.readthedocs.io/en/release-2.2/developapps/connectionprofile.html
+# Example: https://github.com/hyperledger/fabric/blob/main/internal/peer/chaincode/testdata/connectionprofile.yaml
+
+name: application
+description: Connection profile configuration for chipa-inu owned application
+version: 1.0
+
+client:
+  organization: chipa-inu
+  channel: supply-channel
+  cryptoconfig:
+    path: /crypto-config
+
+  credentialStore:
+    cryptoStore:
+      path: {keystore-path}
+
+channels:
+  supply-channel:
+    peers:
+      peer0.chipa-inu.org.chainmetric.network:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.blueberry-go.org.chainmetric.network:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.moon-lan.org.chainmetric.network:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+organizations:
+  chipa-inu:
+    mspid: chipa-inu
+    peers:
+      - peer0.chipa-inu.org.chainmetric.network
+    certificateAuthorities:
+      - ca.chipa-inu.org.org.chainmetric.network
+  blueberry-go:
+    mspid: blueberry-go
+    peers:
+      - peer0.blueberry-go.org.chainmetric.network
+    certificateAuthorities:
+      - ca.blueberry-go.org.org.chainmetric.network
+  moon-lan:
+    mspid: moon-lan
+    peers:
+      - peer0.moon-lan.org.chainmetric.network
+    certificateAuthorities:
+      - ca.moon-lan.org.org.chainmetric.network
+
+orderers:
+  orderer.chainmetric.network:
+    url: "grpcs://orderer.chainmetric.network:443"
+    grpcOptions:
+      hostnameOverride: orderer.chainmetric.network
+      ssl-target-name-override: orderer.chainmetric.network
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICYzCCAgmgAwIBAgIQcd1n5/VvgNqHBowi77MydTAKBggqhkjOPQQDAjB8MQsw
+        CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+        YW5jaXNjbzEcMBoGA1UEChMTY2hhaW5tZXRyaWMubmV0d29yazEiMCAGA1UEAxMZ
+        dGxzY2EuY2hhaW5tZXRyaWMubmV0d29yazAeFw0yMTA3MDQwMTA4MDBaFw0zMTA3
+        MDIwMTA4MDBaMHwxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYw
+        FAYDVQQHEw1TYW4gRnJhbmNpc2NvMRwwGgYDVQQKExNjaGFpbm1ldHJpYy5uZXR3
+        b3JrMSIwIAYDVQQDExl0bHNjYS5jaGFpbm1ldHJpYy5uZXR3b3JrMFkwEwYHKoZI
+        zj0CAQYIKoZIzj0DAQcDQgAEyPDtcIu9wHrD402pRxECZvKP3Q0BpNFxlp0fW2ne
+        81PaDW0177zAy8uP7bn/aRR3mELZhP21HKbuCJTNimFsUqNtMGswDgYDVR0PAQH/
+        BAQDAgGmMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8E
+        BTADAQH/MCkGA1UdDgQiBCD7/JyjNsR5OrLccz+yHnAWyruYJDpqht/8M7hErEUK
+        czAKBggqhkjOPQQDAgNIADBFAiEAiD0vt3UltLly2COKCRFq8305Ognk0lBijzOE
+        rQDjET0CIAZacaE3RnUz3xvmsZvaImNRhpMKfHgpKQu+iBSwvL4T
+        -----END CERTIFICATE-----
+
+
+peers:
+  peer0.chipa-inu.org.chainmetric.network:
+    url: "grpcs://peer0.chipa-inu.org.chainmetric.network:443"
+    grpcOptions:
+      hostnameOverride: peer0.chipa-inu.org.chainmetric.network
+      ssl-target-name-override: peer0.chipa-inu.org.chainmetric.network
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICnjCCAkSgAwIBAgIRALziMQWcKuSLxY5ea0pben8wCgYIKoZIzj0EAwIwgZgx
+        CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+        RnJhbmNpc2NvMSowKAYDVQQKEyFjaGlwYS1pbnUub3JnLmNoYWlubWV0cmljLm5l
+        dHdvcmsxMDAuBgNVBAMTJ3Rsc2NhLmNoaXBhLWludS5vcmcuY2hhaW5tZXRyaWMu
+        bmV0d29yazAeFw0yMTA3MDQwMTA4MDBaFw0zMTA3MDIwMTA4MDBaMIGYMQswCQYD
+        VQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZyYW5j
+        aXNjbzEqMCgGA1UEChMhY2hpcGEtaW51Lm9yZy5jaGFpbm1ldHJpYy5uZXR3b3Jr
+        MTAwLgYDVQQDEyd0bHNjYS5jaGlwYS1pbnUub3JnLmNoYWlubWV0cmljLm5ldHdv
+        cmswWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARFJSI9L5+tSFihYG7KMNW++pZx
+        0KF9TwT12wfu64NUdw9y1ruyjPY7dW7OHiKno1AYCYw4GXE/JeE155XXOkwMo20w
+        azAOBgNVHQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMB
+        MA8GA1UdEwEB/wQFMAMBAf8wKQYDVR0OBCIEIDr+ccKc/T5qdhH08KAN8/yP5rRQ
+        /CI3WeasMN2D1631MAoGCCqGSM49BAMCA0gAMEUCIQCQObLdQMovXvv5tEdVnLm9
+        KcgShsvvSe8svkOY8zaWEAIgM0cZ0QEF15Pz0ywyXkyOCef6/iFRRg62jUSASSwq
+        ZRE=
+        -----END CERTIFICATE-----
+
+  peer0.blueberry-go.org.chainmetric.network:
+    url: "grpcs://peer0.blueberry-go.org.chainmetric.network:443"
+    grpcOptions:
+      hostnameOverride: peer0.blueberry-go.org.chainmetric.network
+      ssl-target-name-override: peer0.blueberry-go.org.chainmetric.network
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICqjCCAk+gAwIBAgIQTd6NDL2BgF5yWBYe0eEKNzAKBggqhkjOPQQDAjCBnjEL
+        MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG
+        cmFuY2lzY28xLTArBgNVBAoTJGJsdWViZXJyeS1nby5vcmcuY2hhaW5tZXRyaWMu
+        bmV0d29yazEzMDEGA1UEAxMqdGxzY2EuYmx1ZWJlcnJ5LWdvLm9yZy5jaGFpbm1l
+        dHJpYy5uZXR3b3JrMB4XDTIxMDcwNDAxMDgwMFoXDTMxMDcwMjAxMDgwMFowgZ4x
+        CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+        RnJhbmNpc2NvMS0wKwYDVQQKEyRibHVlYmVycnktZ28ub3JnLmNoYWlubWV0cmlj
+        Lm5ldHdvcmsxMzAxBgNVBAMTKnRsc2NhLmJsdWViZXJyeS1nby5vcmcuY2hhaW5t
+        ZXRyaWMubmV0d29yazBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABNjp6hUDX6Jw
+        Izr0ttZ6paZ3sxM7eqYwgNO2KQjTkTYyk40IXwcs14dxY/2liwIePRkkJykhP+Nn
+        7XZOhAfSOsKjbTBrMA4GA1UdDwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEFBQcD
+        AgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zApBgNVHQ4EIgQg+u7HdOAJ92ix
+        WGo8OgBxO4HcXaupUkeVTqoG/kp/Nr0wCgYIKoZIzj0EAwIDSQAwRgIhAMBJglqN
+        KcSsYCXuQlWiOqbLnZbYG6M0i5t0mjtJ6ECPAiEAoUWrnfm2GMFuai2DBMgncnmd
+        nwR85mkQy1In0c6tZwQ=
+        -----END CERTIFICATE-----
+
+  peer0.moon-lan.org.chainmetric.network:
+    url: "grpcs://peer0.moon-lan.org.chainmetric.network:443"
+    grpcOptions:
+      hostnameOverride: peer0.moon-lan.org.chainmetric.network
+      ssl-target-name-override: peer0.moon-lan.org.chainmetric.network
+    tlsCACerts:
+      pem: |
+        -----BEGIN CERTIFICATE-----
+        MIICmzCCAkCgAwIBAgIRANhhCQMIPOpK5/0NI9jz540wCgYIKoZIzj0EAwIwgZYx
+        CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+        RnJhbmNpc2NvMSkwJwYDVQQKEyBtb29uLWxhbi5vcmcuY2hhaW5tZXRyaWMubmV0
+        d29yazEvMC0GA1UEAxMmdGxzY2EubW9vbi1sYW4ub3JnLmNoYWlubWV0cmljLm5l
+        dHdvcmswHhcNMjEwNzA0MDEwODAwWhcNMzEwNzAyMDEwODAwWjCBljELMAkGA1UE
+        BhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBGcmFuY2lz
+        Y28xKTAnBgNVBAoTIG1vb24tbGFuLm9yZy5jaGFpbm1ldHJpYy5uZXR3b3JrMS8w
+        LQYDVQQDEyZ0bHNjYS5tb29uLWxhbi5vcmcuY2hhaW5tZXRyaWMubmV0d29yazBZ
+        MBMGByqGSM49AgEGCCqGSM49AwEHA0IABLvBkLoKNmzIIgfgbXFmwjoiIi8gwTHY
+        rS3v1ap42VyDSVS42ke3xxoxohyWBlFYjgyCNUD0wFrad9ndpGyFiNKjbTBrMA4G
+        A1UdDwEB/wQEAwIBpjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYD
+        VR0TAQH/BAUwAwEB/zApBgNVHQ4EIgQgh7n3ZHEkoTj/dVUnMVtG62a/l3pyVO5Y
+        q55XBqNVKs8wCgYIKoZIzj0EAwIDSQAwRgIhAP2JHQ+o+ZyozZY3YEBZ/lfS5srd
+        EzzWVDNh8ybRlNmKAiEApgiIfkjv8GBvQZebl4uiSebvZ0ic262LB68LEyJVy6A=
+        -----END CERTIFICATE-----
+
+
+certificateAuthorities:
+  ca.chipa-inu.org.chainmetric.network:
+    url: "https://ca.chipa-inu.org.chainmetric.network:443"
+    caName: ca-chipa-inu
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      pem:
+        - |
+          -----BEGIN CERTIFICATE-----
+          MIICmDCCAj6gAwIBAgIRAOSvRbXj18WMhbh12345LZYwCgYIKoZIzj0EAwIwgZUx
+          CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+          RnJhbmNpc2NvMSowKAYDVQQKEyFjaGlwYS1pbnUub3JnLmNoYWlubWV0cmljLm5l
+          dHdvcmsxLTArBgNVBAMTJGNhLmNoaXBhLWludS5vcmcuY2hhaW5tZXRyaWMubmV0
+          d29yazAeFw0yMTA3MDQwMTA4MDBaFw0zMTA3MDIwMTA4MDBaMIGVMQswCQYDVQQG
+          EwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZyYW5jaXNj
+          bzEqMCgGA1UEChMhY2hpcGEtaW51Lm9yZy5jaGFpbm1ldHJpYy5uZXR3b3JrMS0w
+          KwYDVQQDEyRjYS5jaGlwYS1pbnUub3JnLmNoYWlubWV0cmljLm5ldHdvcmswWTAT
+          BgcqhkjOPQIBBggqhkjOPQMBBwNCAAQk/rMhFQ1VbDnQhITpHfCdaeFNNVti/J3K
+          2sGkHG1MuK/T91SKVPKFM68u14FEM1BPNK1rOJB3DjNJCmNniPkPo20wazAOBgNV
+          HQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMA8GA1Ud
+          EwEB/wQFMAMBAf8wKQYDVR0OBCIEIEt3vIpJhnEmW9Kqyh3bcF/QpSD+ePe2w4a1
+          6OuTuVYyMAoGCCqGSM49BAMCA0gAMEUCIEwp+nx40TFOhtaCUeu5xR/8Pal3wxCF
+          9vK7BRgBxrwiAiEAuOAj3qxdLYD6bE7njbNyH3RUzHGNaY4u9z/++XTGsFs=
+          -----END CERTIFICATE-----
+
+  ca.blueberry-go.org.chainmetric.network:
+    url: "https://ca.blueberry-go.org.chainmetric.network:443"
+    caName: ca-blueberry-go
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      pem:
+        - |
+          -----BEGIN CERTIFICATE-----
+          MIICozCCAkqgAwIBAgIRANr3UUiX5/3+qgW+NESafwkwCgYIKoZIzj0EAwIwgZsx
+          CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+          RnJhbmNpc2NvMS0wKwYDVQQKEyRibHVlYmVycnktZ28ub3JnLmNoYWlubWV0cmlj
+          Lm5ldHdvcmsxMDAuBgNVBAMTJ2NhLmJsdWViZXJyeS1nby5vcmcuY2hhaW5tZXRy
+          aWMubmV0d29yazAeFw0yMTA3MDQwMTA4MDBaFw0zMTA3MDIwMTA4MDBaMIGbMQsw
+          CQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy
+          YW5jaXNjbzEtMCsGA1UEChMkYmx1ZWJlcnJ5LWdvLm9yZy5jaGFpbm1ldHJpYy5u
+          ZXR3b3JrMTAwLgYDVQQDEydjYS5ibHVlYmVycnktZ28ub3JnLmNoYWlubWV0cmlj
+          Lm5ldHdvcmswWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQgF6ApHrHxQqLCSUAT
+          eiseyVYsnk8FGy07Z4tMwutLwlKmJm8Y2yOq0byfUaRBXOwrQFmHZj+KHm3Z137n
+          /BwGo20wazAOBgNVHQ8BAf8EBAMCAaYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsG
+          AQUFBwMBMA8GA1UdEwEB/wQFMAMBAf8wKQYDVR0OBCIEIIwuEAeRIO9YSv2yA+eA
+          U0aEd0L0RLbrhdD2iISBgDZQMAoGCCqGSM49BAMCA0cAMEQCIENQvYA+tqBsxvJq
+          dvHXS9DDIp7DHQlqDQRj8VeVbvyCAiA0PAYp1xZS/vr+zU/71dSHLLU9Xd+yIq4Q
+          DjLY7L3p3A==
+          -----END CERTIFICATE-----
+
+  ca.moon-lan.org.chainmetric.network:
+    url: "https://ca.moon-lan.org.chainmetric.network:443"
+    caName: ca-moon-lan
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      pem:
+        - |
+          -----BEGIN CERTIFICATE-----
+          MIIClTCCAjqgAwIBAgIRAPMfJF/u+ikzQcTb/f7fZ1UwCgYIKoZIzj0EAwIwgZMx
+          CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4g
+          RnJhbmNpc2NvMSkwJwYDVQQKEyBtb29uLWxhbi5vcmcuY2hhaW5tZXRyaWMubmV0
+          d29yazEsMCoGA1UEAxMjY2EubW9vbi1sYW4ub3JnLmNoYWlubWV0cmljLm5ldHdv
+          cmswHhcNMjEwNzA0MDEwODAwWhcNMzEwNzAyMDEwODAwWjCBkzELMAkGA1UEBhMC
+          VVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBGcmFuY2lzY28x
+          KTAnBgNVBAoTIG1vb24tbGFuLm9yZy5jaGFpbm1ldHJpYy5uZXR3b3JrMSwwKgYD
+          VQQDEyNjYS5tb29uLWxhbi5vcmcuY2hhaW5tZXRyaWMubmV0d29yazBZMBMGByqG
+          SM49AgEGCCqGSM49AwEHA0IABE9Y0yIMEobrwaCsYZCBie2MKiS7nlXe174UJZhD
+          C2vgjvA0vSwpq+sE/mao1LQPaVZUZxyi/tI0ORhkvCdXHJmjbTBrMA4GA1UdDwEB
+          /wQEAwIBpjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwEwDwYDVR0TAQH/
+          BAUwAwEB/zApBgNVHQ4EIgQg0+fHRBQVnLEFDchP0VcfMM7ibjkjA8J0U80ZTl5D
+          FCswCgYIKoZIzj0EAwIDSQAwRgIhAJti1ALFLR/rBW3Fr4WuQvnFhBIWeeFyGYjV
+          ekSG95rCAiEAgvYxo83+uPDjVclbRhedFCTZ+AMTa9m2s05Qiisf02Y=
+          -----END CERTIFICATE-----
