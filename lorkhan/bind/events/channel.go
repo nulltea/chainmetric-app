@@ -8,7 +8,7 @@ type EventHandler interface {
 
 type EventChannel struct {
 	EventHandler
-	cancel  context.CancelFunc
+	cancel  []context.CancelFunc
 }
 
 func NewChannel() *EventChannel {
@@ -20,10 +20,12 @@ func (ec *EventChannel) SetHandler(handler EventHandler) {
 }
 
 func (ec *EventChannel) SetCancel(cancel context.CancelFunc) {
-	ec.cancel = cancel
+	ec.cancel = append(ec.cancel, cancel)
 }
 
 func (ec *EventChannel) Cancel() {
-	ec.cancel()
+	for i := range ec.cancel {
+		ec.cancel[i]()
+	}
 }
 
