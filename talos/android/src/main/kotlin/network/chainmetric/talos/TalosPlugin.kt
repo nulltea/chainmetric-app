@@ -9,9 +9,9 @@ import network.chainmetric.talos.controllers.HyperledgerHandler
 import app.loup.streams_channel.StreamsChannel;
 import network.chainmetric.talos.controllers.EventSocketHandler
 
-const val BLOCKCHAIN_CHANNEL = "com.chainmetric.network.talos/hyperledger"
-const val VAULT_CHANNEL = "com.chainmetric.network.talos/plugins/auth_vault"
-const val EVENTSOCKET_CHANNEL = "com.chainmetric.network.talos/plugins/eventsocket"
+const val BLOCKCHAIN_CHANNEL = "network.chainmetric.talos/hyperledger"
+const val VAULT_CHANNEL = "network.chainmetric.talos/plugins/auth_vault"
+const val EVENTSOCKET_CHANNEL = "network.chainmetric.talos/plugins/eventsocket"
 
 class TalosPlugin: FlutterPlugin {
   private val hyperledgerSDK = hyperledger.SDK();

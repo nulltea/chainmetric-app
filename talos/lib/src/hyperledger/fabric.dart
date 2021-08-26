@@ -1,19 +1,16 @@
-import 'package:chainmetric/models/identity/auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
-import 'package:yaml/yaml.dart';
+import 'package:talos/src/hyperledger/config.dart';
 
-const blockchainChannel = "chainmetric.app.blockchain-native-sdk";
+const hyperledgerChannel = "network.chainmetric.talos/hyperledger";
 
 class Hyperledger {
-  static const _nativeSDK = MethodChannel(blockchainChannel);
-  static Map<String?, dynamic>? _config;
+  static const _channel = MethodChannel(hyperledgerChannel);
 
   static Future<void> initWallet() async {
     final dir = await getApplicationDocumentsDirectory();
     try {
-      await _nativeSDK
+      await _channel
           .invokeMethod("wallet_init", {"path": "${dir.path}/wallet"});
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");
@@ -22,19 +19,19 @@ class Hyperledger {
 
   static Future<bool> authRequired() async {
     try {
-      return await _nativeSDK.invokeMethod("auth_required");
+      return await _channel.invokeMethod("auth_required");
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");
     }
     return true;
   }
 
-  static Future<bool> authenticate(AuthCredentials credentials) async {
+  static Future<bool> authenticate(String organization, String certificate, String key) async {
     try {
-      await _nativeSDK.invokeMethod("auth_identity", {
-        "orgID": credentials.organization,
-        "cert": credentials.certificate,
-        "key": credentials.privateKey
+      await _channel.invokeMethod("auth_identity", {
+        "orgID": organization,
+        "cert": certificate,
+        "key": key
       });
       return true;
     } on PlatformException catch (e) {
@@ -43,10 +40,10 @@ class Hyperledger {
     return false;
   }
 
-  static Future<bool> initConnection(String channel) async {
+  static Future<bool> initConnection(FabricConnection conn, String channel) async {
     try {
-      await _nativeSDK.invokeMethod("connection_init",
-          {"config": await getConfigString(), "channel": channel});
+      await _channel.invokeMethod("connection_init",
+          {"config": conn.toString(), "channel": channel});
       return true;
     } on PlatformException catch (e) {
       print("PlatformException: ${e.message}");
@@ -57,7 +54,7 @@ class Hyperledger {
   static Future<String?> evaluateTransaction(String contract, String method,
       [String? args]) async {
     try {
-      return await _nativeSDK.invokeMethod("transaction_evaluate", {
+      return await _channel.invokeMethod("transaction_evaluate", {
         "contract": contract,
         "method": method,
         "args": args,
@@ -71,7 +68,7 @@ class Hyperledger {
   static Future<String?> submitTransaction(String contract, String method,
       [String? args]) async {
     try {
-      return await _nativeSDK.invokeMethod("transaction_submit", {
+      return await _channel.invokeMethod("transaction_submit", {
         "contract": contract,
         "method": method,
         "args": args,
@@ -85,7 +82,7 @@ class Hyperledger {
   static Future<bool> trySubmitTransaction(String contract, String method,
       [String? args]) async {
     try {
-      await _nativeSDK.invokeMethod("transaction_submit", {
+      await _channel.invokeMethod("transaction_submit", {
         "contract": contract,
         "method": method,
         "args": args,
@@ -95,26 +92,5 @@ class Hyperledger {
       print("PlatformException: ${e.message}");
     }
     return false;
-  }
-
-  static Future<void> initConfig() async {
-    final yaml = loadYaml(await rootBundle.loadString("assets/connection.yaml"))
-        as YamlMap;
-
-    _config = {for (var key in yaml.keys) key as String?: yaml[key]};
-  }
-
-  static dynamic getConfigValue(String compositeKey) {
-    dynamic value = _config;
-    for (final key in compositeKey.split(".")) {
-      value = value[key];
-    }
-    return value;
-  }
-
-  static Future<String> getConfigString() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final raw = await rootBundle.loadString("assets/connection.yaml");
-    return raw.replaceAll("{keystore-path}", dir.path);
   }
 }

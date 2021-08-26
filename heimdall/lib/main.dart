@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chainmetric/platform/adapters/hyperledger.dart';
 import 'package:chainmetric/platform/adapters/bluetooth.dart';
 import 'package:chainmetric/platform/repositories/preferences_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
@@ -9,6 +8,8 @@ import 'package:chainmetric/app/widgets/common/loading_splash.dart';
 import 'package:chainmetric/app/pages/main_page.dart';
 import 'package:chainmetric/app/pages/identity/login_page.dart';
 import 'package:chainmetric/usecase/privileges/resolver.dart';
+import 'package:talos/talos.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -95,7 +96,8 @@ class _AppState extends State<App> {
       setState(() => _isLoading = false);
       return;
     }
-    await Hyperledger.initConnection("supply-channel");
+    final config = await FabricConnection("assets/connection.yaml").init();
+    await Hyperledger.initConnection(config, "supply-channel");
     setState(() => _requireAuth = _isLoading = false);
 
     await Bluetooth.init();

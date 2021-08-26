@@ -10,19 +10,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  yaml: ^3.1.0
+  path_provider: ^2.0.2
   streams_channel2: ^1.0.0+1
 
 dev_dependencies:
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
-  # This section identifies this Flutter project as a plugin project.
-  # The 'pluginClass' and Android 'package' identifiers should not ordinarily
-  # be modified. They are used by the tooling to maintain consistency when
-  # adding or updating assets for this project.
   plugin:
     platforms:
       android:

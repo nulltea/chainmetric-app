@@ -1,15 +1,15 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/app/pages/identity/registration_page.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:chainmetric/platform/adapters/hyperledger.dart';
 import 'package:chainmetric/models/identity/auth.dart';
 import 'package:chainmetric/app/theme/theme.dart';
+import 'package:talos/talos.dart';
 
 class LoginPage extends StatefulWidget {
   final Function? submitAuth;
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> submitIdentity() async {
     if (formKey.currentState!.validate()) {
       try {
-        if (await Hyperledger.authenticate(credentials)) {
+        if (await Hyperledger.authenticate(credentials.organization!, credentials.certificate!, credentials.privateKey!)) {
           widget.submitAuth!();
         }
       } on Exception catch (e) {

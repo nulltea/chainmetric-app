@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:chainmetric/models/assets/requirements.dart';
-import 'package:chainmetric/platform/adapters/hyperledger.dart';
+import 'package:talos/talos.dart';
 
 class RequirementsController {
   static Future<bool> assignRequirements(Requirements requirements) async {

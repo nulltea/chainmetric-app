@@ -39,10 +39,11 @@ dependencies:
   place_picker: ^0.9.19-nullsafety
   # Platform functionality:
   permission_handler: ^8.1.4+2
-  streams_channel2: ^1.0.0+1
   geolocator: ^7.4.0
   geocoding: ^2.0.0
   flutter_reactive_ble: ^3.1.1+1
+  talos:
+    path: ../talos
 
 dev_dependencies:
   build_runner: ^2.1.1

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:chainmetric/models/assets/asset.dart';
-import 'package:chainmetric/platform/adapters/hyperledger.dart';
+import 'package:talos/talos.dart';
 
 class AssetsController {
   static Future<AssetsResponse?> getAssets(

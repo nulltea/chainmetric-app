@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chainmetric/models/device/device.dart';
-import 'package:chainmetric/platform/adapters/hyperledger.dart';
+import 'package:talos/talos.dart';
 
 class DevicesController {
   static Future<List<Device>?> getDevices() async {
