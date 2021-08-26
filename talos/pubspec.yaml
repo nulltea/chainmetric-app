@@ -1,5 +1,5 @@
 name: talos
-description: Platfrom oriented Flutter plaugin for binding Lorkhan gomobile backend with Heimdall application
+description: Platfrom interface Flutter plugin for binding Lorkhan gomobile backend with Heimdall application
 version: 0.0.1
 homepage:
 
@@ -13,8 +13,6 @@ dependencies:
   streams_channel2: ^1.0.0+1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -28,8 +26,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.chainmetric.network.talos
+        package: network.chainmetric.talos
         pluginClass: TalosPlugin
       ios:
         pluginClass: TalosPlugin
-

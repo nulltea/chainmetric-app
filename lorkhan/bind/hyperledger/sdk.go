@@ -8,20 +8,24 @@ import (
 )
 
 type SDK struct {
-	wallet *gateway.Wallet
 	gateway *gateway.Gateway
-	network *gateway.Network
+	*gateway.Wallet
+	*gateway.Network
+}
+
+func New() *SDK {
+	return &SDK{}
 }
 
 func (sdk *SDK) InitConnectionOn(configRaw, channel string) error {
 	gw, err := gateway.Connect(
 		gateway.WithConfig(config.FromRaw([]byte(configRaw), "yaml")),
-		gateway.WithIdentity(sdk.wallet, userID),
+		gateway.WithIdentity(sdk.Wallet, UserID),
 	); if err != nil {
 		return fmt.Errorf("InitConnectionFor: connect to gateway: %w", err)
 	}
 
-	sdk.network, err = gw.GetNetwork(channel); if err != nil {
+	sdk.Network, err = gw.GetNetwork(channel); if err != nil {
 		return fmt.Errorf("InitConnectionFor: connect to network: %w", err)
 	}
 

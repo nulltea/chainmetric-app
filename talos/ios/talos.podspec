@@ -5,9 +5,9 @@
 Pod::Spec.new do |s|
   s.name             = 'talos'
   s.version          = '0.0.1'
-  s.summary          = 'Platfrom oriented Flutter plaugin for binding Lorkhan gomobile backend with Heimdall application'
+  s.summary          = 'Platfrom interface Flutter plugin for binding Lorkhan gomobile backend with Heimdall application'
   s.description      = <<-DESC
-Platfrom oriented Flutter plaugin for binding Lorkhan gomobile backend with Heimdall application
+Platfrom interface Flutter plugin for binding Lorkhan gomobile backend with Heimdall application
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }

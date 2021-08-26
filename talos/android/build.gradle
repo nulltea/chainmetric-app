@@ -1,8 +1,8 @@
-group 'com.chainmetric.network.talos'
+group 'network.chainmetric.talos'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.5.21'
+    ext.kotlin_version = '1.5.30'
     repositories {
         google()
         jcenter()
@@ -31,7 +31,7 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
     }
 }
 
@@ -39,5 +39,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
-    implementation fileTree(dir: "libs", include: ['*.aar'])
+    implementation fileTree(dir: "src/main/libs", include: ['*.aar'])
 }

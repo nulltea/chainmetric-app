@@ -16,16 +16,16 @@ type EventSocket struct {
 }
 
 // NewEventSocket constructs new EventSocket instance.
-func (p *Plugins) NewEventSocket(sdk *hyperledger.SDK, chaincode string) *EventSocket {
+func NewEventSocket(sdk *hyperledger.SDK, chaincode string) *EventSocket {
 	return &EventSocket{
-		sdk:      sdk,
+		sdk: sdk,
 		contract: sdk.GetContract(chaincode),
 	}
 }
 
 // Bind makes 'BindToEventSocket' transaction to request events streaming subscription,
 // and subscribes to event, which name corresponds received event token.
-func (e *EventSocket) Bind(args string) (*events.EventChannel, error) {
+func (p *EventSocket) Bind(args string) (*events.EventChannel, error) {
 	var (
 		argsSlice []string
 	)
@@ -34,28 +34,28 @@ func (e *EventSocket) Bind(args string) (*events.EventChannel, error) {
 		return nil, err
 	}
 
-	eventToken, err := e.contract.SubmitTransaction("BindToEventSocket", argsSlice...)
+	eventToken, err := p.contract.SubmitTransaction("BindToEventSocket", argsSlice...)
 	if err != nil {
 		return nil, fmt.Errorf("failed executing 'BindToEventSocket' transaction: %w", err)
 	}
 
-	ch, err := e.Subscribe(string(eventToken))
+	ch, err := p.Subscribe(string(eventToken))
 	if err != nil {
 		return nil, fmt.Errorf("failed subscribe to events with token '%s': %w", eventToken, err)
 	}
 
 	ch.SetCancel(func() {
-		e.close(string(eventToken))
+		p.close(string(eventToken))
 	})
 
 	return ch, nil
 }
 
 // Subscribe subscribes to generic event on network with given `event` name.
-func (e *EventSocket) Subscribe(event string) (*events.EventChannel, error) {
+func (p *EventSocket) Subscribe(event string) (*events.EventChannel, error) {
 	var channel = events.NewChannel()
 
-	reg, notifier, err := e.contract.RegisterEvent(event); if err != nil {
+	reg, notifier, err := p.contract.RegisterEvent(event); if err != nil {
 		return nil, fmt.Errorf("failed executing 'SubscribeFor' transaction: %w", err)
 	}
 
@@ -63,7 +63,7 @@ func (e *EventSocket) Subscribe(event string) (*events.EventChannel, error) {
 	channel.SetCancel(cancel)
 
 	go func() {
-		defer e.contract.Unregister(reg)
+		defer p.contract.Unregister(reg)
 
 		for {
 			select {
@@ -79,7 +79,7 @@ func (e *EventSocket) Subscribe(event string) (*events.EventChannel, error) {
 }
 
 // close makes 'CloseEventSocket' transaction to close subscription.
-func (e *EventSocket) close(eventToken string) error {
-	_, err := e.contract.SubmitTransaction("CloseEventSocket", eventToken)
+func (p *EventSocket) close(eventToken string) error {
+	_, err := p.contract.SubmitTransaction("CloseEventSocket", eventToken)
 	return fmt.Errorf("failed executing 'CloseEventSocket' transaction: %w", err)
 }
