@@ -16,3 +16,8 @@ message User {
   bool confirmed = 7;
   google.protobuf.Timestamp expireAt = 8;
 }
+
+message Users {
+  repeated User users = 1;
+  int64 count = 2;
+}

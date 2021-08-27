@@ -4,6 +4,7 @@ package chainmetric.identity.presenter;
 
 option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
 
+import "user.proto";
 import "validate/validate.proto";
 
 message AuthRequest {
@@ -15,7 +16,13 @@ message SetPasswordRequest {
   string passwordHash = 2 [(validate.rules).string = {min_bytes: 8 }];
 }
 
+message VaultSecret {
+  string token = 1;
+  string path = 2;
+}
+
 message AuthResponse {
-  string secretToken = 1;
-  string accessToken = 2;
+  User user = 1;
+  VaultSecret secret = 2;
+  string accessToken = 3;
 }

@@ -19,9 +19,9 @@ func NewAuthVault(sdk *hyperledger.SDK) *AuthVault {
 	}
 }
 
-func (p *AuthVault) Authenticate(orgID, userID, secretToken string) error {
+func (p *AuthVault) Authenticate(orgID, secretPath, secretToken string) error {
 	cert, key, err := repositories.NewIdentitiesVault(core.Vault, secretToken).
-		RetrieveFrom(fmt.Sprintf("auth/%s/login", userID))
+		RetrieveFrom(secretPath)
 	if err != nil {
 		return fmt.Errorf("failed to get credentials from Vault: %w", err)
 	}

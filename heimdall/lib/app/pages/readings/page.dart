@@ -10,12 +10,10 @@ import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/shared/extensions.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/svg_icon.dart';
-import 'package:charts_common/src/chart/common/canvas_shapes.dart'
-    show CanvasBarStack, CanvasRect;
+import 'package:charts_common/src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect; // ignore: implementation_imports
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports
-import 'package:charts_flutter/src/text_style.dart'
-    as style; // ignore: implementation_imports
+import 'package:charts_flutter/src/text_style.dart' as style; // ignore: implementation_imports
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';

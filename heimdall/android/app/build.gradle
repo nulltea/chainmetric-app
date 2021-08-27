@@ -1,3 +1,7 @@
+plugins {
+    id("co.uzzu.dotenv.gradle") version "1.1.0"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -21,6 +25,26 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def localMapsPropertiesFile = rootProject.file('local_maps.properties')
+if (localMapsPropertiesFile.exists()) {
+    project.logger.info('Load maps properties from local file')
+    localMapsPropertiesFile.withReader('UTF-8') { reader ->
+        mapsProperties.load(reader)
+    }
+} else {
+    project.logger.info('Load maps properties from environment')
+    try {
+        localProperties['MAPS_API_KEY'] = env.MAPS_API_KEY.value
+    } catch(NullPointerException e) {
+        project.logger.warn('Failed to load MAPS_API_KEY from environment.', e)
+    }
+}
+def mapsApiKey = localProperties.getProperty('MAPS_API_KEY')
+if(mapsApiKey == null){
+    mapsApiKey = ""
+    project.logger.error('Google Maps Api Key not configured. Set it in `local_maps.properties` or in the environment variable `MAPS_API_KEY`')
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -34,11 +58,13 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.chainmetric.network.heimdall"
+        applicationId "network.chainmetric.heimdall"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        manifestPlaceholders = [MAPS_API_KEY: mapsApiKey]
     }
 
     buildTypes {
@@ -56,4 +82,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation fileTree(dir: "src/main/libs", include: ['*.aar'])
 }

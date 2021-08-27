@@ -4,33 +4,45 @@ import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import plugins.Plugins
 
-class EventSocketHandler(sdk: hyperledger.SDK) : EventChannel.StreamHandler {
-    private val channels = mutableMapOf<String, events.EventChannel>()
+class EventSocketHandler(private val sdk: hyperledger.SDK) : EventChannel.StreamHandler {
+    private val channels = mutableMapOf<Int, events.EventChannel>()
 
     override fun onListen(event: Any?, events: EventChannel.EventSink?) {
         CoroutineScope(Dispatchers.IO).launch {
-            val args = (event as String).split(".")
-            when (val eventName = args[0]) {
-                "posted" -> {
-                    val chaincode = args[1]
-                    val metric = args[2]
-                    val channel = sdk.readings.subscribeFor(chaincode, metric)
-                    channels[event] = channel
+            val args = (event as List<*>)
+            when (val method = args[0]) {
+                "bind" -> {
+                    val chaincode = args[1] as String
+                    val argsJson = args[2] as String
+                    val channel = Plugins.newEventSocket(sdk, chaincode).bind(argsJson)
+                    channels[event.hashCode()] = channel
                     channel.setHandler {
                         artifact -> CoroutineScope(Dispatchers.Main).launch {
-                        events?.success(artifact)
-                    }
+                            events?.success(artifact)
+                        }
                     }
                 }
-                else -> throw IllegalStateException("Event '$eventName' unsupported")
+                "subscribe" -> {
+                    val chaincode = args[1] as String
+                    val eventName = args[1] as String
+                    val channel = Plugins.newEventSocket(sdk, chaincode).subscribe(eventName)
+                    channels[event.hashCode()] = channel
+                    channel.setHandler {
+                        artifact -> CoroutineScope(Dispatchers.Main).launch {
+                            events?.success(artifact)
+                        }
+                    }
+                }
+                else -> throw IllegalStateException("Event '$method' unsupported")
             }
         }
     }
 
     override fun onCancel(event: Any?) {
         CoroutineScope(Dispatchers.IO).launch {
-            channels[event]?.cancel()
+            channels[event.hashCode()]?.cancel()
         }
     }
 }

@@ -11,6 +11,8 @@ class AppTheme {
   static const Color cardBG = Color(0xFF1A1D29);
   static const Color inputBG = Color(0xFF1A1D29);
   static const Color appBarBG = Color(0xFF1A1D29);
+  static const Color labelColor = Color(0xFFACB1B8);
+  static const Color hintColor = Color(0xFF6E7681);
 
   static const Color error = Colors.red;
 
@@ -60,6 +62,37 @@ class AppTheme {
         fontWeight: FontWeight.normal,
         fontSize: 12,
       );
+
+  static ThemeData get themeData => ThemeData.dark().copyWith(
+      brightness: Brightness.dark,
+      backgroundColor: primaryBG,
+      scaffoldBackgroundColor: primaryBG,
+      primaryColor: primaryColor,
+      bottomAppBarTheme: ThemeData.dark().bottomAppBarTheme.copyWith(
+        color: appBarBG,
+      ),
+      textTheme: ThemeData.dark().textTheme.copyWith(
+        headline1: title1,
+        headline2: title2,
+        headline3: title3,
+        subtitle1: subtitle1,
+        subtitle2: subtitle2,
+        bodyText1: bodyText1,
+        bodyText2: bodyText1,
+      ),
+      cardColor: cardBG,
+      inputDecorationTheme: ThemeData.dark().inputDecorationTheme.copyWith(
+        fillColor: inputBG,
+        hintStyle: subtitle2.copyWith(color: hintColor),
+        labelStyle: subtitle1.copyWith(color: labelColor),
+        helperStyle: subtitle2,
+      ),
+      appBarTheme: ThemeData.dark().appBarTheme.copyWith(
+        backgroundColor: primaryColor,
+        actionsIconTheme: ThemeData.dark().iconTheme,
+        titleTextStyle: title2
+            .override(fontFamily: "IBM Plex Mono", fontSize: 28),
+      ));
 }
 
 extension TextStyleHelper on TextStyle {

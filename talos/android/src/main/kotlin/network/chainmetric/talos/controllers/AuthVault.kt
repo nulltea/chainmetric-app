@@ -15,7 +15,7 @@ class AuthVault(sdk: hyperledger.SDK) : MethodChannel.MethodCallHandler {
         CoroutineScope(Dispatchers.IO).launch {
             when (call.method) {
                 "authenticate" -> try {
-                    plugin.authenticate(call.argument("orgID"), call.argument("userID"),
+                    plugin.authenticate(call.argument("orgID"), call.argument("path"),
                             call.argument("token"))
                     withContext(Dispatchers.Main) {
                         result.success("Authenticated")

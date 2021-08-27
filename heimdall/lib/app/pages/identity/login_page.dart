@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/app/pages/identity/registration_page.dart';
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/utils/utils.dart';
-import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
-import 'package:chainmetric/models/identity/auth.dart';
-import 'package:chainmetric/app/theme/theme.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
+import 'package:chainmetric/usecase/login/helper.dart';
+import 'package:flutter/material.dart';
 import 'package:talos/talos.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,11 +21,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  AuthCredentials credentials = AuthCredentials();
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String? organization;
+
+  String? certificate;
+  String? privateKey;
   bool privateKeyVisibility = false;
+
+  String? email;
+  String? passcode;
+  bool passcodeVisibility = false;
+
+  bool certificateAuth = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: FormDropDownWidget(
                         height: 50,
-                        initialOption: credentials.organization,
+                        initialOption: organization,
                         icon: const Icon(
                           Icons.corporate_fare_sharp,
                         ),
@@ -79,68 +88,129 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                         onChanged: (value) {
-                          setState(() => credentials.organization = value);
+                          setState(() => organization = value);
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          filled: true,
-                          hintText: "Enter a certificate",
-                          labelText: "Certificate",
-                          enabledBorder: UnderlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
+                    if (certificateAuth)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            filled: true,
+                            hintText: "Enter a certificate",
+                            labelText: "Certificate",
+                            enabledBorder: UnderlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "You must provide certificate to identify you";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() => certificate = value);
+                          },
+                          maxLines: 5,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "You must provide certificate to identify you";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          setState(() => credentials.certificate = value);
-                        },
-                        maxLines: 5,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: TextFormField(
-                        obscureText: !privateKeyVisibility,
-                        decoration: InputDecoration(
-                          filled: true,
-                          hintText: "Enter a private key",
-                          labelText: "Private key",
-                          enabledBorder: const UnderlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          suffixIcon: InkWell(
-                            onTap: () => setState(
-                              () =>
-                                  privateKeyVisibility = !privateKeyVisibility,
-                            ),
-                            child: Icon(
-                              privateKeyVisibility
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
+                    if (certificateAuth)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: TextFormField(
+                          obscureText: !privateKeyVisibility,
+                          decoration: InputDecoration(
+                            filled: true,
+                            hintText: "Enter a private key",
+                            labelText: "Private key",
+                            enabledBorder: const UnderlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            suffixIcon: InkWell(
+                              onTap: () => setState(
+                                () => privateKeyVisibility =
+                                    !privateKeyVisibility,
+                              ),
+                              child: Icon(
+                                privateKeyVisibility
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
                             ),
                           ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "You must provide private key to identify you";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() =>
+                                privateKey = value.replaceAll("    ", "\n"));
+                          },
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "You must provide private key to identify you";
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          setState(() => credentials.privateKey =
-                              value.replaceAll("    ", "\n"));
-                        },
                       ),
-                    ),
+                    if (!certificateAuth)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            filled: true,
+                            hintText: "Enter your email",
+                            labelText: "Email",
+                            enabledBorder: UnderlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "You must provide email to identify you";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() => email = value);
+                          },
+                        ),
+                      ),
+                    if (!certificateAuth)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: TextFormField(
+                          obscureText: !privateKeyVisibility,
+                          decoration: InputDecoration(
+                            filled: true,
+                            hintText: "Enter a password",
+                            labelText: "Password",
+                            enabledBorder: const UnderlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            suffixIcon: InkWell(
+                              onTap: () => setState(
+                                () => passcodeVisibility =
+                                    !passcodeVisibility,
+                              ),
+                              child: Icon(
+                                passcodeVisibility
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "You must provide passcode to identify you";
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() => passcode = value);
+                          },
+                        ),
+                      ),
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: FormButtonWidget(
@@ -184,14 +254,21 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    credentials.organization = LocalData.organizations![0].mspID;
+    organization = LocalData.organizations![0].mspID;
   }
 
   Future<void> submitIdentity() async {
     if (formKey.currentState!.validate()) {
       try {
-        if (await Hyperledger.authenticate(credentials.organization!, credentials.certificate!, credentials.privateKey!)) {
-          widget.submitAuth!();
+        if (certificateAuth) {
+          if (await Hyperledger.authenticate(
+              organization!, certificate!, privateKey!)) {
+            widget.submitAuth!();
+          }
+        } else {
+          if (await LoginHelper(organization!).login(email!, passcode!)) {
+            widget.submitAuth!();
+          }
         }
       } on Exception catch (e) {
         ScaffoldMessenger.of(context)

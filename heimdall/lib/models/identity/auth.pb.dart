@@ -9,6 +9,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'package:chainmetric/models/identity/user.pb.dart' as $1;
+
 class AuthRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'email')
@@ -117,21 +119,87 @@ class SetPasswordRequest extends $pb.GeneratedMessage {
   void clearPasswordHash() => clearField(2);
 }
 
+class VaultSecret extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VaultSecret', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'token')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'path')
+    ..hasRequiredFields = false
+  ;
+
+  VaultSecret._() : super();
+  factory VaultSecret({
+    $core.String? token,
+    $core.String? path,
+  }) {
+    final _result = create();
+    if (token != null) {
+      _result.token = token;
+    }
+    if (path != null) {
+      _result.path = path;
+    }
+    return _result;
+  }
+  factory VaultSecret.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory VaultSecret.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  VaultSecret clone() => VaultSecret()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  VaultSecret copyWith(void Function(VaultSecret) updates) => super.copyWith((message) => updates(message as VaultSecret)) as VaultSecret; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static VaultSecret create() => VaultSecret._();
+  VaultSecret createEmptyInstance() => create();
+  static $pb.PbList<VaultSecret> createRepeated() => $pb.PbList<VaultSecret>();
+  @$core.pragma('dart2js:noInline')
+  static VaultSecret getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VaultSecret>(create);
+  static VaultSecret? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get token => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set token($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasToken() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearToken() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get path => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set path($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPath() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPath() => clearField(2);
+}
+
 class AuthResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'secretToken', protoName: 'secretToken')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'accessToken', protoName: 'accessToken')
+    ..aOM<$1.User>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'user', subBuilder: $1.User.create)
+    ..aOM<VaultSecret>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'secret', subBuilder: VaultSecret.create)
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'accessToken', protoName: 'accessToken')
     ..hasRequiredFields = false
   ;
 
   AuthResponse._() : super();
   factory AuthResponse({
-    $core.String? secretToken,
+    $1.User? user,
+    VaultSecret? secret,
     $core.String? accessToken,
   }) {
     final _result = create();
-    if (secretToken != null) {
-      _result.secretToken = secretToken;
+    if (user != null) {
+      _result.user = user;
+    }
+    if (secret != null) {
+      _result.secret = secret;
     }
     if (accessToken != null) {
       _result.accessToken = accessToken;
@@ -160,21 +228,34 @@ class AuthResponse extends $pb.GeneratedMessage {
   static AuthResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get secretToken => $_getSZ(0);
+  $1.User get user => $_getN(0);
   @$pb.TagNumber(1)
-  set secretToken($core.String v) { $_setString(0, v); }
+  set user($1.User v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasSecretToken() => $_has(0);
+  $core.bool hasUser() => $_has(0);
   @$pb.TagNumber(1)
-  void clearSecretToken() => clearField(1);
+  void clearUser() => clearField(1);
+  @$pb.TagNumber(1)
+  $1.User ensureUser() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get accessToken => $_getSZ(1);
+  VaultSecret get secret => $_getN(1);
   @$pb.TagNumber(2)
-  set accessToken($core.String v) { $_setString(1, v); }
+  set secret(VaultSecret v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasAccessToken() => $_has(1);
+  $core.bool hasSecret() => $_has(1);
   @$pb.TagNumber(2)
-  void clearAccessToken() => clearField(2);
+  void clearSecret() => clearField(2);
+  @$pb.TagNumber(2)
+  VaultSecret ensureSecret() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.String get accessToken => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set accessToken($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasAccessToken() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAccessToken() => clearField(3);
 }
 

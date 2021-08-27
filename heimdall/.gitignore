@@ -44,14 +44,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-lib/main.reflectable.dart
-
-# Environmental variables
-**/.env
-
-# Main config file
-assets/config.yaml
-assets/certs
-
-*.g.dart

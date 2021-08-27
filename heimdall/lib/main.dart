@@ -39,46 +39,12 @@ class _AppState extends State<App> {
     _initOverlay();
   }
 
-  ThemeData mainTheme() => darkTheme;
-
-  ThemeData darkTheme = ThemeData.dark().copyWith(
-      brightness: Brightness.dark,
-      backgroundColor: AppTheme.primaryBG,
-      scaffoldBackgroundColor: AppTheme.primaryBG,
-      primaryColor: AppTheme.primaryColor,
-      bottomAppBarTheme: ThemeData.dark().bottomAppBarTheme.copyWith(
-            color: AppTheme.appBarBG,
-          ),
-      textTheme: ThemeData.dark().textTheme.copyWith(
-            headline1: AppTheme.title1,
-            headline2: AppTheme.title2,
-            headline3: AppTheme.title3,
-            subtitle1: AppTheme.subtitle1,
-            subtitle2: AppTheme.subtitle2,
-            bodyText1: AppTheme.bodyText1,
-            bodyText2: AppTheme.bodyText1,
-          ),
-      cardColor: AppTheme.cardBG,
-      inputDecorationTheme: ThemeData.dark().inputDecorationTheme.copyWith(
-            fillColor: AppTheme.inputBG,
-            hintStyle:
-                AppTheme.subtitle2.copyWith(color: ThemeData.dark().hintColor),
-            labelStyle: AppTheme.subtitle1,
-            helperStyle: AppTheme.subtitle2,
-          ),
-      appBarTheme: ThemeData.dark().appBarTheme.copyWith(
-            backgroundColor: AppTheme.primaryColor,
-            actionsIconTheme: ThemeData.dark().iconTheme,
-            titleTextStyle: AppTheme.title2
-                .override(fontFamily: "IBM Plex Mono", fontSize: 28),
-          ));
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Chainmetric admin application",
-      theme: mainTheme(),
-      darkTheme: darkTheme,
+      theme: AppTheme.themeData,
+      darkTheme: AppTheme.themeData,
       home: _isLoading
           ? LoadingSplash()
           : _requireAuth
@@ -110,7 +76,7 @@ class _AppState extends State<App> {
         content: const Center(),
       ),
       "loading": CustomOverlayScreen(
-        backgroundColor: darkTheme.primaryColor.withAlpha(225),
+        backgroundColor: AppTheme.primaryBG.withAlpha(225),
         content: LoadingBouncingGrid.square(
             size: 75,
             backgroundColor: Colors.teal.shade600,
