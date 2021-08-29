@@ -43,3 +43,13 @@ const RegistrationResponse$json = const {
 
 /// Descriptor for `RegistrationResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List registrationResponseDescriptor = $convert.base64Decode('ChRSZWdpc3RyYXRpb25SZXNwb25zZRI4CgR1c2VyGAEgASgLMiQuY2hhaW5tZXRyaWMuaWRlbnRpdHkucHJlc2VudGVyLlVzZXJSBHVzZXISIAoLYWNjZXNzVG9rZW4YAiABKAlSC2FjY2Vzc1Rva2Vu');
+@$core.Deprecated('Use enrollmentResponseDescriptor instead')
+const EnrollmentResponse$json = const {
+  '1': 'EnrollmentResponse',
+  '2': const [
+    const {'1': 'initialPassword', '3': 1, '4': 1, '5': 9, '10': 'initialPassword'},
+  ],
+};
+
+/// Descriptor for `EnrollmentResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List enrollmentResponseDescriptor = $convert.base64Decode('ChJFbnJvbGxtZW50UmVzcG9uc2USKAoPaW5pdGlhbFBhc3N3b3JkGAEgASgJUg9pbml0aWFsUGFzc3dvcmQ=');

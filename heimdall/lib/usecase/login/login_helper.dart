@@ -1,40 +1,47 @@
 import 'dart:convert';
 import 'package:chainmetric/platform/repositories/preferences_shared.dart';
+import 'package:chainmetric/shared/logger.dart';
 import 'package:crypto/crypto.dart';
 
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
-import 'package:chainmetric/infrastructure/services/auth_grpc.dart';
+import 'package:chainmetric/infrastructure/services/access_grpc.dart';
 import 'package:chainmetric/models/identity/auth.pb.dart';
 import 'package:flutter/services.dart';
-import 'package:logging/logging.dart';
+import 'package:grpc/grpc.dart';
 import 'package:talos/talos.dart';
 
 class LoginHelper {
   final String _organization;
-  final _logger = Logger('LoginHelper');
 
   LoginHelper(this._organization);
 
   Future<bool> login(String email, String passcode) async {
-    AuthResponse resp;
+    FabricCredentialsResponse resp;
 
     try {
-      resp = await AuthService(_organization,
-              certificate: await CerificatesResolver(_organization)
+      resp = await AccessService(_organization,
+              certificate: await CertificatesResolver(_organization)
                   .resolveBytes("identity-client"))
-          .authenticate(AuthRequest(
-              email: email, passwordHash: generatePasswordHash(passcode)));
-    } on Exception {
+          .requestFabricCredentials(FabricCredentialsRequest(
+              email: email, passcode: generatePasswordHash(passcode)));
+    } on GrpcError catch (e) {
+      switch (e.code) {
+        case StatusCode.invalidArgument:
+          throw Exception(e.message);
+        default:
+          logger.e("failed request Fabric credentials: [${e.codeName}] ${e.message}");
+      }
+
       return false;
     }
 
-    Preferences.accessToken = resp.accessToken;
+    Preferences.accessToken = resp.apiAccessToken;
     bool success;
 
     try {
       success = await AuthVault.authenticate(_organization, resp.secret.path, resp.secret.token);
     } on PlatformException catch (e) {
-      _logger.severe("failed to authificate via Vault: ${e.toString()}");
+      logger.e("failed to authenticate via Vault: ${e.message}");
       return false;
     }
 

@@ -27,7 +27,7 @@ grpc-gen:
 		./assets/proto/services/*.proto
 
 	find . -type f -name '*.pb*.dart' \
-		-exec sed -i "s/'\(enrollment\|auth\|user\).pb.dart'/'package:chainmetric\/models\/identity\/\1.pb.dart'/g" {} +
+		-exec sed -i "s/'\(enrollment\|auth\|user\|common\).pb.dart'/'package:chainmetric\/models\/identity\/\1.pb.dart'/g" {} +
 	find . -type f -name '*.pb*.dart' \
 		-exec sed -i "s/google\/protobuf/package:chainmetric\/models\/generated\/google\/protobuf/g" {} +
 

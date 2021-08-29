@@ -25,3 +25,14 @@ const User$json = const {
 
 /// Descriptor for `User`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userDescriptor = $convert.base64Decode('CgRVc2VyEg4KAmlkGAEgASgJUgJpZBIcCglmaXJzdG5hbWUYAiABKAlSCWZpcnN0bmFtZRIaCghsYXN0bmFtZRgDIAEoCVIIbGFzdG5hbWUSFAoFZW1haWwYBCABKAlSBWVtYWlsEhIKBHJvbGUYBSABKAlSBHJvbGUSOAoJY3JlYXRlZEF0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJY3JlYXRlZEF0EhwKCWNvbmZpcm1lZBgHIAEoCFIJY29uZmlybWVkEjYKCGV4cGlyZUF0GAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIIZXhwaXJlQXQ=');
+@$core.Deprecated('Use usersDescriptor instead')
+const Users$json = const {
+  '1': 'Users',
+  '2': const [
+    const {'1': 'users', '3': 1, '4': 3, '5': 11, '6': '.chainmetric.identity.presenter.User', '10': 'users'},
+    const {'1': 'count', '3': 2, '4': 1, '5': 3, '10': 'count'},
+  ],
+};
+
+/// Descriptor for `Users`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List usersDescriptor = $convert.base64Decode('CgVVc2VycxI6CgV1c2VycxgBIAMoCzIkLmNoYWlubWV0cmljLmlkZW50aXR5LnByZXNlbnRlci5Vc2VyUgV1c2VycxIUCgVjb3VudBgCIAEoA1IFY291bnQ=');

@@ -42,7 +42,7 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(),
                 child: AutoSizeText(
-                  'Registation',
+                  "Registration",
                   textAlign: TextAlign.center,
                   style: AppTheme.title1
                       .override(fontFamily: "IBM Plex Mono", fontSize: 48),
@@ -175,7 +175,7 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
 
     try {
       await IdentityService(organization!,
-              certificate: await CerificatesResolver(organization!)
+              certificate: await CertificatesResolver(organization!)
                   .resolveBytes("identity-client"))
           .enroll(request);
     } on Exception catch (e) {

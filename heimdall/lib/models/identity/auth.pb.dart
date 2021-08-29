@@ -11,47 +11,47 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'package:chainmetric/models/identity/user.pb.dart' as $1;
 
-class AuthRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+class FabricCredentialsRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'FabricCredentialsRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'email')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'passwordHash', protoName: 'passwordHash')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'passcode')
     ..hasRequiredFields = false
   ;
 
-  AuthRequest._() : super();
-  factory AuthRequest({
+  FabricCredentialsRequest._() : super();
+  factory FabricCredentialsRequest({
     $core.String? email,
-    $core.String? passwordHash,
+    $core.String? passcode,
   }) {
     final _result = create();
     if (email != null) {
       _result.email = email;
     }
-    if (passwordHash != null) {
-      _result.passwordHash = passwordHash;
+    if (passcode != null) {
+      _result.passcode = passcode;
     }
     return _result;
   }
-  factory AuthRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AuthRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory FabricCredentialsRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory FabricCredentialsRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  AuthRequest clone() => AuthRequest()..mergeFromMessage(this);
+  FabricCredentialsRequest clone() => FabricCredentialsRequest()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  AuthRequest copyWith(void Function(AuthRequest) updates) => super.copyWith((message) => updates(message as AuthRequest)) as AuthRequest; // ignore: deprecated_member_use
+  FabricCredentialsRequest copyWith(void Function(FabricCredentialsRequest) updates) => super.copyWith((message) => updates(message as FabricCredentialsRequest)) as FabricCredentialsRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static AuthRequest create() => AuthRequest._();
-  AuthRequest createEmptyInstance() => create();
-  static $pb.PbList<AuthRequest> createRepeated() => $pb.PbList<AuthRequest>();
+  static FabricCredentialsRequest create() => FabricCredentialsRequest._();
+  FabricCredentialsRequest createEmptyInstance() => create();
+  static $pb.PbList<FabricCredentialsRequest> createRepeated() => $pb.PbList<FabricCredentialsRequest>();
   @$core.pragma('dart2js:noInline')
-  static AuthRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthRequest>(create);
-  static AuthRequest? _defaultInstance;
+  static FabricCredentialsRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FabricCredentialsRequest>(create);
+  static FabricCredentialsRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get email => $_getSZ(0);
@@ -63,60 +63,92 @@ class AuthRequest extends $pb.GeneratedMessage {
   void clearEmail() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get passwordHash => $_getSZ(1);
+  $core.String get passcode => $_getSZ(1);
   @$pb.TagNumber(2)
-  set passwordHash($core.String v) { $_setString(1, v); }
+  set passcode($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasPasswordHash() => $_has(1);
+  $core.bool hasPasscode() => $_has(1);
   @$pb.TagNumber(2)
-  void clearPasswordHash() => clearField(2);
+  void clearPasscode() => clearField(2);
 }
 
-class SetPasswordRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'SetPasswordRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'passwordHash', protoName: 'passwordHash')
+class FabricCredentialsResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'FabricCredentialsResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..aOM<VaultSecret>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'secret', subBuilder: VaultSecret.create)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'apiAccessToken', protoName: 'apiAccessToken')
+    ..aOM<$1.User>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'user', subBuilder: $1.User.create)
     ..hasRequiredFields = false
   ;
 
-  SetPasswordRequest._() : super();
-  factory SetPasswordRequest({
-    $core.String? passwordHash,
+  FabricCredentialsResponse._() : super();
+  factory FabricCredentialsResponse({
+    VaultSecret? secret,
+    $core.String? apiAccessToken,
+    $1.User? user,
   }) {
     final _result = create();
-    if (passwordHash != null) {
-      _result.passwordHash = passwordHash;
+    if (secret != null) {
+      _result.secret = secret;
+    }
+    if (apiAccessToken != null) {
+      _result.apiAccessToken = apiAccessToken;
+    }
+    if (user != null) {
+      _result.user = user;
     }
     return _result;
   }
-  factory SetPasswordRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory SetPasswordRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory FabricCredentialsResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory FabricCredentialsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  SetPasswordRequest clone() => SetPasswordRequest()..mergeFromMessage(this);
+  FabricCredentialsResponse clone() => FabricCredentialsResponse()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  SetPasswordRequest copyWith(void Function(SetPasswordRequest) updates) => super.copyWith((message) => updates(message as SetPasswordRequest)) as SetPasswordRequest; // ignore: deprecated_member_use
+  FabricCredentialsResponse copyWith(void Function(FabricCredentialsResponse) updates) => super.copyWith((message) => updates(message as FabricCredentialsResponse)) as FabricCredentialsResponse; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static SetPasswordRequest create() => SetPasswordRequest._();
-  SetPasswordRequest createEmptyInstance() => create();
-  static $pb.PbList<SetPasswordRequest> createRepeated() => $pb.PbList<SetPasswordRequest>();
+  static FabricCredentialsResponse create() => FabricCredentialsResponse._();
+  FabricCredentialsResponse createEmptyInstance() => create();
+  static $pb.PbList<FabricCredentialsResponse> createRepeated() => $pb.PbList<FabricCredentialsResponse>();
   @$core.pragma('dart2js:noInline')
-  static SetPasswordRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SetPasswordRequest>(create);
-  static SetPasswordRequest? _defaultInstance;
+  static FabricCredentialsResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FabricCredentialsResponse>(create);
+  static FabricCredentialsResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  VaultSecret get secret => $_getN(0);
+  @$pb.TagNumber(1)
+  set secret(VaultSecret v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasSecret() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSecret() => clearField(1);
+  @$pb.TagNumber(1)
+  VaultSecret ensureSecret() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $core.String get passwordHash => $_getSZ(0);
+  $core.String get apiAccessToken => $_getSZ(1);
   @$pb.TagNumber(2)
-  set passwordHash($core.String v) { $_setString(0, v); }
+  set apiAccessToken($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasPasswordHash() => $_has(0);
+  $core.bool hasApiAccessToken() => $_has(1);
   @$pb.TagNumber(2)
-  void clearPasswordHash() => clearField(2);
+  void clearApiAccessToken() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $1.User get user => $_getN(2);
+  @$pb.TagNumber(3)
+  set user($1.User v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasUser() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearUser() => clearField(3);
+  @$pb.TagNumber(3)
+  $1.User ensureUser() => $_ensure(2);
 }
 
 class VaultSecret extends $pb.GeneratedMessage {
@@ -180,82 +212,64 @@ class VaultSecret extends $pb.GeneratedMessage {
   void clearPath() => clearField(2);
 }
 
-class AuthResponse extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AuthResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
-    ..aOM<$1.User>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'user', subBuilder: $1.User.create)
-    ..aOM<VaultSecret>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'secret', subBuilder: VaultSecret.create)
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'accessToken', protoName: 'accessToken')
+class UpdatePasswordRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UpdatePasswordRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'prevPasscode', protoName: 'prevPasscode')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'newPasscode', protoName: 'newPasscode')
     ..hasRequiredFields = false
   ;
 
-  AuthResponse._() : super();
-  factory AuthResponse({
-    $1.User? user,
-    VaultSecret? secret,
-    $core.String? accessToken,
+  UpdatePasswordRequest._() : super();
+  factory UpdatePasswordRequest({
+    $core.String? prevPasscode,
+    $core.String? newPasscode,
   }) {
     final _result = create();
-    if (user != null) {
-      _result.user = user;
+    if (prevPasscode != null) {
+      _result.prevPasscode = prevPasscode;
     }
-    if (secret != null) {
-      _result.secret = secret;
-    }
-    if (accessToken != null) {
-      _result.accessToken = accessToken;
+    if (newPasscode != null) {
+      _result.newPasscode = newPasscode;
     }
     return _result;
   }
-  factory AuthResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AuthResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory UpdatePasswordRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory UpdatePasswordRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  AuthResponse clone() => AuthResponse()..mergeFromMessage(this);
+  UpdatePasswordRequest clone() => UpdatePasswordRequest()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  AuthResponse copyWith(void Function(AuthResponse) updates) => super.copyWith((message) => updates(message as AuthResponse)) as AuthResponse; // ignore: deprecated_member_use
+  UpdatePasswordRequest copyWith(void Function(UpdatePasswordRequest) updates) => super.copyWith((message) => updates(message as UpdatePasswordRequest)) as UpdatePasswordRequest; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static AuthResponse create() => AuthResponse._();
-  AuthResponse createEmptyInstance() => create();
-  static $pb.PbList<AuthResponse> createRepeated() => $pb.PbList<AuthResponse>();
+  static UpdatePasswordRequest create() => UpdatePasswordRequest._();
+  UpdatePasswordRequest createEmptyInstance() => create();
+  static $pb.PbList<UpdatePasswordRequest> createRepeated() => $pb.PbList<UpdatePasswordRequest>();
   @$core.pragma('dart2js:noInline')
-  static AuthResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AuthResponse>(create);
-  static AuthResponse? _defaultInstance;
+  static UpdatePasswordRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<UpdatePasswordRequest>(create);
+  static UpdatePasswordRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $1.User get user => $_getN(0);
+  $core.String get prevPasscode => $_getSZ(0);
   @$pb.TagNumber(1)
-  set user($1.User v) { setField(1, v); }
+  set prevPasscode($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasUser() => $_has(0);
+  $core.bool hasPrevPasscode() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUser() => clearField(1);
-  @$pb.TagNumber(1)
-  $1.User ensureUser() => $_ensure(0);
+  void clearPrevPasscode() => clearField(1);
 
   @$pb.TagNumber(2)
-  VaultSecret get secret => $_getN(1);
+  $core.String get newPasscode => $_getSZ(1);
   @$pb.TagNumber(2)
-  set secret(VaultSecret v) { setField(2, v); }
+  set newPasscode($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasSecret() => $_has(1);
+  $core.bool hasNewPasscode() => $_has(1);
   @$pb.TagNumber(2)
-  void clearSecret() => clearField(2);
-  @$pb.TagNumber(2)
-  VaultSecret ensureSecret() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  $core.String get accessToken => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set accessToken($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasAccessToken() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearAccessToken() => clearField(3);
+  void clearNewPasscode() => clearField(2);
 }
 

@@ -192,7 +192,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     try {
       final response = await IdentityService(organization!,
-              certificate: await CerificatesResolver(organization!)
+              certificate: await CertificatesResolver(organization!)
                   .resolveBytes("identity-client"))
           .register(request);
 

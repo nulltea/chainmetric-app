@@ -7,6 +7,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart' as $0;
@@ -158,5 +159,60 @@ class User extends $pb.GeneratedMessage {
   void clearExpireAt() => clearField(8);
   @$pb.TagNumber(8)
   $0.Timestamp ensureExpireAt() => $_ensure(7);
+}
+
+class Users extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Users', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..pc<User>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'users', $pb.PbFieldType.PM, subBuilder: User.create)
+    ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'count')
+    ..hasRequiredFields = false
+  ;
+
+  Users._() : super();
+  factory Users({
+    $core.Iterable<User>? users,
+    $fixnum.Int64? count,
+  }) {
+    final _result = create();
+    if (users != null) {
+      _result.users.addAll(users);
+    }
+    if (count != null) {
+      _result.count = count;
+    }
+    return _result;
+  }
+  factory Users.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Users.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Users clone() => Users()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Users copyWith(void Function(Users) updates) => super.copyWith((message) => updates(message as Users)) as Users; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Users create() => Users._();
+  Users createEmptyInstance() => create();
+  static $pb.PbList<Users> createRepeated() => $pb.PbList<Users>();
+  @$core.pragma('dart2js:noInline')
+  static Users getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Users>(create);
+  static Users? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<User> get users => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get count => $_getI64(1);
+  @$pb.TagNumber(2)
+  set count($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasCount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCount() => clearField(2);
 }
 

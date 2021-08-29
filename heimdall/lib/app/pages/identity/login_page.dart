@@ -7,9 +7,10 @@ import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
-import 'package:chainmetric/usecase/login/helper.dart';
+import 'package:chainmetric/usecase/login/login_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:talos/talos.dart';
+import 'package:chainmetric/app/utils/utils.dart' as utils;
 
 class LoginPage extends StatefulWidget {
   final Function? submitAuth;
@@ -180,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: TextFormField(
-                          obscureText: !privateKeyVisibility,
+                          obscureText: !passcodeVisibility,
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter a password",
@@ -271,8 +272,7 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
       } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        utils.displayError(context, e);
       }
     }
   }

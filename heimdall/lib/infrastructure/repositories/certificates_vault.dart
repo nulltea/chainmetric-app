@@ -1,16 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart' show rootBundle;
 
-class CerificatesResolver {
+class CertificatesResolver {
   final String organization;
 
-  CerificatesResolver(this.organization);
+  CertificatesResolver(this.organization);
 
   Future<String> resolve(String key) =>
       rootBundle.loadString("assets/certs/$key.pem");
 
   Future<List<int>> resolveBytes(String key) async {
-    return utf8.encode(await resolve(key));
+    final data = await rootBundle.load("assets/certs/$key.pem");
+    final certBytes = data.buffer.asUint8List();
+    return certBytes;
   }
 }

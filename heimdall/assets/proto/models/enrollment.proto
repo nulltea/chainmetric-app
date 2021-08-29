@@ -24,3 +24,7 @@ message RegistrationResponse {
   User user = 1;
   string accessToken = 2;
 }
+
+message EnrollmentResponse {
+  string initialPassword = 1;
+}

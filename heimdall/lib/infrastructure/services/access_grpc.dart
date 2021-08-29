@@ -1,10 +1,10 @@
-import 'package:chainmetric/infrastructure/services/auth_grpc.pbgrpc.dart';
+import 'package:chainmetric/infrastructure/services/access_grpc.pbgrpc.dart';
 import 'package:grpc/grpc.dart' as grpc;
 
-class AuthService extends AuthServiceClient {
+class AccessService extends AccessServiceClient {
   final String organization;
 
-  AuthService(this.organization,
+  AccessService(this.organization,
       {grpc.ClientChannel? channel, List<int>? certificate})
       : super(channel ??
       grpc.ClientChannel("identity.$organization.org.chainmetric.network",
