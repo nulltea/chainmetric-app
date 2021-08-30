@@ -22,6 +22,7 @@ func New() *SDK {
 // SetupConnectionToChannel preforms initialization of Fabric gateway.Gateway client with given `config`,
 // and makes connection attempt to gateway.Network on specified `channel`.
 func (sdk *SDK) SetupConnectionToChannel(configRaw, channel, username string) error {
+	fmt.Println("SetupConnectionToChannel ->", "username:", username)
 	gw, err := gateway.Connect(
 		gateway.WithConfig(config.FromRaw([]byte(configRaw), "yaml")),
 		gateway.WithIdentity(sdk.Wallet, username),

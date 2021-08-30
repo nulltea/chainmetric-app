@@ -21,10 +21,10 @@ func (sdk *SDK) InitWallet(path string) error {
 // IdentityRequired determines whether the signing identity is required for using SDK.
 func (sdk *SDK) IdentityRequired() bool {
 	if identities, err := sdk.Wallet.List(); err == nil && len(identities) > 0 {
-		return true
+		return false
 	}
 
-	return false
+	return true
 }
 
 // GetIdentities returns list of signing identities stored in the gateway.Wallet.
@@ -36,14 +36,15 @@ func (sdk *SDK) GetIdentities() (string, error) {
 	}
 }
 
-// PutX509Identity adds signing identity with given `key` and `cert` to the gateway.Wallet.
-func (sdk *SDK) PutX509Identity(username, org, key, cert string) error {
-	if !sdk.Exists(username) {
-		identity := gateway.NewX509Identity(org, cert, key)
-		return sdk.Put(username, identity)
-	}
-
-	return nil
+// PutX509Identity adds signing identity with given `cert` and `key` pair to the gateway.Wallet.
+func (sdk *SDK) PutX509Identity(username, org, cert, key string) error {
+	fmt.Println("username:", username, "org:", org)
+	fmt.Println("Cert:")
+	fmt.Println(string(cert))
+	fmt.Println("Key:")
+	fmt.Println(string(key))
+	identity := gateway.NewX509Identity(org, cert, key)
+	return sdk.Put(username, identity)
 }
 
 // RemoveIdentity removes signing identity from the gateway.Wallet.

@@ -7,9 +7,11 @@ import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
+import 'package:chainmetric/models/identity/app_identity.dart';
 import 'package:chainmetric/models/identity/enrollment.pb.dart';
+import 'package:chainmetric/models/identity/user.dart';
+import 'package:chainmetric/platform/repositories/appidentities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
-import 'package:chainmetric/platform/repositories/preferences_shared.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -40,7 +42,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(),
                 child: AutoSizeText(
-                  'Registation',
+                  "Registration",
                   textAlign: TextAlign.center,
                   style: AppTheme.title1
                       .override(fontFamily: "IBM Plex Mono", fontSize: 48),
@@ -189,12 +191,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
     if (!formKey.currentState!.validate()) return;
 
     try {
-      final response = await IdentityService(organization!,
+      final resp = await IdentityService(organization!,
               certificate: await CertificatesResolver(organization!)
                   .resolveBytes("identity-client"))
           .register(request);
 
-      Preferences.accessToken = response.accessToken;
+      AppIdentities.put(
+          AppIdentity(organization!, resp.user.username, accessToken: resp.accessToken)
+      );
     } on Exception catch (e) {
       utils.displayError(context, e);
     }

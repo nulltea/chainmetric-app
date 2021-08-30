@@ -37,8 +37,8 @@ class FabricHandler(private val sdk: fabric.SDK): MethodChannel.MethodCallHandle
                     sdk.putX509Identity(
                         call.argument("username"),
                         call.argument("org"),
+                        call.argument("cert"),
                         call.argument("key"),
-                        call.argument("cert")
                     )
                     withContext(Dispatchers.Main) {
                         result.success(0)

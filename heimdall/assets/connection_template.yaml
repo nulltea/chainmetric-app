@@ -6,7 +6,7 @@ description: Connection profile configuration for chipa-inu owned application
 version: 1.0
 
 client:
-  organization: chipa-inu
+  organization: {organization}
   channel: supply-channel
   cryptoconfig:
     path: /crypto-config

@@ -36,7 +36,7 @@ class Fabric {
       String certificate, String signingKey, {String username = "appUser"}
   ) => _channel.invokeMethod("identity_put", {
       "username": username,
-      "orgID": organization,
+      "org": organization,
       "cert": certificate,
       "key": signingKey,
     });

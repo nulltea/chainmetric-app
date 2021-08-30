@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:chainmetric/platform/repositories/preferences_shared.dart';
+import 'package:chainmetric/platform/repositories/paired_devices_shared.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -16,7 +16,7 @@ class Bluetooth {
   static Map<String, DeviceDisconnectFunc> connectedDevices = {};
 
   static Future<void> init() {
-    pairedDevices = Preferences.pairedDevices;
+    pairedDevices = PairedDevices.pairedDevices;
     return driver.initialize();
   }
 
@@ -34,7 +34,7 @@ class Bluetooth {
             ..advertisedName = device.name
             ..rssi = device.rssi;
 
-          Preferences.pairedDevices = pairedDevices;
+          PairedDevices.pairedDevices = pairedDevices;
         }
         onFound(device);
       }
@@ -72,7 +72,7 @@ class Bluetooth {
   static Future<void> forgetDevice(String deviceID) async {
     if (isConnected(deviceID)) connectedDevices[deviceID]!();
     pairedDevices.remove(deviceID);
-    Preferences.pairedDevices = pairedDevices;
+    PairedDevices.pairedDevices = pairedDevices;
   }
 
   static String? getHardwareID(String deviceID) {

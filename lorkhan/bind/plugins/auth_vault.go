@@ -9,8 +9,8 @@ import (
 )
 
 type (
-	// AuthVault defines a plugin for authenticating to Fabric network via Vault.
-	AuthVault struct {
+	// VaultAuthenticator defines a plugin for authenticating to Fabric network via Vault.
+	VaultAuthenticator struct {
 		sdk *fabric.SDK
 		client *vault.Client
 	}
@@ -22,18 +22,18 @@ type (
 	}
 )
 
-// NewAuthVault constructs new instance of AuthVault plugin.
-func NewAuthVault(sdk *fabric.SDK) *AuthVault {
+// NewVaultAuthenticator constructs new instance of VaultAuthenticator plugin.
+func NewVaultAuthenticator(sdk *fabric.SDK) *VaultAuthenticator {
 	client, _ := vault.NewClient(vault.DefaultConfig())
 
-	return &AuthVault{
+	return &VaultAuthenticator{
 		sdk: sdk,
 		client: client,
 	}
 }
 
 // Init performs initialization of the AuthVault plugin.
-func (p *AuthVault) Init(config *VaultConfig) error {
+func (p *VaultAuthenticator) Init(config *VaultConfig) error {
 	if err := p.client.SetAddress(config.Address); err != nil {
 		return fmt.Errorf("invalid address given: %w", err)
 	}
@@ -45,13 +45,13 @@ func (p *AuthVault) Init(config *VaultConfig) error {
 	return nil
 }
 
-// Authenticate requests Fabric identity x509 credentials and puts those into the fabric.SDK wallet.
-func (p *AuthVault) Authenticate(orgID, secretPath, userToken string) error {
+// FetchVaultIdentity requests Fabric identity x509 credentials and puts those into the fabric.SDK wallet.
+func (p *VaultAuthenticator) FetchVaultIdentity(username, org, secretPath, userToken string) error {
 	cert, key, err := repositories.NewIdentitiesVault(p.client, userToken).
 		RetrieveFrom(secretPath)
 	if err != nil {
 		return fmt.Errorf("failed to get credentials from Vault: %w", err)
 	}
 
-	return p.sdk.PutX509Identity("", orgID, string(cert), string(key))
+	return p.sdk.PutX509Identity(username, org, string(cert), string(key))
 }

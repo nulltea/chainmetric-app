@@ -1,4 +1,5 @@
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
+import 'package:chainmetric/platform/repositories/appidentities_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
@@ -53,9 +54,17 @@ class _ProfileTabState extends State<ProfileTab> {
   void _showMenu(BuildContext context) {
     showModalMenu(context: context, options: [
       ModalMenuOption(
+        title: "Add identity",
+        icon: Icons.person_add,
+        action: () => throw UnimplementedError(),
+      ),
+      ModalMenuOption(
         title: "Log out",
         icon: Icons.logout,
-        action: () => Fabric.removeIdentity(),
+        action: () {
+          Fabric.removeIdentity(username: AppIdentities.current!.username);
+          Navigator.of(context).build(context);
+        },
       ),
     ]);
   }

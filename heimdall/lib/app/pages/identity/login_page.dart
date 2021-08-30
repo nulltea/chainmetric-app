@@ -97,13 +97,17 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: TextFormField(
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter a certificate",
                             labelText: "Certificate",
-                            enabledBorder: UnderlineInputBorder(
+                            enabledBorder: const UnderlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
+                            suffixIcon: InkWell(
+                              onTap: () {},
+                              child: const Icon(Icons.attach_file),
+                            ),
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -121,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: TextFormField(
-                          obscureText: !privateKeyVisibility,
                           decoration: InputDecoration(
                             filled: true,
                             hintText: "Enter a private key",
@@ -130,15 +133,8 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
                             suffixIcon: InkWell(
-                              onTap: () => setState(
-                                () => privateKeyVisibility =
-                                    !privateKeyVisibility,
-                              ),
-                              child: Icon(
-                                privateKeyVisibility
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                              ),
+                              onTap: () {},
+                              child: const Icon(Icons.attach_file),
                             ),
                           ),
                           validator: (value) {
@@ -151,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                             setState(() =>
                                 privateKey = value.replaceAll("    ", "\n"));
                           },
+                          maxLines: 2,
                         ),
                       ),
                     if (!certificateAuth)
@@ -233,7 +230,12 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: 12,
                         ),
                       ),
-                    )
+                    ),
+                    TextButton(
+                        onPressed: () => setState(() => certificateAuth = !certificateAuth),
+                        child: Text(!certificateAuth
+                            ? "Login with certificate instead"
+                            : "Back to password login"))
                   ].expand((widget) => [
                         widget,
                         const SizedBox(

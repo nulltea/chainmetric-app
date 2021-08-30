@@ -9,7 +9,7 @@ import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 import 'package:chainmetric/platform/adapters/bluetooth.dart';
-import 'package:chainmetric/platform/repositories/preferences_shared.dart';
+import 'package:chainmetric/platform/repositories/paired_devices_shared.dart';
 import 'package:chainmetric/main.dart';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
@@ -91,7 +91,7 @@ class GeoService {
 
   static Future<void> tryShareLocation(
       Map<String, PairedDevice>? devices) async {
-    await Preferences.init();
+    await PairedDevices.init();
     await Bluetooth.init();
 
     Timer.periodic(const Duration(minutes: 1), (t) {
