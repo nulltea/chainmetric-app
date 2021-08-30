@@ -7,42 +7,69 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HyperledgerHandler(private val sdk: hyperledger.SDK): MethodChannel.MethodCallHandler {
+class FabricHandler(private val sdk: fabric.SDK): MethodChannel.MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         CoroutineScope(Dispatchers.IO).launch {
             when (call.method) {
                 "wallet_init" -> try {
                     sdk.initWallet(call.argument("path"))
                     withContext(Dispatchers.Main) {
-                        result.success("Wallet ready")
+                        result.success(0)
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        result.error("HyperledgerSDK_initWallet", e.message, null)
+                        result.error("FabricSDK::initWallet", e.message, null)
                     }
                 }
-                "auth_required" -> withContext(Dispatchers.Main) {
-                    result.success(withContext(Dispatchers.IO) { sdk.authRequired() })
+                "identity_required" -> withContext(Dispatchers.Main) {
+                    result.success(withContext(Dispatchers.IO) { sdk.identityRequired() })
                 }
-                "auth_identity" -> try {
-                    sdk.authX509(call.argument("orgID"), call.argument("key"), call.argument("cert"))
+                "identities_get" -> try {
                     withContext(Dispatchers.Main) {
-                        result.success("Authenticated")
+                        result.success(sdk.identities)
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        result.error("HyperledgerSDK_authIdentity", e.message, null)
+                        result.error("FabricSDK::getIdentities", e.message, null)
                     }
                 }
-                "connection_init" -> try {
-                    val channel = call.argument<String>("channel")
-                    sdk.initConnectionOn(call.argument("config"), channel)
+                "identity_put" -> try {
+                    sdk.putX509Identity(
+                        call.argument("username"),
+                        call.argument("org"),
+                        call.argument("key"),
+                        call.argument("cert")
+                    )
                     withContext(Dispatchers.Main) {
-                        result.success("Connected to $channel")
+                        result.success(0)
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        result.error("HyperledgerSDK_initConnectionFor", e.message, null)
+                        result.error("FabricSDK::putX509Identity", e.message, null)
+                    }
+                }
+                "identity_remove" -> try {
+                    sdk.removeIdentity(call.argument("username"))
+                    withContext(Dispatchers.Main) {
+                        result.success(0)
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        result.error("FabricSDK::removeIdentity", e.message, null)
+                    }
+                }
+                "connection_setup" -> try {
+                    sdk.setupConnectionToChannel(
+                        call.argument("config"),
+                        call.argument("channel"),
+                        call.argument("username")
+                    )
+                    withContext(Dispatchers.Main) {
+                        result.success(0)
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        result.error("FabricSDK::setupConnectionToChannel", e.message, null)
                     }
                 }
                 "transaction_evaluate" -> try {
@@ -52,7 +79,7 @@ class HyperledgerHandler(private val sdk: hyperledger.SDK): MethodChannel.Method
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        result.error("HyperledgerSDK_evaluateTransaction", e.message, null)
+                        result.error("FabricSDK::evaluateTransaction", e.message, null)
                     }
                 }
                 "transaction_submit" -> try {
@@ -62,7 +89,7 @@ class HyperledgerHandler(private val sdk: hyperledger.SDK): MethodChannel.Method
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        result.error("HyperledgerSDK_submitTransaction", e.message, null)
+                        result.error("FabricSDK::submitTransaction", e.message, null)
                     }
                 }
                 else -> throw IllegalStateException("Invalid operation: ${call.method}")

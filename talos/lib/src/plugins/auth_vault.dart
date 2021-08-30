@@ -21,16 +21,10 @@ class AuthVault {
   }
 
   Future<bool> authenticate(String organization, String secretPath, String secretToken) async {
-    try {
-      await _channel.invokeMethod("authenticate", {
-        "orgID": organization,
-        "path": secretPath,
-        "token": secretToken
-      });
-      return true;
-    } on PlatformException catch (e) {
-      print("PlatformException: ${e.message}");
-    }
-    return false;
+    return await _channel.invokeMethod<int>("authenticate", {
+      "orgID": organization,
+      "path": secretPath,
+      "token": secretToken
+    }) == 0;
   }
 }

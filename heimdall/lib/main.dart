@@ -57,13 +57,13 @@ class _AppState extends State<App> {
     await Preferences.init();
     await LocalData.init();
     await Privileges.init();
-    await Hyperledger.initWallet();
-    if (await Hyperledger.authRequired()) {
+    await Fabric.initWallet();
+    if (await Fabric.identityRequired()) {
       setState(() => _isLoading = false);
       return;
     }
     final config = await FabricConnection("assets/connection.yaml").init();
-    await Hyperledger.initConnection(config, "supply-channel");
+    await Fabric.setupConnection(config, "supply-channel");
     setState(() => _requireAuth = _isLoading = false);
 
     await Bluetooth.init();

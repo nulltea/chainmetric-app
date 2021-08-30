@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import plugins.Plugins;
 import plugins.VaultConfig
 
-class AuthVault(sdk: hyperledger.SDK) : MethodChannel.MethodCallHandler {
+class AuthVault(sdk: fabric.SDK) : MethodChannel.MethodCallHandler {
     private val plugin = Plugins.newAuthVault(sdk)
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -21,7 +21,7 @@ class AuthVault(sdk: hyperledger.SDK) : MethodChannel.MethodCallHandler {
                     config.defaultToken = call.argument("default_token")
                     plugin.init(config)
                     withContext(Dispatchers.Main) {
-                        result.success()
+                        result.success(0)
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -32,7 +32,7 @@ class AuthVault(sdk: hyperledger.SDK) : MethodChannel.MethodCallHandler {
                     plugin.authenticate(call.argument("orgID"), call.argument("path"),
                             call.argument("token"))
                     withContext(Dispatchers.Main) {
-                        result.success()
+                        result.success(0)
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {

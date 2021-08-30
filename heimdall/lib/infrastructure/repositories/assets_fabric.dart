@@ -7,7 +7,7 @@ class AssetsController {
   static Future<AssetsResponse?> getAssets(
       {AssetsQuery? query, int? limit, String? scrollID}) async {
     query ??= AssetsQuery(limit: limit, scrollID: scrollID);
-    final data = await Hyperledger.evaluateTransaction(
+    final data = await Fabric.evaluateTransaction(
         "assets", "Query", json.encode(query.toJson()));
     try {
       return data != null && data.isNotEmpty
@@ -21,10 +21,10 @@ class AssetsController {
 
   static Future<bool> upsertAsset(Asset asset) async {
     final jsonData = json.encode(asset.toJson());
-    return Hyperledger.trySubmitTransaction("assets", "Upsert", jsonData);
+    return Fabric.trySubmitTransaction("assets", "Upsert", jsonData);
   }
 
   static Future<bool> deleteAsset(String? id) async {
-    return Hyperledger.trySubmitTransaction("assets", "Remove", id);
+    return Fabric.trySubmitTransaction("assets", "Remove", id);
   }
 }

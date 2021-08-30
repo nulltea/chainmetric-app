@@ -9,7 +9,7 @@ import 'package:chainmetric/app/pages/assets/assets_tab.dart';
 import 'package:chainmetric/app/pages/devices/form.dart';
 import 'package:chainmetric/app/pages/devices/tab.dart';
 import 'package:chainmetric/app/pages/home/tab.dart';
-import 'package:chainmetric/app/pages/organization/tab.dart';
+import 'package:chainmetric/app/pages/organization/organization_tab.dart';
 
 class MainPage extends StatefulWidget {
   @override

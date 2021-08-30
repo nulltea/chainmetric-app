@@ -4,15 +4,14 @@ import (
 	"fmt"
 
 	vault "github.com/hashicorp/vault/api"
-	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
-	"github.com/timoth-y/chainmetric-app/lorkhan/bind/hyperledger"
+	"github.com/timoth-y/chainmetric-app/lorkhan/bind/fabric"
 	"github.com/timoth-y/chainmetric-app/lorkhan/internal/infrastructure/repositories"
 )
 
 type (
 	// AuthVault defines a plugin for authenticating to Fabric network via Vault.
 	AuthVault struct {
-		sdk *hyperledger.SDK
+		sdk *fabric.SDK
 		client *vault.Client
 	}
 
@@ -24,7 +23,7 @@ type (
 )
 
 // NewAuthVault constructs new instance of AuthVault plugin.
-func NewAuthVault(sdk *hyperledger.SDK) *AuthVault {
+func NewAuthVault(sdk *fabric.SDK) *AuthVault {
 	client, _ := vault.NewClient(vault.DefaultConfig())
 
 	return &AuthVault{
@@ -46,7 +45,7 @@ func (p *AuthVault) Init(config *VaultConfig) error {
 	return nil
 }
 
-// Authenticate requests Fabric identity x509 credentials and puts those into the hyperledger.SDK wallet.
+// Authenticate requests Fabric identity x509 credentials and puts those into the fabric.SDK wallet.
 func (p *AuthVault) Authenticate(orgID, secretPath, userToken string) error {
 	cert, key, err := repositories.NewIdentitiesVault(p.client, userToken).
 		RetrieveFrom(secretPath)
@@ -54,6 +53,5 @@ func (p *AuthVault) Authenticate(orgID, secretPath, userToken string) error {
 		return fmt.Errorf("failed to get credentials from Vault: %w", err)
 	}
 
-	identity := gateway.NewX509Identity(orgID, string(cert), string(key))
-	return p.sdk.Put(hyperledger.UserID, identity)
+	return p.sdk.PutX509Identity("", orgID, string(cert), string(key))
 }

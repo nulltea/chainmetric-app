@@ -17,10 +17,10 @@ class LoginHelper {
 
   LoginHelper(this._organization):
         _vaultPlugin = AuthVault(
-            "https://vault.${GlobalConfiguration().getValue("grpc_domain")}"
+            "https://vault.infra.${GlobalConfiguration().getValue("grpc_domain")}"
         );
 
-  Future<bool> login(String email, String passcode) async {
+  Future<bool> loginUserpass(String email, String passcode) async {
     FabricCredentialsResponse resp;
 
     try {
@@ -51,6 +51,19 @@ class LoginHelper {
     }
 
     return success;
+  }
+
+  Future<bool> loginX509(String cert, String key) async {
+    // TODO: Preferences.accessToken = ??;
+
+    try {
+      await Fabric.putX509Identity(_organization, cert, key);
+    } on PlatformException catch (e) {
+      logger.e("failed to put x509 identity: ${e.message}");
+      return false;
+    }
+
+    return true;
   }
 
   static String generatePasswordHash(String password) {

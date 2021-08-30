@@ -58,7 +58,7 @@ class _AssetsTabState extends State<AssetsTab> {
           child: ListView.builder(
             itemCount: assets.length,
             padding: const EdgeInsets.symmetric(vertical: 12),
-            itemBuilder: _listBuilder as Widget Function(BuildContext, int),
+            itemBuilder: _listBuilder,
           ),
         ),
       );
@@ -72,8 +72,8 @@ class _AssetsTabState extends State<AssetsTab> {
             }));
   }
 
-  Widget? _listBuilder(BuildContext context, int index) {
-    if (index >= _itemsLength) return null;
+  Widget _listBuilder(BuildContext context, int index) {
+    if (index >= _itemsLength) return const Center();
     return SafeArea(
       top: false,
       bottom: false,

@@ -260,14 +260,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> submitIdentity() async {
     if (formKey.currentState!.validate()) {
+      final loginHelper = LoginHelper(organization!);
       try {
         if (certificateAuth) {
-          if (await Hyperledger.authenticate(
-              organization!, certificate!, privateKey!)) {
+          if (await loginHelper.loginX509(certificate!, privateKey!)) {
             widget.submitAuth!();
           }
         } else {
-          if (await LoginHelper(organization!).login(email!, passcode!)) {
+          if (await loginHelper.loginUserpass(email!, passcode!)) {
             widget.submitAuth!();
           }
         }

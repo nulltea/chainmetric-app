@@ -36,14 +36,14 @@ class _HomeTabState extends State<HomeTab> {
         ),
         body: RefreshIndicator(
           key: _refreshKey,
-          onRefresh: _loadData as Future<void> Function(),
+          onRefresh: _loadData,
           child: const Center(
             child: Text("Home dashboard here"),
           ),
         ),
       );
 
-  Future<void>? _loadData() {
-    return null;
+  Future<void> _loadData() {
+    return Future.value();
   }
 }

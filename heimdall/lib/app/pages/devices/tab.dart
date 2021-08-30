@@ -51,7 +51,7 @@ class _DevicesTabState extends State<DevicesTab> {
           child: ListView.builder(
             itemCount: devices!.length,
             padding: const EdgeInsets.symmetric(vertical: 12),
-            itemBuilder: _listBuilder as Widget Function(BuildContext, int),
+            itemBuilder: _listBuilder,
           ),
         ),
       );
@@ -60,8 +60,8 @@ class _DevicesTabState extends State<DevicesTab> {
     return _fetchDevices().then((value) => setState(() => devices = value));
   }
 
-  Widget? _listBuilder(BuildContext context, int index) {
-    if (index >= _itemsLength) return null;
+  Widget _listBuilder(BuildContext context, int index) {
+    if (index >= _itemsLength) return const Center();
     return SafeArea(
       top: false,
       bottom: false,

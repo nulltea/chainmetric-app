@@ -7,16 +7,16 @@ import (
 
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 	"github.com/timoth-y/chainmetric-app/lorkhan/bind/events"
-	"github.com/timoth-y/chainmetric-app/lorkhan/bind/hyperledger"
+	"github.com/timoth-y/chainmetric-app/lorkhan/bind/fabric"
 )
 // EventSocket defines plugin for subscribing to events on Hyperledger network.
 type EventSocket struct {
-	sdk      *hyperledger.SDK
+	sdk      *fabric.SDK
 	contract *gateway.Contract
 }
 
 // NewEventSocket constructs new EventSocket instance.
-func NewEventSocket(sdk *hyperledger.SDK, chaincode string) *EventSocket {
+func NewEventSocket(sdk *fabric.SDK, chaincode string) *EventSocket {
 	return &EventSocket{
 		sdk: sdk,
 		contract: sdk.GetContract(chaincode),

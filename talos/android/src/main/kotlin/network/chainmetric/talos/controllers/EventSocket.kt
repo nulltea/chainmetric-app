@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import plugins.Plugins
 
-class EventSocketHandler(private val sdk: hyperledger.SDK) : EventChannel.StreamHandler {
+class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandler {
     private val channels = mutableMapOf<Int, events.EventChannel>()
 
     override fun onListen(event: Any?, events: EventChannel.EventSink?) {
