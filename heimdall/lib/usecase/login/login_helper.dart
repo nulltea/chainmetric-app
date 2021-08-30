@@ -7,13 +7,18 @@ import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart'
 import 'package:chainmetric/infrastructure/services/access_grpc.dart';
 import 'package:chainmetric/models/identity/auth.pb.dart';
 import 'package:flutter/services.dart';
+import 'package:global_configuration/global_configuration.dart';
 import 'package:grpc/grpc.dart';
 import 'package:talos/talos.dart';
 
 class LoginHelper {
   final String _organization;
+  final AuthVault _vaultPlugin;
 
-  LoginHelper(this._organization);
+  LoginHelper(this._organization):
+        _vaultPlugin = AuthVault(
+            "https://vault.${GlobalConfiguration().getValue("grpc_domain")}"
+        );
 
   Future<bool> login(String email, String passcode) async {
     FabricCredentialsResponse resp;
@@ -39,7 +44,7 @@ class LoginHelper {
     bool success;
 
     try {
-      success = await AuthVault.authenticate(_organization, resp.secret.path, resp.secret.token);
+      success = await _vaultPlugin.authenticate(_organization, resp.secret.path, resp.secret.token);
     } on PlatformException catch (e) {
       logger.e("failed to authenticate via Vault: ${e.message}");
       return false;

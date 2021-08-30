@@ -186,9 +186,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<void> submitRegistration() async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
+    if (!formKey.currentState!.validate()) return;
 
     try {
       final response = await IdentityService(organization!,
