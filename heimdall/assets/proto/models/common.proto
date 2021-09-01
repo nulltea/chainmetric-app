@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package chainmetric.identity.presenter;
+
+option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
+
+message StatusResponse {
+  Status status = 1;
+}
+
+enum Status {
+  UNKNOWN = 0;
+  OK = 200;
+  ACCEPTED = 202;
+  NO_CONTENT = 204;
+}
