@@ -45,6 +45,7 @@ dependencies:
   flutter_reactive_ble: ^3.1.1+1
   talos:
     path: ../talos
+  lottie: ^1.1.0
 
 dev_dependencies:
   build_runner: ^2.1.1
@@ -57,6 +58,7 @@ flutter:
   assets:
     - assets/data/
     - assets/icons/
+    - assets/lottie/
     - assets/certs/
     - assets/config.yaml
     - assets/connection.yaml

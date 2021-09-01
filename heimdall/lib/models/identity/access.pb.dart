@@ -212,3 +212,127 @@ class VaultSecret extends $pb.GeneratedMessage {
   void clearPath() => clearField(2);
 }
 
+class CertificateAuthRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CertificateAuthRequest', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..a<$core.List<$core.int>>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'certificate', $pb.PbFieldType.OY)
+    ..a<$core.List<$core.int>>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'signingKey', $pb.PbFieldType.OY, protoName: 'signingKey')
+    ..hasRequiredFields = false
+  ;
+
+  CertificateAuthRequest._() : super();
+  factory CertificateAuthRequest({
+    $core.List<$core.int>? certificate,
+    $core.List<$core.int>? signingKey,
+  }) {
+    final _result = create();
+    if (certificate != null) {
+      _result.certificate = certificate;
+    }
+    if (signingKey != null) {
+      _result.signingKey = signingKey;
+    }
+    return _result;
+  }
+  factory CertificateAuthRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CertificateAuthRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CertificateAuthRequest clone() => CertificateAuthRequest()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CertificateAuthRequest copyWith(void Function(CertificateAuthRequest) updates) => super.copyWith((message) => updates(message as CertificateAuthRequest)) as CertificateAuthRequest; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CertificateAuthRequest create() => CertificateAuthRequest._();
+  CertificateAuthRequest createEmptyInstance() => create();
+  static $pb.PbList<CertificateAuthRequest> createRepeated() => $pb.PbList<CertificateAuthRequest>();
+  @$core.pragma('dart2js:noInline')
+  static CertificateAuthRequest getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CertificateAuthRequest>(create);
+  static CertificateAuthRequest? _defaultInstance;
+
+  @$pb.TagNumber(2)
+  $core.List<$core.int> get certificate => $_getN(0);
+  @$pb.TagNumber(2)
+  set certificate($core.List<$core.int> v) { $_setBytes(0, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasCertificate() => $_has(0);
+  @$pb.TagNumber(2)
+  void clearCertificate() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.int> get signingKey => $_getN(1);
+  @$pb.TagNumber(3)
+  set signingKey($core.List<$core.int> v) { $_setBytes(1, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasSigningKey() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearSigningKey() => clearField(3);
+}
+
+class CertificateAuthResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CertificateAuthResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'apiAccessToken', protoName: 'apiAccessToken')
+    ..aOM<$1.User>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'user', subBuilder: $1.User.create)
+    ..hasRequiredFields = false
+  ;
+
+  CertificateAuthResponse._() : super();
+  factory CertificateAuthResponse({
+    $core.String? apiAccessToken,
+    $1.User? user,
+  }) {
+    final _result = create();
+    if (apiAccessToken != null) {
+      _result.apiAccessToken = apiAccessToken;
+    }
+    if (user != null) {
+      _result.user = user;
+    }
+    return _result;
+  }
+  factory CertificateAuthResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CertificateAuthResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CertificateAuthResponse clone() => CertificateAuthResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CertificateAuthResponse copyWith(void Function(CertificateAuthResponse) updates) => super.copyWith((message) => updates(message as CertificateAuthResponse)) as CertificateAuthResponse; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CertificateAuthResponse create() => CertificateAuthResponse._();
+  CertificateAuthResponse createEmptyInstance() => create();
+  static $pb.PbList<CertificateAuthResponse> createRepeated() => $pb.PbList<CertificateAuthResponse>();
+  @$core.pragma('dart2js:noInline')
+  static CertificateAuthResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CertificateAuthResponse>(create);
+  static CertificateAuthResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get apiAccessToken => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set apiAccessToken($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasApiAccessToken() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearApiAccessToken() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $1.User get user => $_getN(1);
+  @$pb.TagNumber(2)
+  set user($1.User v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasUser() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUser() => clearField(2);
+  @$pb.TagNumber(2)
+  $1.User ensureUser() => $_ensure(1);
+}
+

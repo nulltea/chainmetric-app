@@ -4,8 +4,8 @@ package chainmetric.identity.presenter;
 
 option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
 
-import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
 
 message EnrollUserRequest {
   string userID = 1 [(validate.rules).string = {uuid: true}];
@@ -16,4 +16,3 @@ message EnrollUserRequest {
 message EnrollUserResponse {
   string initialPassword = 1;
 }
-

@@ -266,13 +266,11 @@ class _LoginPageState extends State<LoginPage> {
       try {
         if (certificateAuth) {
           if (await loginHelper.loginX509(certificate!, privateKey!)) {
-            openPage(context, RegistrationPage(onRegister: (resp) {
-              // TODO: enroll by admin
-            }));
+            widget.onLogged?.call();
           }
         } else {
           if (await loginHelper.loginUserpass(email!, passcode!)) {
-
+            widget.onLogged?.call();
           }
         }
       } on Exception catch (e) {

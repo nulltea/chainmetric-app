@@ -7,5 +7,5 @@ import "access.proto";
 
 service AccessService {
   rpc requestFabricCredentials(presenter.FabricCredentialsRequest) returns (presenter.FabricCredentialsResponse);
+  rpc authWithSigningIdentity(presenter.CertificateAuthRequest) returns (presenter.CertificateAuthResponse);
 }
-

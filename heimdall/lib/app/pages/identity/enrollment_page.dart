@@ -9,6 +9,7 @@ import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart'
 import 'package:chainmetric/infrastructure/services/admin_grpc.dart';
 import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart';
 import 'package:chainmetric/models/identity/admin.pb.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -176,7 +177,8 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
     try {
       await AdminService(organization!,
               certificate: await CertificatesResolver(organization!)
-                  .resolveBytes("identity-client"))
+                  .resolveBytes("identity-client"),
+          accessToken: IdentitiesRepo.accessToken)
           .enrollUser(request);
     } on Exception catch (e) {
       utils.displayError(context, e);

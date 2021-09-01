@@ -17,9 +17,9 @@ class LoginHelper {
   final String _organization;
   final VaultAuthenticator _vaultPlugin;
 
-  LoginHelper(this._organization): _vaultPlugin = VaultAuthenticator(
-      "https://vault.infra.${GlobalConfiguration().getValue("grpc_domain")}"
-  );
+  LoginHelper(this._organization)
+      : _vaultPlugin = VaultAuthenticator(
+            "https://vault.infra.${GlobalConfiguration().getValue("grpc_domain")}");
 
   Future<bool> loginUserpass(String email, String passcode) async {
     FabricCredentialsResponse resp;
@@ -35,7 +35,8 @@ class LoginHelper {
         case StatusCode.invalidArgument:
           throw Exception(e.message);
         default:
-          logger.e("failed request Fabric credentials: [${e.codeName}] ${e.message}");
+          logger.e(
+              "failed request Fabric credentials: [${e.codeName}] ${e.message}");
       }
 
       return false;
@@ -44,10 +45,11 @@ class LoginHelper {
     bool success;
 
     try {
-      success = await _vaultPlugin.fetchVaultIdentity(_organization,
-          resp.secret.path,
-          resp.secret.token,
-          username: resp.user.username,
+      success = await _vaultPlugin.fetchVaultIdentity(
+        _organization,
+        resp.secret.path,
+        resp.secret.token,
+        username: resp.user.username,
       );
     } on PlatformException catch (e) {
       logger.e("failed to authenticate via Vault: ${e.message}");
@@ -55,27 +57,43 @@ class LoginHelper {
     }
 
     IdentitiesRepo.put(AppIdentity(_organization, resp.user.username,
-            accessToken: resp.apiAccessToken, user: resp.user)
-    );
+        accessToken: resp.apiAccessToken, user: resp.user));
     IdentitiesRepo.setCurrent(resp.user.username);
 
     return success;
   }
 
   Future<bool> loginX509(String cert, String key) async {
-    // TODO: Preferences.accessToken = ??;
-
-    const username = "admin";
+    CertificateAuthResponse resp;
 
     try {
-      await Fabric.putX509Identity(_organization, cert, key, username: username);
+      resp = await AccessService(_organization,
+              certificate: await CertificatesResolver(_organization)
+                  .resolveBytes("identity-client"))
+          .authWithSigningIdentity(CertificateAuthRequest(
+              certificate: utf8.encode(cert), signingKey: utf8.encode(key)));
+    } on GrpcError catch (e) {
+      switch (e.code) {
+        case StatusCode.invalidArgument:
+          throw Exception(e.message);
+        default:
+          logger.e("failed auth with x509: [${e.codeName}] ${e.message}");
+      }
+
+      return false;
+    }
+
+    try {
+      await Fabric.putX509Identity(_organization, cert, key,
+          username: resp.user.username);
     } on PlatformException catch (e) {
       logger.e("failed to put x509 identity: ${e.message}");
       return false;
     }
 
-    IdentitiesRepo.put(AppIdentity(_organization, username, user: User(firstname: "Admin")));
-    IdentitiesRepo.setCurrent(username);
+    IdentitiesRepo.put(
+        AppIdentity(_organization, resp.user.username, user: resp.user));
+    IdentitiesRepo.setCurrent(resp.user.username);
 
     return true;
   }
