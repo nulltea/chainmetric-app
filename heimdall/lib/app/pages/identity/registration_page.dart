@@ -197,7 +197,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           .register(request);
 
       IdentitiesRepo.put(
-          AppIdentity(organization!, resp.user.username, accessToken: resp.accessToken)
+          AppIdentity(organization!, resp.user.username, accessToken: resp.accessToken, user: resp.user)
       );
 
       widget.onRegister?.call(resp);

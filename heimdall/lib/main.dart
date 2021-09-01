@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chainmetric/app/pages/identity/confirm_pending_page.dart';
 import 'package:chainmetric/app/pages/identity/login_page.dart';
 import 'package:chainmetric/app/pages/main_page.dart';
 import 'package:chainmetric/app/theme/theme.dart';
@@ -43,12 +44,24 @@ class _AppState extends State<App> {
       title: "Chainmetric admin application",
       theme: AppTheme.themeData,
       darkTheme: AppTheme.themeData,
-      home: _isLoading
-          ? LoadingSplash()
-          : _requireAuth
-              ? LoginPage(onLogged: _initBackend)
-              : MainPage(reloadApp: _initBackend),
+      home: _viewApp(),
     );
+  }
+
+  Widget? _viewApp() {
+    if (_isLoading) {
+      return LoadingSplash();
+    }
+
+    if (_requireAuth) {
+      final pendingConfirm = IdentitiesRepo.current?.user?.confirmed == false;
+
+      return pendingConfirm
+          ? ConfirmPendingPage(onReady: _initBackend)
+          : LoginPage(onLogged: _initBackend);
+    }
+
+    return MainPage(reloadApp: _initBackend);
   }
 
   @override
