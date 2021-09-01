@@ -128,7 +128,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             hintText: "Choose the device profile",
                             labelText: "Profile",
                           ),
-                          items: LocalData.deviceProfiles!
+                          items: LocalDataRepo.deviceProfiles!
                               .map<DropdownMenuItem<String>>(
                                   (profile) => DropdownMenuItem<String>(
                                         value: profile.profile,
@@ -159,7 +159,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
                                 buttonIcon: const Icon(Icons.arrow_drop_down),
-                                items: LocalData.metrics!
+                                items: LocalDataRepo.metrics!
                                     .map((metric) => MultiSelectItem(
                                           metric.metric,
                                           metric.name!,
@@ -182,7 +182,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                 items: device!.supports
                                     .map((metric) => MultiSelectItem(
                                           metric,
-                                          LocalData.metricsMap[metric]?.name ??
+                                          LocalDataRepo.metricsMap[metric]?.name ??
                                               "",
                                         ))
                                     .toList(),
@@ -201,7 +201,7 @@ class _DeviceFormState extends State<DeviceForm> {
                             labelText: "Holder",
                             filled: true,
                           ),
-                          items: LocalData.organizations!
+                          items: LocalDataRepo.organizations!
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,

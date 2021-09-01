@@ -12,7 +12,7 @@ import 'package:chainmetric/app/pages/devices/form.dart';
 import 'package:chainmetric/app/pages/devices/pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
-  DevicesTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
+  const DevicesTab({GlobalKey? key}) : super(key: key);
 
   _DevicesTabState? get _currentState =>
       (key as GlobalKey?)?.currentState as _DevicesTabState?;

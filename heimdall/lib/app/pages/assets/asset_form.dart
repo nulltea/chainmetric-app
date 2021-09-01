@@ -94,7 +94,7 @@ class _AssetFormState extends State<AssetForm> {
                             hintText: "Choose asset type",
                             labelText: "Asset type",
                           ),
-                          items: LocalData.assetTypes!
+                          items: LocalDataRepo.assetTypes!
                               .map<DropdownMenuItem<String>>(
                                   (type) => DropdownMenuItem<String>(
                                         value: type.type,
@@ -177,7 +177,7 @@ class _AssetFormState extends State<AssetForm> {
                             labelText: "Owned by",
                             filled: true,
                           ),
-                          items: LocalData.organizations!
+                          items: LocalDataRepo.organizations!
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,

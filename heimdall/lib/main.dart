@@ -5,7 +5,7 @@ import 'package:chainmetric/app/pages/main_page.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/loading_splash.dart';
 import 'package:chainmetric/platform/adapters/bluetooth.dart';
-import 'package:chainmetric/platform/repositories/appidentities_shared.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/platform/repositories/paired_devices_shared.dart';
 import 'package:chainmetric/usecase/privileges/resolver.dart';
@@ -46,8 +46,8 @@ class _AppState extends State<App> {
       home: _isLoading
           ? LoadingSplash()
           : _requireAuth
-              ? LoginPage(submitAuth: _initBackend)
-              : MainPage(),
+              ? LoginPage(onLogged: _initBackend)
+              : MainPage(reloadApp: _initBackend),
     );
   }
 
@@ -60,17 +60,17 @@ class _AppState extends State<App> {
   }
 
   Future<void> _initBackend() async {
-    await PairedDevices.init();
-    await AppIdentities.init();
-    await LocalData.init();
+    await PairedDevicesRepo.init();
+    await IdentitiesRepo.init();
+    await LocalDataRepo.init();
     await Privileges.init();
     await Fabric.initWallet();
     if (await Fabric.identityRequired()) {
       setState(() => _isLoading = false);
       return;
     }
-    final config = await FabricConnection("assets/connection.yaml", AppIdentities.organization!).init();
-    await Fabric.setupConnection(config, "supply-channel", username: AppIdentities.current!.username);
+    final config = await FabricConnection("assets/connection.yaml", IdentitiesRepo.organization!).init();
+    await Fabric.setupConnection(config, "supply-channel", username: IdentitiesRepo.current!.username);
     setState(() => _requireAuth = _isLoading = false);
 
     await Bluetooth.init();

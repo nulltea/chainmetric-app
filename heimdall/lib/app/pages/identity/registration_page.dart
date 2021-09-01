@@ -10,7 +10,7 @@ import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
 import 'package:chainmetric/models/identity/app_identity.dart';
 import 'package:chainmetric/models/identity/enrollment.pb.dart';
 import 'package:chainmetric/models/identity/user.dart';
-import 'package:chainmetric/platform/repositories/appidentities_shared.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +65,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         borderRadius: 8,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
-                        items: LocalData.organizations!
+                        items: LocalDataRepo.organizations!
                             .map<DropdownMenuItem<String>>(
                                 (org) => DropdownMenuItem<String>(
                                       value: org.mspID,
@@ -184,7 +184,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void initState() {
     super.initState();
-    organization = LocalData.organizations![0].mspID;
+    organization = LocalDataRepo.organizations![0].mspID;
   }
 
   Future<void> submitRegistration() async {
@@ -196,7 +196,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   .resolveBytes("identity-client"))
           .register(request);
 
-      AppIdentities.put(
+      IdentitiesRepo.put(
           AppIdentity(organization!, resp.user.username, accessToken: resp.accessToken)
       );
     } on Exception catch (e) {

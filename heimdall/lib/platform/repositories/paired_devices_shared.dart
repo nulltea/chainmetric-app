@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:chainmetric/models/device/device.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PairedDevices {
+class PairedDevicesRepo {
   static late SharedPreferences prefs;
 
   static Future<void> init() async {

@@ -22,7 +22,7 @@ class AssetCard extends StatelessWidget {
       onLongPress: () => _showAssetMenu(context, asset),
       child: Card(
         elevation: 5,
-        color: LocalData.assetTypesMap[asset.type]!.color,
+        color: LocalDataRepo.assetTypesMap[asset.type]!.color,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
@@ -48,7 +48,7 @@ class AssetCard extends StatelessWidget {
                   Icon(Icons.corporate_fare,
                       color: Theme.of(context).hintColor),
                   const SizedBox(width: 5),
-                  Text(LocalData.organizationsMap[asset.holder]!.name!,
+                  Text(LocalDataRepo.organizationsMap[asset.holder]!.name!,
                       style: AppTheme.bodyText2.override(
                           color: Theme.of(context).hintColor,
                           fontWeight: FontWeight.w400))

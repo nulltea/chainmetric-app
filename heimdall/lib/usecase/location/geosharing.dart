@@ -91,7 +91,7 @@ class GeoService {
 
   static Future<void> tryShareLocation(
       Map<String, PairedDevice>? devices) async {
-    await PairedDevices.init();
+    await PairedDevicesRepo.init();
     await Bluetooth.init();
 
     Timer.periodic(const Duration(minutes: 1), (t) {

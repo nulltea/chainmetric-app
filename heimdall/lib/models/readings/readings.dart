@@ -19,9 +19,9 @@ class MetricReadings {
 
   @JsonKey(ignore: true)
   Map<Metric?, MetricReadingsStream?>? get streams =>
-      LocalData.metricsMap != null
+      LocalDataRepo.metricsMap != null
           ? _streams ??= streamsRaw?.map((key, value) => MapEntry(
-              LocalData.metricsMap[key],
+              LocalDataRepo.metricsMap[key],
               MetricReadingsStream.from(streamsRaw![key])))
           : null;
   Map<Metric?, MetricReadingsStream?>? _streams;

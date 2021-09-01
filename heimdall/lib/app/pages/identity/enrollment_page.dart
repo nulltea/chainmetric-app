@@ -65,7 +65,7 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
                         borderRadius: 8,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
-                        items: LocalData.userRoles!
+                        items: LocalDataRepo.userRoles!
                             .map<DropdownMenuItem<String>>(
                                 (role) => DropdownMenuItem<String>(
                                       value: role,

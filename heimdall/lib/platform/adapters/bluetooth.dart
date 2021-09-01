@@ -16,7 +16,7 @@ class Bluetooth {
   static Map<String, DeviceDisconnectFunc> connectedDevices = {};
 
   static Future<void> init() {
-    pairedDevices = PairedDevices.pairedDevices;
+    pairedDevices = PairedDevicesRepo.pairedDevices;
     return driver.initialize();
   }
 
@@ -34,7 +34,7 @@ class Bluetooth {
             ..advertisedName = device.name
             ..rssi = device.rssi;
 
-          PairedDevices.pairedDevices = pairedDevices;
+          PairedDevicesRepo.pairedDevices = pairedDevices;
         }
         onFound(device);
       }
@@ -72,7 +72,7 @@ class Bluetooth {
   static Future<void> forgetDevice(String deviceID) async {
     if (isConnected(deviceID)) connectedDevices[deviceID]!();
     pairedDevices.remove(deviceID);
-    PairedDevices.pairedDevices = pairedDevices;
+    PairedDevicesRepo.pairedDevices = pairedDevices;
   }
 
   static String? getHardwareID(String deviceID) {

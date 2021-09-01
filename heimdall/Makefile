@@ -34,3 +34,8 @@ grpc-gen:
 	rm \
 		./lib/infrastructure/services/*.pbenum.dart \
 		./lib/infrastructure/services/*.pbjson.dart
+
+fabric-gen:
+	fabnctl gen connection -f ../../network/network-config.yaml -n heimdall-applicatiion \
+		-c supply-channel -o chipa-inu ../../network
+	# mv connection.yaml assets/connection.yaml

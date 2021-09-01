@@ -89,7 +89,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                   buttonIcon: const Icon(Icons.add),
-                                  items: LocalData.metrics!
+                                  items: LocalDataRepo.metrics!
                                       .where((metric) => !requirements.metrics
                                           .containsKey(metric.name))
                                       .map((metric) => MultiSelectItem(
@@ -102,7 +102,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                         .addEntries(value.map((metric) =>
                                             MapEntry(
                                                 metric as String,
-                                                LocalData.defaultRequirements![
+                                                LocalDataRepo.defaultRequirements![
                                                     metric]))));
                                   },
                                   onConfirm: (selected) => setState(() {
@@ -133,7 +133,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                                   child: Hero(
                                       tag: kvp.key,
                                       child: _requirementControl(
-                                          LocalData.metricsMap[kvp.key]!,
+                                          LocalDataRepo.metricsMap[kvp.key]!,
                                           kvp.value!))))
                               .toList(),
                         ),

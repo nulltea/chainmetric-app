@@ -38,20 +38,14 @@ func (sdk *SDK) GetIdentities() (string, error) {
 
 // PutX509Identity adds signing identity with given `cert` and `key` pair to the gateway.Wallet.
 func (sdk *SDK) PutX509Identity(username, org, cert, key string) error {
-	fmt.Println("username:", username, "org:", org)
-	fmt.Println("Cert:")
-	fmt.Println(string(cert))
-	fmt.Println("Key:")
-	fmt.Println(string(key))
-	identity := gateway.NewX509Identity(org, cert, key)
-	return sdk.Put(username, identity)
+	return sdk.Put(username, gateway.NewX509Identity(org, cert, key))
 }
 
 // RemoveIdentity removes signing identity from the gateway.Wallet.
 func (sdk *SDK) RemoveIdentity(username string) error {
-	if !sdk.Exists(username) {
+	if sdk.Exists(username) {
 		return sdk.Remove(username)
 	}
 
-	return nil
+	return fmt.Errorf("identity '%s' does not exists", username)
 }

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package chainmetric.identity.service;
+option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/rpc";
+
+import "user.proto";
+import "admin.proto";
+
+service AdminService {
+  rpc getCandidates() returns (presenter.Users);
+  rpc enroll(presenter.EnrollmentRequest) returns (presenter.EnrollmentResponse);
+}

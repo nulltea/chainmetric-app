@@ -3,7 +3,7 @@ import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
 import 'package:flutter/material.dart';
 
 class HomeTab extends NavigationTab {
-  HomeTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
+  const HomeTab({GlobalKey? key}) : super(key: key);
 
   _HomeTabState? get _currentState =>
       (key as GlobalKey?)?.currentState as _HomeTabState?;

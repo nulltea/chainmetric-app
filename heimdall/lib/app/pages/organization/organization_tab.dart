@@ -1,12 +1,18 @@
+import 'package:chainmetric/app/pages/identity/login_page.dart';
+import 'package:chainmetric/app/utils/utils.dart' as utils;
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
-import 'package:chainmetric/platform/repositories/appidentities_shared.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
+import 'package:chainmetric/usecase/identity/identity_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
-import 'package:talos/talos.dart';
+import 'package:chainmetric/models/identity/user.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
-class ProfileTab extends NavigationTab {
-  ProfileTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
+class OrganizationTab extends NavigationTab {
+  final Function? reloadApp;
+
+  const OrganizationTab({Key? key, this.reloadApp}) : super(key: key);
 
   _ProfileTabState? get _currentState =>
       (key as GlobalKey?)?.currentState as _ProfileTabState?;
@@ -18,7 +24,7 @@ class ProfileTab extends NavigationTab {
   Future? refreshData() => _currentState!._refreshData();
 }
 
-class _ProfileTabState extends State<ProfileTab> {
+class _ProfileTabState extends State<OrganizationTab> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
@@ -55,16 +61,37 @@ class _ProfileTabState extends State<ProfileTab> {
     showModalMenu(context: context, options: [
       ModalMenuOption(
         title: "Add identity",
-        icon: Icons.person_add,
-        action: () => throw UnimplementedError(),
+        icon: Icons.person_add_sharp,
+        action: () =>
+            utils.openPage(context, LoginPage(onLogged: widget.reloadApp)),
       ),
       ModalMenuOption(
-        title: "Log out",
-        icon: Icons.logout,
-        action: () {
-          Fabric.removeIdentity(username: AppIdentities.current!.username);
-          Navigator.of(context).build(context);
-        },
+        title: "Switch identity",
+        icon: Icons.contacts_sharp,
+        action: () => _switchIdentitiesMenu(context),
+      ),
+      ModalMenuOption(
+          title: "Log out",
+          icon: Icons.logout_sharp,
+          action: () => IdentityManager.forget(IdentitiesRepo.current!.username,
+              then: widget.reloadApp)),
+    ]);
+  }
+
+  void _switchIdentitiesMenu(BuildContext context) {
+    showModalMenu(context: context, options: [
+      for (final identity in IdentitiesRepo.all.values)
+        ModalMenuOption(
+            title: identity.user?.fullName ?? identity.username.split("@")[0],
+            subtitle: identity.organization,
+            icon: Icons.contacts_sharp,
+            action: () =>
+                IdentityManager.use(identity.username, then: widget.reloadApp)),
+      ModalMenuOption(
+        title: "Add new",
+        icon: Icons.person_add_sharp,
+        action: () =>
+            utils.openPage(context, LoginPage(onLogged: widget.reloadApp)),
       ),
     ]);
   }

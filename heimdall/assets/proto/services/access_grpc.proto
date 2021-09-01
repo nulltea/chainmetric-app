@@ -3,10 +3,9 @@ syntax = "proto3";
 package chainmetric.identity.service;
 option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/rpc";
 
-import "auth.proto";
+import "access.proto";
 import "common.proto";
 
 service AccessService {
   rpc requestFabricCredentials(presenter.FabricCredentialsRequest) returns (presenter.FabricCredentialsResponse);
-  rpc updatePassword(presenter.UpdatePasswordRequest) returns (presenter.StatusResponse);
 }

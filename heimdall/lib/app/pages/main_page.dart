@@ -12,18 +12,23 @@ import 'package:chainmetric/app/pages/home/tab.dart';
 import 'package:chainmetric/app/pages/organization/organization_tab.dart';
 
 class MainPage extends StatefulWidget {
+  final Function? reloadApp;
+
+  const MainPage({Key? key, this.reloadApp}) : super(key: key);
+
   @override
   _MainPageState createState() => _MainPageState();
+
 }
 
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
 
-  List<NavigationTabItem> tabs = [
+  List<NavigationTabItem> get tabs => _tabs ??= [
     NavigationTabItem(
         title: "IoT Chain",
         navBarItem: CustomAppBarItem(icon: Icons.home_filled),
-        tab: HomeTab(),
+        tab: HomeTab(key: GlobalKey()),
         buttonIcon: const Icon(Icons.cached, color: Colors.black),
         pageAction: (ctx) => print("Home")),
     NavigationTabItem(
@@ -43,10 +48,12 @@ class _MainPageState extends State<MainPage> {
     NavigationTabItem(
         title: "Profile",
         navBarItem: CustomAppBarItem(icon: Icons.people_alt_sharp),
-        tab: ProfileTab(),
+        tab: OrganizationTab(key: GlobalKey(), reloadApp: widget.reloadApp),
         buttonIcon: const Icon(Icons.person, color: Colors.black),
         pageAction: (ctx) => print("Profile")),
   ];
+
+  List<NavigationTabItem>? _tabs;
 
   void selectedTab(int index) {
     setState(() {

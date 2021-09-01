@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class AssetsTab extends NavigationTab {
-  AssetsTab({GlobalKey? key}) : super(key: key ?? GlobalKey());
+  const AssetsTab({GlobalKey? key}) : super(key: key);
 
   _AssetsTabState? get _currentState =>
       (key as GlobalKey?)?.currentState as _AssetsTabState?;

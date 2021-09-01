@@ -7,15 +7,14 @@ import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
-import 'package:chainmetric/usecase/login/login_helper.dart';
+import 'package:chainmetric/usecase/identity/login_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:talos/talos.dart';
 import 'package:chainmetric/app/utils/utils.dart' as utils;
 
 class LoginPage extends StatefulWidget {
-  final Function? submitAuth;
+  final Function? onLogged;
 
-  const LoginPage({Key? key, this.submitAuth}) : super(key: key);
+  LoginPage({Key? key, this.onLogged}) : super(key: key ?? GlobalKey());
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -75,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: 8,
                         margin: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
-                        items: LocalData.organizations!
+                        items: LocalDataRepo.organizations!
                             .map<DropdownMenuItem<String>>(
                                 (org) => DropdownMenuItem<String>(
                                       value: org.mspID,
@@ -257,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    organization = LocalData.organizations![0].mspID;
+    organization = LocalDataRepo.organizations![0].mspID;
   }
 
   Future<void> submitIdentity() async {
@@ -266,11 +265,11 @@ class _LoginPageState extends State<LoginPage> {
       try {
         if (certificateAuth) {
           if (await loginHelper.loginX509(certificate!, privateKey!)) {
-            widget.submitAuth!();
+            widget.onLogged!();
           }
         } else {
           if (await loginHelper.loginUserpass(email!, passcode!)) {
-            widget.submitAuth!();
+            widget.onLogged!();
           }
         }
       } on Exception catch (e) {
