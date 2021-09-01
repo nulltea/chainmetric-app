@@ -1,6 +1,6 @@
 import 'package:chainmetric/app/utils/utils.dart' as utils;
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
-import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
+import 'package:chainmetric/infrastructure/services/admin_grpc.dart';
 import 'package:chainmetric/models/identity/user.pb.dart';
 import 'package:flutter/material.dart';
 

@@ -42,14 +42,3 @@ const VaultSecret$json = const {
 
 /// Descriptor for `VaultSecret`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List vaultSecretDescriptor = $convert.base64Decode('CgtWYXVsdFNlY3JldBIUCgV0b2tlbhgBIAEoCVIFdG9rZW4SEgoEcGF0aBgCIAEoCVIEcGF0aA==');
-@$core.Deprecated('Use updatePasswordRequestDescriptor instead')
-const UpdatePasswordRequest$json = const {
-  '1': 'UpdatePasswordRequest',
-  '2': const [
-    const {'1': 'prevPasscode', '3': 1, '4': 1, '5': 9, '10': 'prevPasscode'},
-    const {'1': 'newPasscode', '3': 2, '4': 1, '5': 9, '8': const {}, '10': 'newPasscode'},
-  ],
-};
-
-/// Descriptor for `UpdatePasswordRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updatePasswordRequestDescriptor = $convert.base64Decode('ChVVcGRhdGVQYXNzd29yZFJlcXVlc3QSIgoMcHJldlBhc3Njb2RlGAEgASgJUgxwcmV2UGFzc2NvZGUSKQoLbmV3UGFzc2NvZGUYAiABKAlCB/pCBHICIAhSC25ld1Bhc3Njb2Rl');

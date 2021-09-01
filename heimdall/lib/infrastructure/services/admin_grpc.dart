@@ -1,11 +1,11 @@
-import 'package:chainmetric/infrastructure/services/identity_grpc.pbgrpc.dart';
+import 'package:chainmetric/infrastructure/services/admin_grpc.pbgrpc.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:grpc/grpc.dart' as grpc;
 
-class IdentityService extends IdentityServiceClient {
+class AdminService extends AdminServiceClient {
   final String organization;
 
-  IdentityService(this.organization,
+  AdminService(this.organization,
       {grpc.ClientChannel? channel, List<int>? certificate})
       : super(channel ??
             grpc.ClientChannel("identity.$organization.org.${GlobalConfiguration().getValue("grpc_domain")}",

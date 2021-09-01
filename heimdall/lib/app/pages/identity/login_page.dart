@@ -6,6 +6,7 @@ import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
+import 'package:chainmetric/infrastructure/services/admin_grpc.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/usecase/identity/login_helper.dart';
 import 'package:flutter/material.dart';
@@ -265,11 +266,13 @@ class _LoginPageState extends State<LoginPage> {
       try {
         if (certificateAuth) {
           if (await loginHelper.loginX509(certificate!, privateKey!)) {
-            widget.onLogged!();
+            openPage(context, RegistrationPage(onRegister: (resp) {
+              // TODO: enroll by admin
+            }));
           }
         } else {
           if (await loginHelper.loginUserpass(email!, passcode!)) {
-            widget.onLogged!();
+
           }
         }
       } on Exception catch (e) {

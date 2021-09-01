@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:chainmetric/models/identity/access.pb.dart';
 import 'package:chainmetric/models/identity/app_identity.dart';
 import 'package:chainmetric/models/identity/user.pb.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
@@ -7,8 +8,6 @@ import 'package:crypto/crypto.dart';
 
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/access_grpc.dart';
-import 'package:chainmetric/models/identity/auth.pb.dart';
-import 'package:chainmetric/models/identity/user.dart';
 import 'package:flutter/services.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:grpc/grpc.dart';

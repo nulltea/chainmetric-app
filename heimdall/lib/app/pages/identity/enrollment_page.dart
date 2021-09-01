@@ -6,9 +6,9 @@ import 'package:chainmetric/app/utils/utils.dart' as utils;
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
-import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
+import 'package:chainmetric/infrastructure/services/admin_grpc.dart';
 import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart';
-import 'package:chainmetric/models/identity/enrollment.pb.dart';
+import 'package:chainmetric/models/identity/admin.pb.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class EnrollmentPage extends StatefulWidget {
 }
 
 class _EnrollmentPageState extends State<EnrollmentPage> {
-  EnrollmentRequest request = EnrollmentRequest();
+  EnrollUserRequest request = EnrollUserRequest();
   String? organization;
   bool isTransient = false;
   final formKey = GlobalKey<FormState>();
@@ -174,10 +174,10 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
     }
 
     try {
-      await IdentityService(organization!,
+      await AdminService(organization!,
               certificate: await CertificatesResolver(organization!)
                   .resolveBytes("identity-client"))
-          .enroll(request);
+          .enrollUser(request);
     } on Exception catch (e) {
       utils.displayError(context, e);
     }

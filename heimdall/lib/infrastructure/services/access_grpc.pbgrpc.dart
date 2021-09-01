@@ -10,8 +10,7 @@ import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
-import 'package:chainmetric/models/identity/auth.pb.dart' as $0;
-import 'package:chainmetric/models/identity/common.pb.dart' as $1;
+import 'package:chainmetric/models/identity/access.pb.dart' as $0;
 export 'access_grpc.pb.dart';
 
 class AccessServiceClient extends $grpc.Client {
@@ -21,11 +20,6 @@ class AccessServiceClient extends $grpc.Client {
       ($0.FabricCredentialsRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) =>
           $0.FabricCredentialsResponse.fromBuffer(value));
-  static final _$updatePassword =
-      $grpc.ClientMethod<$0.UpdatePasswordRequest, $1.StatusResponse>(
-          '/chainmetric.identity.service.AccessService/updatePassword',
-          ($0.UpdatePasswordRequest value) => value.writeToBuffer(),
-          ($core.List<$core.int> value) => $1.StatusResponse.fromBuffer(value));
 
   AccessServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -37,12 +31,6 @@ class AccessServiceClient extends $grpc.Client {
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$requestFabricCredentials, request,
         options: options);
-  }
-
-  $grpc.ResponseFuture<$1.StatusResponse> updatePassword(
-      $0.UpdatePasswordRequest request,
-      {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$updatePassword, request, options: options);
   }
 }
 
@@ -59,14 +47,6 @@ abstract class AccessServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.FabricCredentialsRequest.fromBuffer(value),
         ($0.FabricCredentialsResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UpdatePasswordRequest, $1.StatusResponse>(
-        'updatePassword',
-        updatePassword_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) =>
-            $0.UpdatePasswordRequest.fromBuffer(value),
-        ($1.StatusResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.FabricCredentialsResponse> requestFabricCredentials_Pre(
@@ -75,13 +55,6 @@ abstract class AccessServiceBase extends $grpc.Service {
     return requestFabricCredentials(call, await request);
   }
 
-  $async.Future<$1.StatusResponse> updatePassword_Pre($grpc.ServiceCall call,
-      $async.Future<$0.UpdatePasswordRequest> request) async {
-    return updatePassword(call, await request);
-  }
-
   $async.Future<$0.FabricCredentialsResponse> requestFabricCredentials(
       $grpc.ServiceCall call, $0.FabricCredentialsRequest request);
-  $async.Future<$1.StatusResponse> updatePassword(
-      $grpc.ServiceCall call, $0.UpdatePasswordRequest request);
 }
