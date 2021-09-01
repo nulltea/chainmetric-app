@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/app/pages/identity/login_page.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/utils/utils.dart' as utils;
+import 'package:chainmetric/app/utils/menus.dart' as menus;
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/user_grpc.dart';
@@ -107,7 +108,11 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
                       borderRadius: 12,
                     ),
                   ),
-                )
+                ),
+              if (IdentitiesRepo.all.isNotEmpty)
+                TextButton(
+                    onPressed: () => menus.switchIdentitiesMenu(context, onSelect: widget.onReady),
+                    child: Text("Use other identity (${IdentitiesRepo.all.length})"))
             ].expand((widget) => [
                   widget,
                   const SizedBox(

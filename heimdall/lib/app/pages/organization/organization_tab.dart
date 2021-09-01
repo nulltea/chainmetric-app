@@ -1,5 +1,6 @@
 import 'package:chainmetric/app/pages/identity/login_page.dart';
 import 'package:chainmetric/app/utils/utils.dart' as utils;
+import 'package:chainmetric/app/utils/menus.dart' as menus;
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/usecase/identity/identity_manager.dart';
@@ -68,31 +69,13 @@ class _ProfileTabState extends State<OrganizationTab> {
       ModalMenuOption(
         title: "Switch identity",
         icon: Icons.contacts_sharp,
-        action: () => _switchIdentitiesMenu(context),
+        action: () => menus.switchIdentitiesMenu(context, onSelect: widget.reloadApp),
       ),
       ModalMenuOption(
           title: "Log out",
           icon: Icons.logout_sharp,
           action: () => IdentityManager.forget(IdentitiesRepo.current!.username,
               then: widget.reloadApp)),
-    ]);
-  }
-
-  void _switchIdentitiesMenu(BuildContext context) {
-    showModalMenu(context: context, options: [
-      for (final identity in IdentitiesRepo.all.values)
-        ModalMenuOption(
-            title: identity.user?.fullName ?? identity.username.split("@")[0],
-            subtitle: identity.organization,
-            icon: Icons.contacts_sharp,
-            action: () =>
-                IdentityManager.use(identity.username, then: widget.reloadApp)),
-      ModalMenuOption(
-        title: "Add new",
-        icon: Icons.person_add_sharp,
-        action: () =>
-            utils.openPage(context, LoginPage(onLogged: widget.reloadApp)),
-      ),
     ]);
   }
 

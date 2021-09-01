@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/app/pages/identity/registration_page.dart';
 import 'package:chainmetric/app/theme/theme.dart';
-import 'package:chainmetric/app/utils/utils.dart';
+import 'package:chainmetric/app/utils/menus.dart' as menus;
+import 'package:chainmetric/app/utils/utils.dart' as utils;
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
-import 'package:chainmetric/infrastructure/services/admin_grpc.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/usecase/identity/login_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/app/utils/utils.dart' as utils;
 
 class LoginPage extends StatefulWidget {
   final Function? onLogged;
@@ -235,7 +235,11 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () => setState(() => certificateAuth = !certificateAuth),
                         child: Text(!certificateAuth
                             ? "Login with certificate instead"
-                            : "Back to password login"))
+                            : "Back to password login")),
+                    if (IdentitiesRepo.all.isNotEmpty)
+                      TextButton(
+                          onPressed: () => menus.switchIdentitiesMenu(context, onSelect: widget.onLogged),
+                          child: Text("Use other identity (${IdentitiesRepo.all.length})"))
                   ].expand((widget) => [
                         widget,
                         const SizedBox(
@@ -245,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                 ]),
               ),
               TextButton(
-                  onPressed: () => openPage(context, const RegistrationPage()),
+                  onPressed: () => utils.openPage(context, const RegistrationPage()),
                   child: const Text("New here? Request registration here"))
             ],
           ),
