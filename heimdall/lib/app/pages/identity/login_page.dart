@@ -249,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                 ]),
               ),
               TextButton(
-                  onPressed: () => utils.openPage(context, const RegistrationPage()),
+                  onPressed: () => utils.openPage(context, RegistrationPage(onRegister: widget.onLogged)),
                   child: const Text("New here? Request registration here"))
             ],
           ),

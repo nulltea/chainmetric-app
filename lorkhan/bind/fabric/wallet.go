@@ -18,13 +18,9 @@ func (sdk *SDK) InitWallet(path string) error {
 	return nil
 }
 
-// IdentityRequired determines whether the signing identity is required for using SDK.
-func (sdk *SDK) IdentityRequired() bool {
-	if identities, err := sdk.Wallet.List(); err == nil && len(identities) > 0 {
-		return false
-	}
-
-	return true
+// IdentityExists determines whether the gateway.Wallet holds signing credentials for given `username`.
+func (sdk *SDK) IdentityExists(username string) bool {
+	return !sdk.Wallet.Exists(username)
 }
 
 // GetIdentities returns list of signing identities stored in the gateway.Wallet.

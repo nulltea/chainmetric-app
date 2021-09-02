@@ -10,7 +10,7 @@ void switchIdentitiesMenu(BuildContext context, {Function? onSelect}) {
   showModalMenu(context: context, options: [
     for (final identity in IdentitiesRepo.all.values)
       ModalMenuOption(
-          title: identity.user?.fullName ?? identity.username.split("@")[0],
+          title: identity.displayName,
           subtitle: identity.organization,
           icon: Icons.contacts_sharp,
           action: () =>

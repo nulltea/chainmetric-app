@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:chainmetric/models/identity/access.pb.dart';
-import 'package:chainmetric/models/identity/app_identity.dart';
-import 'package:chainmetric/models/identity/user.pb.dart';
+import 'package:chainmetric/models/identity/user.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/shared/logger.dart';
 import 'package:crypto/crypto.dart';
@@ -56,8 +55,8 @@ class LoginHelper {
       return false;
     }
 
-    IdentitiesRepo.put(AppIdentity(_organization, resp.user.username,
-        accessToken: resp.apiAccessToken, user: resp.user));
+    IdentitiesRepo.put(AppUser.fromProto(resp.user, _organization,
+      accessToken: resp.apiAccessToken));
     IdentitiesRepo.setCurrent(resp.user.username);
 
     return success;
@@ -91,8 +90,8 @@ class LoginHelper {
       return false;
     }
 
-    IdentitiesRepo.put(
-        AppIdentity(_organization, resp.user.username, user: resp.user));
+    IdentitiesRepo.put(AppUser.fromProto(resp.user, _organization,
+        accessToken: resp.apiAccessToken));
     IdentitiesRepo.setCurrent(resp.user.username);
 
     return true;

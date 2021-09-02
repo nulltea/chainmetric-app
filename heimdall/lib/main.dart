@@ -22,7 +22,7 @@ void main() {
   runApp(App());
 }
 
-Future<void> initConfig() async {
+Future<void> _initConfig() async {
   final yaml = loadYaml(await rootBundle.loadString("assets/config.yaml"));
 
   GlobalConfiguration()
@@ -54,7 +54,7 @@ class _AppState extends State<App> {
     }
 
     if (_requireAuth) {
-      final pendingConfirm = IdentitiesRepo.current?.user?.confirmed == false;
+      final pendingConfirm = IdentitiesRepo.current?.confirmed == false;
 
       return pendingConfirm
           ? ConfirmPendingPage(onReady: _initBackend)
@@ -67,26 +67,34 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    initConfig();
+    _initConfig();
     _initBackend();
     _initOverlay();
   }
 
   Future<void> _initBackend() async {
-    await PairedDevicesRepo.init();
+    _requireAuth = true;
+
     await IdentitiesRepo.init();
+    await PairedDevicesRepo.init();
     await LocalDataRepo.init();
     await Privileges.init();
     await Fabric.initWallet();
-    if (await Fabric.identityRequired()) {
+
+    final identity = IdentitiesRepo.current;
+
+    if (identity == null || await Fabric.identityExists(username: identity.username)) {
       setState(() => _isLoading = false);
       return;
     }
-    final config = await FabricConnection("assets/connection.yaml", IdentitiesRepo.organization!).init();
-    await Fabric.setupConnection(config, "supply-channel", username: IdentitiesRepo.current!.username);
-    setState(() => _requireAuth = _isLoading = false);
 
+    final config = await FabricConnection(
+            "assets/connection.yaml", IdentitiesRepo.organization!)
+        .init();
+    await Fabric.setupConnection(config, "supply-channel",
+        username: IdentitiesRepo.current!.username);
     await Bluetooth.init();
+    setState(() => _requireAuth = _isLoading = false);
   }
 
   void _initOverlay() {

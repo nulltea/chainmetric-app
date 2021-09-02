@@ -7,14 +7,14 @@ import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/user_grpc.dart';
-import 'package:chainmetric/models/identity/app_identity.dart';
+import 'package:chainmetric/models/identity/user.dart';
 import 'package:chainmetric/models/identity/user.pb.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
-  final Function(RegistrationResponse)? onRegister;
+  final Function? onRegister;
   const RegistrationPage({Key? key, this.onRegister}) : super(key: key);
 
   @override
@@ -196,11 +196,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   .resolveBytes("identity-client"))
           .register(request);
 
-      IdentitiesRepo.put(
-          AppIdentity(organization!, resp.user.username, accessToken: resp.accessToken, user: resp.user)
-      );
+      IdentitiesRepo.put(AppUser.fromProto(resp.user, organization!,
+          accessToken: resp.accessToken));
 
-      widget.onRegister?.call(resp);
+      widget.onRegister?.call();
     } on Exception catch (e) {
       utils.displayError(context, e);
     }
