@@ -14,8 +14,7 @@ class AppUser {
   late final String organization;
   late final DateTime createdAt;
   @JsonKey(defaultValue: false)
-  late final bool confirmed;
-  bool? trained;
+  late bool confirmed;
   String? accessToken;
 
   AppUser();

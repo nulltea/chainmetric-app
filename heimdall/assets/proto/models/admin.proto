@@ -8,11 +8,13 @@ import "validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
 message EnrollUserRequest {
-  string userID = 1 [(validate.rules).string = {uuid: true}];
+  string userID = 1 [(validate.rules).string = {min_len: 32, max_len: 32}];
   string role = 2;
   google.protobuf.Timestamp expireAt = 3 [(validate.rules).timestamp = {required: false}];
 }
 
 message EnrollUserResponse {
   string initialPassword = 1;
+
+  option (validate.ignored) = true;
 }

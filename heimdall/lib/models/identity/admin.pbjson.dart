@@ -19,14 +19,15 @@ const EnrollUserRequest$json = const {
 };
 
 /// Descriptor for `EnrollUserRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List enrollUserRequestDescriptor = $convert.base64Decode('ChFFbnJvbGxVc2VyUmVxdWVzdBIgCgZ1c2VySUQYASABKAlCCPpCBXIDsAEBUgZ1c2VySUQSEgoEcm9sZRgCIAEoCVIEcm9sZRJACghleHBpcmVBdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCCPpCBbIBAggAUghleHBpcmVBdA==');
+final $typed_data.Uint8List enrollUserRequestDescriptor = $convert.base64Decode('ChFFbnJvbGxVc2VyUmVxdWVzdBIhCgZ1c2VySUQYASABKAlCCfpCBnIEECAYIFIGdXNlcklEEhIKBHJvbGUYAiABKAlSBHJvbGUSQAoIZXhwaXJlQXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgj6QgWyAQIIAFIIZXhwaXJlQXQ=');
 @$core.Deprecated('Use enrollUserResponseDescriptor instead')
 const EnrollUserResponse$json = const {
   '1': 'EnrollUserResponse',
   '2': const [
     const {'1': 'initialPassword', '3': 1, '4': 1, '5': 9, '10': 'initialPassword'},
   ],
+  '7': const {},
 };
 
 /// Descriptor for `EnrollUserResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List enrollUserResponseDescriptor = $convert.base64Decode('ChJFbnJvbGxVc2VyUmVzcG9uc2USKAoPaW5pdGlhbFBhc3N3b3JkGAEgASgJUg9pbml0aWFsUGFzc3dvcmQ=');
+final $typed_data.Uint8List enrollUserResponseDescriptor = $convert.base64Decode('ChJFbnJvbGxVc2VyUmVzcG9uc2USKAoPaW5pdGlhbFBhc3N3b3JkGAEgASgJUg9pbml0aWFsUGFzc3dvcmQ6A4BDAQ==');

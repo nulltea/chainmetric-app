@@ -12,6 +12,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart' as $0;
 
+import 'user.pbenum.dart';
+
+export 'user.pbenum.dart';
+
 class User extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'User', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
@@ -22,7 +26,6 @@ class User extends $pb.GeneratedMessage {
     ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'role')
     ..aOM<$0.Timestamp>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'createdAt', protoName: 'createdAt', subBuilder: $0.Timestamp.create)
     ..aOB(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'confirmed')
-    ..aOB(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'trained')
     ..aOM<$0.Timestamp>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'expireAt', protoName: 'expireAt', subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false
   ;
@@ -37,7 +40,6 @@ class User extends $pb.GeneratedMessage {
     $core.String? role,
     $0.Timestamp? createdAt,
     $core.bool? confirmed,
-    $core.bool? trained,
     $0.Timestamp? expireAt,
   }) {
     final _result = create();
@@ -64,9 +66,6 @@ class User extends $pb.GeneratedMessage {
     }
     if (confirmed != null) {
       _result.confirmed = confirmed;
-    }
-    if (trained != null) {
-      _result.trained = trained;
     }
     if (expireAt != null) {
       _result.expireAt = expireAt;
@@ -168,25 +167,16 @@ class User extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearConfirmed() => clearField(8);
 
-  @$pb.TagNumber(9)
-  $core.bool get trained => $_getBF(8);
-  @$pb.TagNumber(9)
-  set trained($core.bool v) { $_setBool(8, v); }
-  @$pb.TagNumber(9)
-  $core.bool hasTrained() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearTrained() => clearField(9);
-
   @$pb.TagNumber(10)
-  $0.Timestamp get expireAt => $_getN(9);
+  $0.Timestamp get expireAt => $_getN(8);
   @$pb.TagNumber(10)
   set expireAt($0.Timestamp v) { setField(10, v); }
   @$pb.TagNumber(10)
-  $core.bool hasExpireAt() => $_has(9);
+  $core.bool hasExpireAt() => $_has(8);
   @$pb.TagNumber(10)
   void clearExpireAt() => clearField(10);
   @$pb.TagNumber(10)
-  $0.Timestamp ensureExpireAt() => $_ensure(9);
+  $0.Timestamp ensureExpireAt() => $_ensure(8);
 }
 
 class UsersRequest extends $pb.GeneratedMessage {
@@ -470,5 +460,66 @@ class ChangePasswordRequest extends $pb.GeneratedMessage {
   $core.bool hasNewPasscode() => $_has(1);
   @$pb.TagNumber(2)
   void clearNewPasscode() => clearField(2);
+}
+
+class UserStatusResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UserStatusResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
+    ..e<UserStatus>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: UserStatus.PENDING_APPROVAL, valueOf: UserStatus.valueOf, enumValues: UserStatus.values)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'initialPassword', protoName: 'initialPassword')
+    ..hasRequiredFields = false
+  ;
+
+  UserStatusResponse._() : super();
+  factory UserStatusResponse({
+    UserStatus? status,
+    $core.String? initialPassword,
+  }) {
+    final _result = create();
+    if (status != null) {
+      _result.status = status;
+    }
+    if (initialPassword != null) {
+      _result.initialPassword = initialPassword;
+    }
+    return _result;
+  }
+  factory UserStatusResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory UserStatusResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  UserStatusResponse clone() => UserStatusResponse()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  UserStatusResponse copyWith(void Function(UserStatusResponse) updates) => super.copyWith((message) => updates(message as UserStatusResponse)) as UserStatusResponse; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static UserStatusResponse create() => UserStatusResponse._();
+  UserStatusResponse createEmptyInstance() => create();
+  static $pb.PbList<UserStatusResponse> createRepeated() => $pb.PbList<UserStatusResponse>();
+  @$core.pragma('dart2js:noInline')
+  static UserStatusResponse getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<UserStatusResponse>(create);
+  static UserStatusResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  UserStatus get status => $_getN(0);
+  @$pb.TagNumber(1)
+  set status(UserStatus v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasStatus() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStatus() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get initialPassword => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set initialPassword($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasInitialPassword() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInitialPassword() => clearField(2);
 }
 

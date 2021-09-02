@@ -17,7 +17,6 @@ AppUser _$AppUserFromJson(Map<String, dynamic> json) {
     ..organization = json['organization'] as String
     ..createdAt = DateTime.parse(json['createdAt'] as String)
     ..confirmed = json['confirmed'] as bool? ?? false
-    ..trained = json['trained'] as bool?
     ..accessToken = json['accessToken'] as String?;
 }
 
@@ -31,6 +30,5 @@ Map<String, dynamic> _$AppUserToJson(AppUser instance) => <String, dynamic>{
       'organization': instance.organization,
       'createdAt': instance.createdAt.toIso8601String(),
       'confirmed': instance.confirmed,
-      'trained': instance.trained,
       'accessToken': instance.accessToken,
     };

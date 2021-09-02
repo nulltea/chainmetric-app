@@ -1,3 +1,6 @@
+import 'package:chainmetric/models/identity/user.dart';
+import 'package:chainmetric/models/identity/user.pb.dart';
+import 'package:chainmetric/usecase/identity/login_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -24,23 +27,38 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool pendingConfirm = false;
+  bool pendingConfirm = true;
+  late final AppUser currentIdentity;
+  late final String initialPassword;
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
+    currentIdentity = IdentitiesRepo.current!;
 
-    final currentIdentity = IdentitiesRepo.current!;
+    Future.doWhile(() async {
 
-    final resp = await UserService(currentIdentity.organization,
-            certificate:
-                await CertificatesResolver(currentIdentity.organization)
-                    .resolveBytes("identity-client"),
-            accessToken: currentIdentity.accessToken)
-        .getState(Empty());
+      final resp = await UserService(currentIdentity.organization,
+          certificate:
+          await CertificatesResolver(currentIdentity.organization)
+              .resolveBytes("identity-client"),
+          accessToken: currentIdentity.accessToken)
+          .pingAccountStatus(Empty());
 
-    setState(() {
-      pendingConfirm = !resp.confirmed;
+      setState(() {
+        pendingConfirm = resp.status == UserStatus.PENDING_APPROVAL;
+      });
+
+      if (resp.status == UserStatus.APPROVED) {
+        IdentitiesRepo.put(currentIdentity..confirmed = true);
+        initialPassword = resp.initialPassword;
+
+        return false;
+      }
+
+      await Future.delayed(const Duration(seconds: 10));
+
+      return true;
     });
   }
 
@@ -54,14 +72,18 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
           child: Column(children: [
             ...[
               Lottie.asset(pendingConfirm
-                  ? "assets/lottie/waiting.json"
-                  : "assets/lottie/confirmed.json"), // TODO: Lottie animation here
-              AutoSizeText(
-                pendingConfirm
-                    ? "Your account will be reviewed by administrator soon..."
-                    : "Congratulations! Your account has been confirmed",
-                textAlign: TextAlign.center,
-                style: AppTheme.title1.override(fontSize: 20),
+                  ? "assets/lottie/review.json"
+                  : "assets/lottie/confirmed.json"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: AutoSizeText(
+                  pendingConfirm
+                      ? "Your account will be reviewed by administrator soon"
+                      : "Congratulations!\nYour account has been confirmed",
+                  textAlign: TextAlign.center,
+                  style: AppTheme.title1
+                      .override(fontFamily: "IBM Plex Mono", fontSize: 20),
+                ),
               ),
               if (pendingConfirm)
                 Padding(
@@ -91,7 +113,7 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
                   padding: const EdgeInsets.only(top: 12),
                   child: FormButtonWidget(
                     onPressed: _finishRegistration,
-                    text: "Start using app...",
+                    text: "Start using app",
                     options: FormButtonOptions(
                       width: 200,
                       height: 50,
@@ -109,10 +131,12 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
                     ),
                   ),
                 ),
-              if (IdentitiesRepo.all.isNotEmpty)
+              if (IdentitiesRepo.all.length > 1)
                 TextButton(
-                    onPressed: () => menus.switchIdentitiesMenu(context, onSelect: widget.onReady),
-                    child: Text("Use other identity (${IdentitiesRepo.all.length})"))
+                    onPressed: () => menus.switchIdentitiesMenu(context,
+                        onSelect: widget.onReady),
+                    child: Text(
+                        "Use other identity (${IdentitiesRepo.all.length})"))
             ].expand((widget) => [
                   widget,
                   const SizedBox(
@@ -125,7 +149,15 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
     );
   }
 
-  void _finishRegistration() {
-    utils.openPage(context, LoginPage(onLogged: widget.onReady));
+  Future<void> _finishRegistration() async {
+    try {
+      if (await LoginHelper(currentIdentity.organization)
+          .loginUserpass(currentIdentity.email, initialPassword)) {
+        // TODO expose initial password to user and propose to change it.
+        widget.onReady?.call();
+      }
+    } on Exception catch (e) {
+      utils.displayError(context, e);
+    }
   }
 }

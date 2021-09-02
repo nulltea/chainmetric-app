@@ -26,6 +26,12 @@ class UserServiceClient extends $grpc.Client {
       '/chainmetric.identity.service.UserService/getState',
       ($3.Empty value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $1.User.fromBuffer(value));
+  static final _$pingAccountStatus =
+      $grpc.ClientMethod<$3.Empty, $1.UserStatusResponse>(
+          '/chainmetric.identity.service.UserService/pingAccountStatus',
+          ($3.Empty value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              $1.UserStatusResponse.fromBuffer(value));
   static final _$changePassword =
       $grpc.ClientMethod<$1.ChangePasswordRequest, $4.StatusResponse>(
           '/chainmetric.identity.service.UserService/changePassword',
@@ -46,6 +52,12 @@ class UserServiceClient extends $grpc.Client {
   $grpc.ResponseFuture<$1.User> getState($3.Empty request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getState, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$1.UserStatusResponse> pingAccountStatus(
+      $3.Empty request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$pingAccountStatus, request, options: options);
   }
 
   $grpc.ResponseFuture<$4.StatusResponse> changePassword(
@@ -75,6 +87,13 @@ abstract class UserServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $3.Empty.fromBuffer(value),
         ($1.User value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$3.Empty, $1.UserStatusResponse>(
+        'pingAccountStatus',
+        pingAccountStatus_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $3.Empty.fromBuffer(value),
+        ($1.UserStatusResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ChangePasswordRequest, $4.StatusResponse>(
         'changePassword',
         changePassword_Pre,
@@ -95,6 +114,11 @@ abstract class UserServiceBase extends $grpc.Service {
     return getState(call, await request);
   }
 
+  $async.Future<$1.UserStatusResponse> pingAccountStatus_Pre(
+      $grpc.ServiceCall call, $async.Future<$3.Empty> request) async {
+    return pingAccountStatus(call, await request);
+  }
+
   $async.Future<$4.StatusResponse> changePassword_Pre($grpc.ServiceCall call,
       $async.Future<$1.ChangePasswordRequest> request) async {
     return changePassword(call, await request);
@@ -103,6 +127,8 @@ abstract class UserServiceBase extends $grpc.Service {
   $async.Future<$1.RegistrationResponse> register(
       $grpc.ServiceCall call, $1.RegistrationRequest request);
   $async.Future<$1.User> getState($grpc.ServiceCall call, $3.Empty request);
+  $async.Future<$1.UserStatusResponse> pingAccountStatus(
+      $grpc.ServiceCall call, $3.Empty request);
   $async.Future<$4.StatusResponse> changePassword(
       $grpc.ServiceCall call, $1.ChangePasswordRequest request);
 }

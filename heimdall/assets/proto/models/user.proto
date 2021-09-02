@@ -16,8 +16,9 @@ message User {
   string role = 6;
   google.protobuf.Timestamp createdAt = 7;
   bool confirmed = 8;
-  bool trained = 9;
   google.protobuf.Timestamp expireAt = 10;
+
+  option (validate.ignored) = true;
 }
 
 message UsersRequest {}
@@ -25,6 +26,8 @@ message UsersRequest {}
 message UsersResponse {
   repeated User users = 1;
   int64 count = 2;
+
+  option (validate.ignored) = true;
 }
 
 message RegistrationRequest {
@@ -36,9 +39,26 @@ message RegistrationRequest {
 message RegistrationResponse {
   User user = 1;
   string accessToken = 2;
+
+  option (validate.ignored) = true;
 }
 
 message ChangePasswordRequest {
   string prevPasscode = 1;
   string newPasscode = 2 [(validate.rules).string = {min_bytes: 8}];
+}
+
+message UserStatusResponse {
+  UserStatus status = 1;
+  optional string initialPassword = 2;
+
+  option (validate.ignored) = true;
+}
+
+enum UserStatus {
+  PENDING_APPROVAL = 0;
+  APPROVED = 1;
+  DECLINED = 2;
+  ACTIVE = 3;
+  CANCELED = 4;
 }
