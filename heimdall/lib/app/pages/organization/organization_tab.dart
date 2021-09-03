@@ -1,17 +1,19 @@
 import 'package:chainmetric/app/pages/identity/login_page.dart';
+import 'package:chainmetric/app/pages/organization/candidates_page.dart';
 import 'package:chainmetric/app/utils/utils.dart' as utils;
 import 'package:chainmetric/app/utils/menus.dart' as menus;
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
+import 'package:chainmetric/models/identity/user.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
+import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/usecase/identity/identity_manager.dart';
+import 'package:chainmetric/usecase/privileges/resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
-import 'package:chainmetric/models/identity/user.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 class OrganizationTab extends NavigationTab {
-  final Function? reloadApp;
+  final Function(BuildContext)? reloadApp;
 
   const OrganizationTab({Key? key, this.reloadApp}) : super(key: key);
 
@@ -22,17 +24,11 @@ class OrganizationTab extends NavigationTab {
   _ProfileTabState createState() => _ProfileTabState();
 
   @override
-  Future? refreshData() => _currentState!._refreshData();
+  Future? refreshData() => Future.value();
 }
 
 class _ProfileTabState extends State<OrganizationTab> {
-  final _refreshKey = GlobalKey<RefreshIndicatorState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _refreshData();
-  }
+  late final AppUser user;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -49,17 +45,36 @@ class _ProfileTabState extends State<OrganizationTab> {
                 icon: const Icon(Icons.menu))
           ],
         ),
-        body: RefreshIndicator(
-          key: _refreshKey,
-          onRefresh: _refreshData,
-          child: const Center(
-            child: Text("Profile here"),
-          ),
+        body: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Center(child: Icon(Icons.account_circle_sharp, size: 128)),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text("${user.firstname} ${user.lastname}",
+                    style: AppTheme.title1),
+              ),
+            ),
+            Center(
+                child: Text(LocalDataRepo.organizationsMap[user.organization]!.name,
+                    style:
+                        AppTheme.subtitle1.override(
+                          fontFamily: "Roboto Mono",
+                            color: AppTheme.hintColor)))
+          ]),
         ),
       );
 
   void _showMenu(BuildContext context) {
     showModalMenu(context: context, options: [
+      if (Privileges.resolveFor(IdentitiesRepo.current!, "identity.enroll"))
+        ModalMenuOption(
+          title: "Enroll users",
+          icon: Icons.manage_accounts_sharp,
+          action: () => utils.openPage(context, const CandidatesPage()),
+        ),
       ModalMenuOption(
         title: "Add identity",
         icon: Icons.person_add_sharp,
@@ -69,17 +84,20 @@ class _ProfileTabState extends State<OrganizationTab> {
       ModalMenuOption(
         title: "Switch identity",
         icon: Icons.contacts_sharp,
-        action: () => menus.switchIdentitiesMenu(context, onSelect: widget.reloadApp),
+        action: () =>
+            menus.switchIdentitiesMenu(context, onSelect: widget.reloadApp),
       ),
       ModalMenuOption(
           title: "Log out",
           icon: Icons.logout_sharp,
           action: () => IdentityManager.forget(IdentitiesRepo.current!.username,
-              then: widget.reloadApp)),
+              then: () => widget.reloadApp?.call(context))),
     ]);
   }
 
-  Future _refreshData() {
-    return Future.value();
+  @override
+  void initState() {
+    super.initState();
+    user = IdentitiesRepo.current!;
   }
 }

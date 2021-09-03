@@ -50,7 +50,8 @@ message ChangePasswordRequest {
 
 message UserStatusResponse {
   UserStatus status = 1;
-  optional string initialPassword = 2;
+  optional string role = 2;
+  optional string initialPassword = 3;
 
   option (validate.ignored) = true;
 }

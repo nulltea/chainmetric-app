@@ -14,7 +14,7 @@ import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
-  final Function? onRegister;
+  final Function(BuildContext)? onRegister;
   const RegistrationPage({Key? key, this.onRegister}) : super(key: key);
 
   @override
@@ -199,7 +199,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       IdentitiesRepo.put(AppUser.fromProto(resp.user, organization!,
           accessToken: resp.accessToken));
 
-      widget.onRegister?.call();
+      widget.onRegister?.call(context);
     } on Exception catch (e) {
       utils.displayError(context, e);
     }

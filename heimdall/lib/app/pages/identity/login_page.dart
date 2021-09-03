@@ -13,7 +13,7 @@ import 'package:chainmetric/usecase/identity/login_helper.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  final Function? onLogged;
+  final Function(BuildContext)? onLogged;
 
   LoginPage({Key? key, this.onLogged}) : super(key: key ?? GlobalKey());
 
@@ -270,11 +270,11 @@ class _LoginPageState extends State<LoginPage> {
       try {
         if (certificateAuth) {
           if (await loginHelper.loginX509(certificate!, privateKey!)) {
-            widget.onLogged?.call();
+            widget.onLogged?.call(context);
           }
         } else {
           if (await loginHelper.loginUserpass(email!, passcode!)) {
-            widget.onLogged?.call();
+            widget.onLogged?.call(context);
           }
         }
       } on Exception catch (e) {

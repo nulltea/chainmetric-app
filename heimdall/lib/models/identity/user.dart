@@ -10,7 +10,7 @@ class AppUser {
   late final String lastname;
   late final String username;
   late final String email;
-  late final String role;
+  late String? role;
   late final String organization;
   late final DateTime createdAt;
   @JsonKey(defaultValue: false)

@@ -57,11 +57,11 @@ class _AppState extends State<App> {
       final pendingConfirm = IdentitiesRepo.current?.confirmed == false;
 
       return pendingConfirm
-          ? ConfirmPendingPage(onReady: _initBackend)
-          : LoginPage(onLogged: _initBackend);
+          ? ConfirmPendingPage(onReady: _reloadApp)
+          : LoginPage(onLogged: _reloadApp);
     }
 
-    return MainPage(reloadApp: _initBackend);
+    return MainPage(reloadApp: _reloadApp);
   }
 
   @override
@@ -73,8 +73,6 @@ class _AppState extends State<App> {
   }
 
   Future<void> _initBackend() async {
-    _requireAuth = true;
-
     await IdentitiesRepo.init();
     await PairedDevicesRepo.init();
     await LocalDataRepo.init();
@@ -111,5 +109,11 @@ class _AppState extends State<App> {
             borderColor: Colors.black54),
       ),
     });
+  }
+
+  void _reloadApp(BuildContext context) {
+    Navigator.maybePop(context);
+    _requireAuth = true;
+    _initBackend();
   }
 }

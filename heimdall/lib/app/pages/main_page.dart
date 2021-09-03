@@ -12,7 +12,7 @@ import 'package:chainmetric/app/pages/home/tab.dart';
 import 'package:chainmetric/app/pages/organization/organization_tab.dart';
 
 class MainPage extends StatefulWidget {
-  final Function? reloadApp;
+  final Function(BuildContext)? reloadApp;
 
   const MainPage({Key? key, this.reloadApp}) : super(key: key);
 

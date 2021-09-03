@@ -15,7 +15,7 @@ import 'package:chainmetric/models/generated/google/protobuf/empty.pb.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 
 class ConfirmPendingPage extends StatefulWidget {
-  final Function? onReady;
+  final Function(BuildContext)? onReady;
 
   const ConfirmPendingPage({Key? key, this.onReady}) : super(key: key);
 
@@ -37,7 +37,6 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
     currentIdentity = IdentitiesRepo.current!;
 
     Future.doWhile(() async {
-
       final resp = await UserService(currentIdentity.organization,
           certificate:
           await CertificatesResolver(currentIdentity.organization)
@@ -50,7 +49,9 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
       });
 
       if (resp.status == UserStatus.APPROVED) {
-        IdentitiesRepo.put(currentIdentity..confirmed = true);
+        IdentitiesRepo.put(currentIdentity
+          ..confirmed = true
+            ..role = resp.role);
         initialPassword = resp.initialPassword;
 
         return false;
@@ -60,6 +61,7 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
 
       return true;
     });
+    // TODO: stop loop on exit
   }
 
   @override
@@ -153,8 +155,9 @@ class _ConfirmPendingPageState extends State<ConfirmPendingPage> {
     try {
       if (await LoginHelper(currentIdentity.organization)
           .loginUserpass(currentIdentity.email, initialPassword)) {
+        IdentitiesRepo.initialPassword = initialPassword;
         // TODO expose initial password to user and propose to change it.
-        widget.onReady?.call();
+        widget.onReady?.call(context);
       }
     } on Exception catch (e) {
       utils.displayError(context, e);

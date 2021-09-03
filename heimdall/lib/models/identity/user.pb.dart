@@ -465,18 +465,23 @@ class ChangePasswordRequest extends $pb.GeneratedMessage {
 class UserStatusResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UserStatusResponse', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'chainmetric.identity.presenter'), createEmptyInstance: create)
     ..e<UserStatus>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: UserStatus.PENDING_APPROVAL, valueOf: UserStatus.valueOf, enumValues: UserStatus.values)
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'initialPassword', protoName: 'initialPassword')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'role')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'initialPassword', protoName: 'initialPassword')
     ..hasRequiredFields = false
   ;
 
   UserStatusResponse._() : super();
   factory UserStatusResponse({
     UserStatus? status,
+    $core.String? role,
     $core.String? initialPassword,
   }) {
     final _result = create();
     if (status != null) {
       _result.status = status;
+    }
+    if (role != null) {
+      _result.role = role;
     }
     if (initialPassword != null) {
       _result.initialPassword = initialPassword;
@@ -514,12 +519,21 @@ class UserStatusResponse extends $pb.GeneratedMessage {
   void clearStatus() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get initialPassword => $_getSZ(1);
+  $core.String get role => $_getSZ(1);
   @$pb.TagNumber(2)
-  set initialPassword($core.String v) { $_setString(1, v); }
+  set role($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasInitialPassword() => $_has(1);
+  $core.bool hasRole() => $_has(1);
   @$pb.TagNumber(2)
-  void clearInitialPassword() => clearField(2);
+  void clearRole() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get initialPassword => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set initialPassword($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasInitialPassword() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInitialPassword() => clearField(3);
 }
 

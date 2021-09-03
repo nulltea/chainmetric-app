@@ -100,13 +100,15 @@ const UserStatusResponse$json = const {
   '1': 'UserStatusResponse',
   '2': const [
     const {'1': 'status', '3': 1, '4': 1, '5': 14, '6': '.chainmetric.identity.presenter.UserStatus', '10': 'status'},
-    const {'1': 'initialPassword', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'initialPassword', '17': true},
+    const {'1': 'role', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'role', '17': true},
+    const {'1': 'initialPassword', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'initialPassword', '17': true},
   ],
   '7': const {},
   '8': const [
+    const {'1': '_role'},
     const {'1': '_initialPassword'},
   ],
 };
 
 /// Descriptor for `UserStatusResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List userStatusResponseDescriptor = $convert.base64Decode('ChJVc2VyU3RhdHVzUmVzcG9uc2USQgoGc3RhdHVzGAEgASgOMiouY2hhaW5tZXRyaWMuaWRlbnRpdHkucHJlc2VudGVyLlVzZXJTdGF0dXNSBnN0YXR1cxItCg9pbml0aWFsUGFzc3dvcmQYAiABKAlIAFIPaW5pdGlhbFBhc3N3b3JkiAEBOgOAQwFCEgoQX2luaXRpYWxQYXNzd29yZA==');
+final $typed_data.Uint8List userStatusResponseDescriptor = $convert.base64Decode('ChJVc2VyU3RhdHVzUmVzcG9uc2USQgoGc3RhdHVzGAEgASgOMiouY2hhaW5tZXRyaWMuaWRlbnRpdHkucHJlc2VudGVyLlVzZXJTdGF0dXNSBnN0YXR1cxIXCgRyb2xlGAIgASgJSABSBHJvbGWIAQESLQoPaW5pdGlhbFBhc3N3b3JkGAMgASgJSAFSD2luaXRpYWxQYXNzd29yZIgBAToDgEMBQgcKBV9yb2xlQhIKEF9pbml0aWFsUGFzc3dvcmQ=');

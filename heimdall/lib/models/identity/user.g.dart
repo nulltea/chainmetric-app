@@ -13,7 +13,7 @@ AppUser _$AppUserFromJson(Map<String, dynamic> json) {
     ..lastname = json['lastname'] as String
     ..username = json['username'] as String
     ..email = json['email'] as String
-    ..role = json['role'] as String
+    ..role = json['role'] as String?
     ..organization = json['organization'] as String
     ..createdAt = DateTime.parse(json['createdAt'] as String)
     ..confirmed = json['confirmed'] as bool? ?? false

@@ -9,24 +9,29 @@ import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart'
 import 'package:chainmetric/infrastructure/services/admin_grpc.dart';
 import 'package:chainmetric/models/generated/google/protobuf/timestamp.pb.dart';
 import 'package:chainmetric/models/identity/admin.pb.dart';
+import 'package:chainmetric/models/identity/user.dart';
+import 'package:chainmetric/models/identity/user.pb.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 
-class EnrollmentPage extends StatefulWidget {
-  const EnrollmentPage({Key? key}) : super(key: key);
+class EnrollUserPage extends StatefulWidget {
+  final User user;
+  final Function(BuildContext)? onEnroll;
+
+  const EnrollUserPage(this.user, {Key? key, this.onEnroll}) : super(key: key);
 
   @override
-  _EnrollmentPageState createState() => _EnrollmentPageState();
+  _EnrollUserPageState createState() => _EnrollUserPageState();
 }
 
-class _EnrollmentPageState extends State<EnrollmentPage> {
+class _EnrollUserPageState extends State<EnrollUserPage> {
   EnrollUserRequest request = EnrollUserRequest();
-  String? organization;
   bool isTransient = false;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late final AppUser adminIdentity;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +48,10 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(),
                 child: AutoSizeText(
-                  "Registration",
+                  "Enroll\n${widget.user.firstname} ${widget.user.lastname}",
                   textAlign: TextAlign.center,
                   style: AppTheme.title1
-                      .override(fontFamily: "IBM Plex Mono", fontSize: 48),
+                      .override(fontFamily: "IBM Plex Mono", fontSize: 44),
                 ),
               ),
               Expanded(
@@ -79,8 +84,9 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           const Text("Temporary contractor"),
                           Checkbox(
@@ -92,7 +98,9 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
                             onChanged: (value) {
                               setState(() {
                                 isTransient = value!;
-                                if (!isTransient) request.expireAt.clear();
+                                if (!isTransient) {
+                                  request.clearExpireAt();
+                                }
                               });
                             },
                           ),
@@ -166,7 +174,10 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
   @override
   void initState() {
     super.initState();
-    request.role = "Engineer";
+    adminIdentity = IdentitiesRepo.current!;
+    request
+      ..role = "Engineer"
+        ..userID = widget.user.id;
   }
 
   Future<void> submitRegistration() async {
@@ -175,13 +186,15 @@ class _EnrollmentPageState extends State<EnrollmentPage> {
     }
 
     try {
-      await AdminService(organization!,
-              certificate: await CertificatesResolver(organization!)
+      await AdminService(adminIdentity.organization,
+              certificate: await CertificatesResolver(adminIdentity.organization)
                   .resolveBytes("identity-client"),
-          accessToken: IdentitiesRepo.accessToken)
+          accessToken: adminIdentity.accessToken)
           .enrollUser(request);
     } on Exception catch (e) {
       utils.displayError(context, e);
     }
+
+    widget.onEnroll?.call(context);
   }
 }

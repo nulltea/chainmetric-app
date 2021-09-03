@@ -60,4 +60,8 @@ class IdentitiesRepo {
   }
 
   static String? get _identityCursor => prefs.getString("current_identity");
+
+
+  static String? get initialPassword => prefs.getString("initial_password");
+  static set initialPassword(String? value) => prefs.setString("initial_password", value ?? "");
 }

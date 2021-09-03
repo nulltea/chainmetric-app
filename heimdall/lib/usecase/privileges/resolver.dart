@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chainmetric/models/identity/user.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class Privileges {
@@ -9,11 +10,14 @@ class Privileges {
     _data = fromJson ?? json.decode(await rootBundle.loadString("assets/data/user_privileges.json"));
   }
 
-  static bool resolveFor(String privilegePath) {
+  static bool resolveFor(AppUser user, String path) {
     dynamic value = _data;
-    for (final key in privilegePath.split(".")) {
-      value = value[key];
+
+    for (final key in List.from(path.split("."))
+      ..insert(0, user.role)) {
+      value = value?[key];
     }
-    return value;
+
+    return value ?? false;
   }
 }

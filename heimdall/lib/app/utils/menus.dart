@@ -3,10 +3,9 @@ import 'package:chainmetric/app/widgets/common/modal_menu.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/usecase/identity/identity_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:chainmetric/models/identity/user.dart';
 import 'package:chainmetric/app/utils/utils.dart' as utils;
 
-void switchIdentitiesMenu(BuildContext context, {Function? onSelect}) {
+void switchIdentitiesMenu(BuildContext context, {Function(BuildContext)? onSelect}) {
   showModalMenu(context: context, options: [
     for (final identity in IdentitiesRepo.all.values)
       ModalMenuOption(
@@ -14,7 +13,7 @@ void switchIdentitiesMenu(BuildContext context, {Function? onSelect}) {
           subtitle: identity.organization,
           icon: Icons.contacts_sharp,
           action: () =>
-              IdentityManager.use(identity.username, then: onSelect)),
+              IdentityManager.use(identity.username, then: () => onSelect?.call(context))),
     ModalMenuOption(
       title: "Add new",
       icon: Icons.person_add_sharp,

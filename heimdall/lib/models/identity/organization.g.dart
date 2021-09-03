@@ -8,8 +8,8 @@ part of 'organization.dart';
 
 Organization _$OrganizationFromJson(Map<String, dynamic> json) {
   return Organization()
-    ..name = json['name'] as String?
-    ..mspID = json['mspID'] as String?;
+    ..name = json['name'] as String
+    ..mspID = json['mspID'] as String;
 }
 
 Map<String, dynamic> _$OrganizationToJson(Organization instance) =>
