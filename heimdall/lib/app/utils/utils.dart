@@ -1,6 +1,11 @@
+import 'package:chainmetric/app/pages/identity/login_page.dart';
 import 'package:chainmetric/app/theme/theme.dart';
+import 'package:chainmetric/app/widgets/common/modal_menu.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
+import 'package:chainmetric/usecase/identity/identity_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_screen/overlay_screen.dart';
+import 'package:chainmetric/models/identity/user.dart';
 
 void openPage(BuildContext context, Widget page,
         {Function()? then, int duration = 300}) =>

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chainmetric/models/identity/app_identity.dart';
+import 'package:chainmetric/models/identity/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentitiesRepo {
@@ -10,17 +10,17 @@ class IdentitiesRepo {
     prefs = await SharedPreferences.getInstance();
   }
 
-  static Map<String, AppIdentity> get all {
+  static Map<String, AppUser> get all {
     final source = prefs.getString("app_identities");
     if (source == null) {
-      return <String, AppIdentity>{};
+      return <String, AppUser>{};
     }
 
     return Map<String, Map<String, dynamic>>.from(json.decode(source))
-        .map((key, value) => MapEntry(key, AppIdentity.fromJson(value)));
+        .map((key, value) => MapEntry(key, AppUser.fromJson(value)));
   }
 
-  static void put(AppIdentity value) {
+  static void put(AppUser value) {
     final allIdentities = all..
     [value.username] = value;
     _setAppIdentities(allIdentities);
@@ -35,7 +35,7 @@ class IdentitiesRepo {
     prefs.setString("current_identity", username);
   }
 
-  static AppIdentity? get current => _identityCursor != null
+  static AppUser? get current => _identityCursor != null
       ? all[_identityCursor]
       : null;
 
@@ -54,10 +54,14 @@ class IdentitiesRepo {
     return current?.organization;
   }
 
-  static void _setAppIdentities(Map<String, AppIdentity> value) {
+  static void _setAppIdentities(Map<String, AppUser> value) {
     prefs.setString("app_identities",
         json.encode(value.map((key, value) => MapEntry(key, value.toJson()))));
   }
 
   static String? get _identityCursor => prefs.getString("current_identity");
+
+
+  static String? get initialPassword => prefs.getString("initial_password");
+  static set initialPassword(String? value) => prefs.setString("initial_password", value ?? "");
 }

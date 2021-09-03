@@ -21,8 +21,8 @@ class FabricHandler(private val sdk: fabric.SDK): MethodChannel.MethodCallHandle
                         result.error("FabricSDK::initWallet", e.message, null)
                     }
                 }
-                "identity_required" -> withContext(Dispatchers.Main) {
-                    result.success(withContext(Dispatchers.IO) { sdk.identityRequired() })
+                "identity_exists" -> withContext(Dispatchers.Main) {
+                    result.success(withContext(Dispatchers.IO) { sdk.identityExists(call.argument("username")) })
                 }
                 "identities_get" -> try {
                     withContext(Dispatchers.Main) {

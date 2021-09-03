@@ -16,8 +16,8 @@ class Fabric {
     return _channel.invokeMethod("wallet_init", {"path": "${dir.path}/wallet"});
   }
 
-  static Future<bool> identityRequired() async =>
-      await _channel.invokeMethod<bool>("identity_required") ?? true;
+  static Future<bool> identityExists({String username = "appUser"}) async =>
+      await _channel.invokeMethod<bool>("identity_exists", {"username": username}) ?? true;
 
   static Future<List<String>> getIdentities() async {
     try {

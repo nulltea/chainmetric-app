@@ -6,16 +6,16 @@ import 'package:chainmetric/app/utils/utils.dart' as utils;
 import 'package:chainmetric/app/widgets/common/form_button_widget.dart';
 import 'package:chainmetric/app/widgets/common/form_dropdown_widget.dart';
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
-import 'package:chainmetric/infrastructure/services/identity_grpc.dart';
-import 'package:chainmetric/models/identity/app_identity.dart';
-import 'package:chainmetric/models/identity/enrollment.pb.dart';
+import 'package:chainmetric/infrastructure/services/user_grpc.dart';
 import 'package:chainmetric/models/identity/user.dart';
+import 'package:chainmetric/models/identity/user.pb.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  final Function(BuildContext)? onRegister;
+  const RegistrationPage({Key? key, this.onRegister}) : super(key: key);
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
@@ -191,14 +191,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
     if (!formKey.currentState!.validate()) return;
 
     try {
-      final resp = await IdentityService(organization!,
+      final resp = await UserService(organization!,
               certificate: await CertificatesResolver(organization!)
                   .resolveBytes("identity-client"))
           .register(request);
 
-      IdentitiesRepo.put(
-          AppIdentity(organization!, resp.user.username, accessToken: resp.accessToken)
-      );
+      IdentitiesRepo.put(AppUser.fromProto(resp.user, organization!,
+          accessToken: resp.accessToken));
+
+      widget.onRegister?.call(context);
     } on Exception catch (e) {
       utils.displayError(context, e);
     }

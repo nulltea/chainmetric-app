@@ -5,6 +5,7 @@ package chainmetric.identity.presenter;
 option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
 
 import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
 
 message User {
   string id = 1;
@@ -15,10 +16,50 @@ message User {
   string role = 6;
   google.protobuf.Timestamp createdAt = 7;
   bool confirmed = 8;
-  google.protobuf.Timestamp expireAt = 9;
+  google.protobuf.Timestamp expireAt = 10;
+
+  option (validate.ignored) = true;
 }
 
-message Users {
+message UsersRequest {}
+
+message UsersResponse {
   repeated User users = 1;
   int64 count = 2;
+
+  option (validate.ignored) = true;
+}
+
+message RegistrationRequest {
+  string firstname = 1;
+  string lastname = 2;
+  string email = 3 [(validate.rules).string = {email: true}];
+}
+
+message RegistrationResponse {
+  User user = 1;
+  string accessToken = 2;
+
+  option (validate.ignored) = true;
+}
+
+message ChangePasswordRequest {
+  string prevPasscode = 1;
+  string newPasscode = 2 [(validate.rules).string = {min_bytes: 8}];
+}
+
+message UserStatusResponse {
+  UserStatus status = 1;
+  optional string role = 2;
+  optional string initialPassword = 3;
+
+  option (validate.ignored) = true;
+}
+
+enum UserStatus {
+  PENDING_APPROVAL = 0;
+  APPROVED = 1;
+  DECLINED = 2;
+  ACTIVE = 3;
+  CANCELED = 4;
 }

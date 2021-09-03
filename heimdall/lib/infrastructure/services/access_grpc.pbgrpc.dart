@@ -10,8 +10,7 @@ import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
-import 'package:chainmetric/models/identity/auth.pb.dart' as $0;
-import 'package:chainmetric/models/identity/common.pb.dart' as $1;
+import 'package:chainmetric/models/identity/access.pb.dart' as $0;
 export 'access_grpc.pb.dart';
 
 class AccessServiceClient extends $grpc.Client {
@@ -21,11 +20,12 @@ class AccessServiceClient extends $grpc.Client {
       ($0.FabricCredentialsRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) =>
           $0.FabricCredentialsResponse.fromBuffer(value));
-  static final _$updatePassword =
-      $grpc.ClientMethod<$0.UpdatePasswordRequest, $1.StatusResponse>(
-          '/chainmetric.identity.service.AccessService/updatePassword',
-          ($0.UpdatePasswordRequest value) => value.writeToBuffer(),
-          ($core.List<$core.int> value) => $1.StatusResponse.fromBuffer(value));
+  static final _$authWithSigningIdentity =
+      $grpc.ClientMethod<$0.CertificateAuthRequest, $0.CertificateAuthResponse>(
+          '/chainmetric.identity.service.AccessService/authWithSigningIdentity',
+          ($0.CertificateAuthRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              $0.CertificateAuthResponse.fromBuffer(value));
 
   AccessServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -39,10 +39,11 @@ class AccessServiceClient extends $grpc.Client {
         options: options);
   }
 
-  $grpc.ResponseFuture<$1.StatusResponse> updatePassword(
-      $0.UpdatePasswordRequest request,
+  $grpc.ResponseFuture<$0.CertificateAuthResponse> authWithSigningIdentity(
+      $0.CertificateAuthRequest request,
       {$grpc.CallOptions? options}) {
-    return $createUnaryCall(_$updatePassword, request, options: options);
+    return $createUnaryCall(_$authWithSigningIdentity, request,
+        options: options);
   }
 }
 
@@ -59,14 +60,15 @@ abstract class AccessServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.FabricCredentialsRequest.fromBuffer(value),
         ($0.FabricCredentialsResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.UpdatePasswordRequest, $1.StatusResponse>(
-        'updatePassword',
-        updatePassword_Pre,
+    $addMethod($grpc.ServiceMethod<$0.CertificateAuthRequest,
+            $0.CertificateAuthResponse>(
+        'authWithSigningIdentity',
+        authWithSigningIdentity_Pre,
         false,
         false,
         ($core.List<$core.int> value) =>
-            $0.UpdatePasswordRequest.fromBuffer(value),
-        ($1.StatusResponse value) => value.writeToBuffer()));
+            $0.CertificateAuthRequest.fromBuffer(value),
+        ($0.CertificateAuthResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.FabricCredentialsResponse> requestFabricCredentials_Pre(
@@ -75,13 +77,14 @@ abstract class AccessServiceBase extends $grpc.Service {
     return requestFabricCredentials(call, await request);
   }
 
-  $async.Future<$1.StatusResponse> updatePassword_Pre($grpc.ServiceCall call,
-      $async.Future<$0.UpdatePasswordRequest> request) async {
-    return updatePassword(call, await request);
+  $async.Future<$0.CertificateAuthResponse> authWithSigningIdentity_Pre(
+      $grpc.ServiceCall call,
+      $async.Future<$0.CertificateAuthRequest> request) async {
+    return authWithSigningIdentity(call, await request);
   }
 
   $async.Future<$0.FabricCredentialsResponse> requestFabricCredentials(
       $grpc.ServiceCall call, $0.FabricCredentialsRequest request);
-  $async.Future<$1.StatusResponse> updatePassword(
-      $grpc.ServiceCall call, $0.UpdatePasswordRequest request);
+  $async.Future<$0.CertificateAuthResponse> authWithSigningIdentity(
+      $grpc.ServiceCall call, $0.CertificateAuthRequest request);
 }
