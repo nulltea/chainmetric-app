@@ -67,8 +67,8 @@ func (p *EventSocket) Subscribe(event string) (*events.EventChannel, error) {
 
 		for {
 			select {
-			case event := <-notifier:
-				channel.HandleEvent(string(event.Payload))
+			case e := <-notifier:
+				channel.HandleEvent(string(e.Payload))
 			case <- ctx.Done():
 				return
 			}

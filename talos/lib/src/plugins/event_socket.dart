@@ -23,7 +23,7 @@ class EventSocket {
   static Future<CancelListening> subscribe(SocketListener listener,
       String chaincode, String eventName) async {
     final subscription = _channel
-        .receiveBroadcastStream(["bind", chaincode, eventName])
+        .receiveBroadcastStream(["subscribe", chaincode, eventName])
         .listen((eventArtifact) {
       listener(eventArtifact);
     }, cancelOnError: false);
