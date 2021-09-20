@@ -3,8 +3,8 @@ syntax = "proto3";
 package chainmetric.identity;
 option go_package = "github.com/timoth-y/chainmetric-network/orgservices/identity/api/rpc";
 
-import "orgservices/user.proto";
-import "orgservices/shared/proto/status.proto";
+import "user.proto";
+import "status.proto";
 import "google/protobuf/empty.proto";
 
 service UserService {

@@ -3,9 +3,8 @@ syntax = "proto3";
 package chainmetric.notifications;
 option go_package = "github.com/timoth-y/chainmetric-network/orgservices/notifications/api/rpc";
 
-import "orgservices/notifications/api/presenter/subscription.proto";
-import "orgservices/shared/proto/status.proto";
-import "google/protobuf/empty.proto";
+import "subscription.proto";
+import "status.proto";
 
 service SubscriberService {
   rpc subscribe(SubscriptionRequest) returns (SubscriptionResponse);

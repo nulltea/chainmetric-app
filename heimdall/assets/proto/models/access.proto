@@ -4,7 +4,7 @@ package chainmetric.identity;
 
 option go_package = "github.com/timoth-y/chainmetric-network/orgservices/identity/api/presenter";
 
-import "orgservices/user.proto";
+import "user.proto";
 import "validate/validate.proto";
 
 message FabricCredentialsRequest {

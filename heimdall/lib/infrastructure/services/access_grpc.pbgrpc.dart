@@ -16,13 +16,13 @@ export 'access_grpc.pb.dart';
 class AccessServiceClient extends $grpc.Client {
   static final _$requestFabricCredentials = $grpc.ClientMethod<
           $0.FabricCredentialsRequest, $0.FabricCredentialsResponse>(
-      '/chainmetric.identity.service.AccessService/requestFabricCredentials',
+      '/chainmetric.identity.AccessService/requestFabricCredentials',
       ($0.FabricCredentialsRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) =>
           $0.FabricCredentialsResponse.fromBuffer(value));
   static final _$authWithSigningIdentity =
       $grpc.ClientMethod<$0.CertificateAuthRequest, $0.CertificateAuthResponse>(
-          '/chainmetric.identity.service.AccessService/authWithSigningIdentity',
+          '/chainmetric.identity.AccessService/authWithSigningIdentity',
           ($0.CertificateAuthRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $0.CertificateAuthResponse.fromBuffer(value));
@@ -48,7 +48,7 @@ class AccessServiceClient extends $grpc.Client {
 }
 
 abstract class AccessServiceBase extends $grpc.Service {
-  $core.String get $name => 'chainmetric.identity.service.AccessService';
+  $core.String get $name => 'chainmetric.identity.AccessService';
 
   AccessServiceBase() {
     $addMethod($grpc.ServiceMethod<$0.FabricCredentialsRequest,

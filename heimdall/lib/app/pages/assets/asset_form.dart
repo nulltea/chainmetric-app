@@ -293,6 +293,7 @@ class _AssetFormState extends State<AssetForm> {
     if (_formKey.currentState!.validate()) {
       try {
         if (await AssetsController.upsertAsset(asset)) {
+
           Navigator.pop(context);
         }
       } on Exception catch (e) {

@@ -14,15 +14,12 @@ const EnrollUserRequest$json = const {
   '2': const [
     const {'1': 'userID', '3': 1, '4': 1, '5': 9, '8': const {}, '10': 'userID'},
     const {'1': 'role', '3': 2, '4': 1, '5': 9, '10': 'role'},
-    const {'1': 'expireAt', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '8': const {}, '9': 0, '10': 'expireAt', '17': true},
-  ],
-  '8': const [
-    const {'1': '_expireAt'},
+    const {'1': 'expireAt', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '8': const {}, '10': 'expireAt'},
   ],
 };
 
 /// Descriptor for `EnrollUserRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List enrollUserRequestDescriptor = $convert.base64Decode('ChFFbnJvbGxVc2VyUmVxdWVzdBIhCgZ1c2VySUQYASABKAlCCfpCBnIEECAYIFIGdXNlcklEEhIKBHJvbGUYAiABKAlSBHJvbGUSRQoIZXhwaXJlQXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgj6QgWyAQIIAEgAUghleHBpcmVBdIgBAUILCglfZXhwaXJlQXQ=');
+final $typed_data.Uint8List enrollUserRequestDescriptor = $convert.base64Decode('ChFFbnJvbGxVc2VyUmVxdWVzdBIhCgZ1c2VySUQYASABKAlCCfpCBnIEECAYIFIGdXNlcklEEhIKBHJvbGUYAiABKAlSBHJvbGUSQAoIZXhwaXJlQXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgj6QgWyAQIIAFIIZXhwaXJlQXQ=');
 @$core.Deprecated('Use enrollUserResponseDescriptor instead')
 const EnrollUserResponse$json = const {
   '1': 'EnrollUserResponse',

@@ -11,30 +11,30 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:chainmetric/models/identity/user.pb.dart' as $1;
-import 'package:chainmetric/models/generated/google/protobuf/empty.pb.dart' as $3;
-import 'package:chainmetric/models/identity/common.pb.dart' as $4;
+import 'package:chainmetric/models/generated/google/protobuf/empty.pb.dart' as $5;
+import 'package:chainmetric/models/generated/common/status.pb.dart' as $4;
 export 'user_grpc.pb.dart';
 
 class UserServiceClient extends $grpc.Client {
   static final _$register =
       $grpc.ClientMethod<$1.RegistrationRequest, $1.RegistrationResponse>(
-          '/chainmetric.identity.service.UserService/register',
+          '/chainmetric.identity.UserService/register',
           ($1.RegistrationRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $1.RegistrationResponse.fromBuffer(value));
-  static final _$getState = $grpc.ClientMethod<$3.Empty, $1.User>(
-      '/chainmetric.identity.service.UserService/getState',
-      ($3.Empty value) => value.writeToBuffer(),
+  static final _$getState = $grpc.ClientMethod<$5.Empty, $1.User>(
+      '/chainmetric.identity.UserService/getState',
+      ($5.Empty value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $1.User.fromBuffer(value));
   static final _$pingAccountStatus =
-      $grpc.ClientMethod<$3.Empty, $1.UserStatusResponse>(
-          '/chainmetric.identity.service.UserService/pingAccountStatus',
-          ($3.Empty value) => value.writeToBuffer(),
+      $grpc.ClientMethod<$5.Empty, $1.UserStatusResponse>(
+          '/chainmetric.identity.UserService/pingAccountStatus',
+          ($5.Empty value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $1.UserStatusResponse.fromBuffer(value));
   static final _$changePassword =
       $grpc.ClientMethod<$1.ChangePasswordRequest, $4.StatusResponse>(
-          '/chainmetric.identity.service.UserService/changePassword',
+          '/chainmetric.identity.UserService/changePassword',
           ($1.ChangePasswordRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $4.StatusResponse.fromBuffer(value));
 
@@ -49,13 +49,13 @@ class UserServiceClient extends $grpc.Client {
     return $createUnaryCall(_$register, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.User> getState($3.Empty request,
+  $grpc.ResponseFuture<$1.User> getState($5.Empty request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getState, request, options: options);
   }
 
   $grpc.ResponseFuture<$1.UserStatusResponse> pingAccountStatus(
-      $3.Empty request,
+      $5.Empty request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$pingAccountStatus, request, options: options);
   }
@@ -68,7 +68,7 @@ class UserServiceClient extends $grpc.Client {
 }
 
 abstract class UserServiceBase extends $grpc.Service {
-  $core.String get $name => 'chainmetric.identity.service.UserService';
+  $core.String get $name => 'chainmetric.identity.UserService';
 
   UserServiceBase() {
     $addMethod(
@@ -80,19 +80,19 @@ abstract class UserServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $1.RegistrationRequest.fromBuffer(value),
             ($1.RegistrationResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.Empty, $1.User>(
+    $addMethod($grpc.ServiceMethod<$5.Empty, $1.User>(
         'getState',
         getState_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.Empty.fromBuffer(value),
+        ($core.List<$core.int> value) => $5.Empty.fromBuffer(value),
         ($1.User value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$3.Empty, $1.UserStatusResponse>(
+    $addMethod($grpc.ServiceMethod<$5.Empty, $1.UserStatusResponse>(
         'pingAccountStatus',
         pingAccountStatus_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $3.Empty.fromBuffer(value),
+        ($core.List<$core.int> value) => $5.Empty.fromBuffer(value),
         ($1.UserStatusResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.ChangePasswordRequest, $4.StatusResponse>(
         'changePassword',
@@ -110,12 +110,12 @@ abstract class UserServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.User> getState_Pre(
-      $grpc.ServiceCall call, $async.Future<$3.Empty> request) async {
+      $grpc.ServiceCall call, $async.Future<$5.Empty> request) async {
     return getState(call, await request);
   }
 
   $async.Future<$1.UserStatusResponse> pingAccountStatus_Pre(
-      $grpc.ServiceCall call, $async.Future<$3.Empty> request) async {
+      $grpc.ServiceCall call, $async.Future<$5.Empty> request) async {
     return pingAccountStatus(call, await request);
   }
 
@@ -126,9 +126,9 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$1.RegistrationResponse> register(
       $grpc.ServiceCall call, $1.RegistrationRequest request);
-  $async.Future<$1.User> getState($grpc.ServiceCall call, $3.Empty request);
+  $async.Future<$1.User> getState($grpc.ServiceCall call, $5.Empty request);
   $async.Future<$1.UserStatusResponse> pingAccountStatus(
-      $grpc.ServiceCall call, $3.Empty request);
+      $grpc.ServiceCall call, $5.Empty request);
   $async.Future<$4.StatusResponse> changePassword(
       $grpc.ServiceCall call, $1.ChangePasswordRequest request);
 }

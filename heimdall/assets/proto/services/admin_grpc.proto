@@ -3,8 +3,8 @@ syntax = "proto3";
 package chainmetric.identity;
 option go_package = "github.com/timoth-y/chainmetric-network/orgservices/identity/api/rpc";
 
-import "orgservices/admin.proto";
-import "orgservices/user.proto";
+import "admin.proto";
+import "user.proto";
 
 service AdminService {
   rpc getCandidates(UsersRequest) returns (UsersResponse);

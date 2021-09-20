@@ -17,12 +17,12 @@ export 'admin_grpc.pb.dart';
 class AdminServiceClient extends $grpc.Client {
   static final _$getCandidates =
       $grpc.ClientMethod<$1.UsersRequest, $1.UsersResponse>(
-          '/chainmetric.identity.service.AdminService/getCandidates',
+          '/chainmetric.identity.AdminService/getCandidates',
           ($1.UsersRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $1.UsersResponse.fromBuffer(value));
   static final _$enrollUser =
       $grpc.ClientMethod<$2.EnrollUserRequest, $2.EnrollUserResponse>(
-          '/chainmetric.identity.service.AdminService/enrollUser',
+          '/chainmetric.identity.AdminService/enrollUser',
           ($2.EnrollUserRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $2.EnrollUserResponse.fromBuffer(value));
@@ -45,7 +45,7 @@ class AdminServiceClient extends $grpc.Client {
 }
 
 abstract class AdminServiceBase extends $grpc.Service {
-  $core.String get $name => 'chainmetric.identity.service.AdminService';
+  $core.String get $name => 'chainmetric.identity.AdminService';
 
   AdminServiceBase() {
     $addMethod($grpc.ServiceMethod<$1.UsersRequest, $1.UsersResponse>(
