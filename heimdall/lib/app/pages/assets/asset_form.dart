@@ -1,8 +1,10 @@
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/models/common/location.dart';
 import 'package:chainmetric/app/utils/utils.dart';
+import 'package:chainmetric/usecase/notifications/notifications_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:global_configuration/global_configuration.dart';
@@ -293,7 +295,8 @@ class _AssetFormState extends State<AssetForm> {
     if (_formKey.currentState!.validate()) {
       try {
         if (await AssetsController.upsertAsset(asset)) {
-
+          NotificationsManager(IdentitiesRepo.organization!).
+            subscribeToRequirementsViolationOf(asset.id);
           Navigator.pop(context);
         }
       } on Exception catch (e) {
@@ -318,8 +321,7 @@ class _AssetFormState extends State<AssetForm> {
           ..name = result.name;
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Location wasn't picked, please try again")));
+      displayError(context, Exception("Location wasn't picked, please try again"));
     }
   }
 }
