@@ -21,7 +21,16 @@ class Asset {
   late Location location;
   List<String> tags = <String>[];
 
-  Asset();
+  Asset({
+    this.id="",
+    this.sku="TST001",
+    this.name="Test",
+    this.type="tech",
+    this.info="test",
+    this.cost = 1.0,
+    this.amount=1,
+    this.state=""
+  });
 
   factory Asset.fromJson(Map<String, dynamic> json) => _$AssetFromJson(json);
   Map<String, dynamic> toJson() => _$AssetToJson(this);

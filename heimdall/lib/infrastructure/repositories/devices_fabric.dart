@@ -6,11 +6,10 @@ import 'package:talos/talos.dart';
 
 class DevicesController {
   static Future<List<Device>?> getDevices() async {
-    final String data = await (Fabric.evaluateTransaction("devices", "All")
-        as FutureOr<String>);
+    final String? data = await Fabric.evaluateTransaction("devices", "All");
 
     try {
-      return data.isNotEmpty
+      return data != null
           ? Device.listFromJson(json.decode(data))
           : <Device>[];
     } on Exception catch (e) {

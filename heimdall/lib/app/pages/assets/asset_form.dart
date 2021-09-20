@@ -27,13 +27,12 @@ class _AssetFormState extends State<AssetForm> {
   final _formKey = GlobalKey<FormState>();
   Asset asset = Asset();
 
-  _AssetFormState() {
-    asset = widget.model ?? Asset();
-  }
+  _AssetFormState();
 
   @override
   void initState() {
     super.initState();
+    asset = widget.model ?? Asset();
   }
 
   @override

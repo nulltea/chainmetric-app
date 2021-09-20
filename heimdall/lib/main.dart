@@ -18,7 +18,6 @@ import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 import 'package:talos/talos.dart';
 import 'package:yaml/yaml.dart';
-import 'package:workmanager/workmanager.dart';
 
 void main() {
   runApp(App());

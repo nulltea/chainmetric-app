@@ -1,7 +1,6 @@
 import 'package:chainmetric/infrastructure/repositories/certificates_vault.dart';
 import 'package:chainmetric/infrastructure/services/subscriber_grpc.dart';
 import 'package:chainmetric/models/notifications/subscription.pb.dart';
-import 'package:chainmetric/models/readings/metric.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/shared/logger.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,8 +19,9 @@ class NotificationsManager {
     final settings = await _fcmClient.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-      // TODO: handle the received notifications
+      FirebaseMessaging.onMessage.listen((event) {
+
+      });
     } else {
       print('User declined or has not accepted permission');
     }
