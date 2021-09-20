@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package chainmetric.identity.presenter;
+package chainmetric.identity;
 
-option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
+option go_package = "github.com/timoth-y/chainmetric-network/orgservices/identity/api/presenter";
 
-import "user.proto";
+import "orgservices/user.proto";
 import "validate/validate.proto";
 
 message FabricCredentialsRequest {
