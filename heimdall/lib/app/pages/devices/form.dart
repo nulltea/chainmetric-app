@@ -39,13 +39,10 @@ class _DeviceFormState extends State<DeviceForm> {
   final GlobalKey _qrKey = GlobalKey(debugLabel: "QR");
   final _formKey = GlobalKey<FormState>();
 
-  _DeviceFormState() {
-    device = widget.model;
-  }
-
   @override
   void initState() {
     super.initState();
+    device = widget.model ;
   }
 
   @override
@@ -377,8 +374,7 @@ class _DeviceFormState extends State<DeviceForm> {
           Navigator.pop(context);
         }
       } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        displayError(context, e);
       }
     }
   }
@@ -398,8 +394,7 @@ class _DeviceFormState extends State<DeviceForm> {
           ..name = result.name;
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Location wasn't picked, please try again")));
+      displayError(context, Exception("Location wasn't picked, please try again"))
     }
   }
 }

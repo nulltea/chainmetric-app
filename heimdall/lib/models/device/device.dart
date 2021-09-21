@@ -9,7 +9,7 @@ part "device.g.dart";
 
 @JsonSerializable()
 class Device {
-  late String id;
+  late final String id;
   late String ip;
   late String mac;
   String? name;
@@ -21,6 +21,14 @@ class Device {
   Location? location;
 
   Device();
+  Device.empty({
+    this.id="",
+    this.ip="",
+    this.mac="",
+    this.name="",
+    this.hostname="",
+    this.state="",
+  });
 
   @JsonKey(ignore: true)
   String get stateView => state?.toSentenceCase() ?? "Unknown";

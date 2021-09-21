@@ -299,8 +299,7 @@ class _AssetFormState extends State<AssetForm> {
           Navigator.pop(context);
         }
       } on Exception catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+        displayError(context, e);
       }
     }
   }
