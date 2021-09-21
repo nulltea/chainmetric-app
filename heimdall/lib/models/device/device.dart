@@ -109,7 +109,7 @@ class DeviceCommandLogEntry {
       json.map((e) => DeviceCommandLogEntry.fromJson(e)).toList();
 }
 
-enum DeviceCommand { pause, resume, pairBluetooth }
+enum DeviceCommand { pause, resume, @JsonValue("ble_pair") pairBluetooth }
 
 enum DeviceCommandStatus { completed, processing, failed, unknown }
 

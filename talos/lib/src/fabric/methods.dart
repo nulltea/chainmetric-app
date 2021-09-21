@@ -86,7 +86,8 @@ class Fabric {
         "args": args,
       });
       return true;
-    } on PlatformException {
+    } on PlatformException catch (e) {
+      _logger.w(e);
       return false;
     }
   }

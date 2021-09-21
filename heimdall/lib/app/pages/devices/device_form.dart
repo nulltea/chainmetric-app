@@ -159,7 +159,7 @@ class _DeviceFormState extends State<DeviceForm> {
                                 items: LocalDataRepo.metrics!
                                     .map((metric) => MultiSelectItem(
                                           metric.metric,
-                                          metric.name!,
+                                          metric.name,
                                         ))
                                     .toList(),
                                 onSelectionChanged: (List<String?> value) {
@@ -368,7 +368,6 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Future<void> _submitDevice() async {
-    final js = device!.toJson();
     if (_formKey.currentState!.validate() && device != null) {
       if (await DevicesController.registerDevice(device!)) {
         Navigator.pop(context);

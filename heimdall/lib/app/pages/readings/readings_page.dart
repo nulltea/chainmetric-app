@@ -84,7 +84,7 @@ abstract class _ReadingsState extends State<ReadingsPage> {
       Metric metric, MetricReadingsStream stream) {
     return [
       charts.Series<MetricReadingPoint, DateTime>(
-        id: metric.metric!,
+        id: metric.metric,
         displayName: metric.name,
         colorFn: (point, i) =>
             isCritical(stream, i!, requirements[metric.metric]!)
@@ -173,7 +173,7 @@ class _ReadingsListViewState extends _ReadingsState {
               Positioned(left: 8, child: metric.icon()),
               Positioned.fill(
                 left: 40,
-                child: Text(metric.name!,
+                child: Text(metric.name,
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.w600)),
               ),
@@ -186,7 +186,7 @@ class _ReadingsListViewState extends _ReadingsState {
                     children: [
                       Text("${stream.lastValue}",
                           style: const TextStyle(fontSize: 15)),
-                      Text(metric.unit!,
+                      Text(metric.unit,
                           style: TextStyle(
                               fontSize: 15,
                               color: Theme.of(context).hintColor)),
@@ -253,7 +253,7 @@ class _ReadingsListViewState extends _ReadingsState {
           Metric metric, MetricReadingsStream stream) =>
       [
         charts.Series<MetricReadingPoint, DateTime>(
-          id: metric.metric!,
+          id: metric.metric,
           displayName: metric.name,
           colorFn: (point, i) =>
               isCritical(stream, i!, requirements[metric.metric]!)
@@ -383,7 +383,7 @@ class _ReadingsPageViewState extends _ReadingsState {
                                             requirements[metric.metric]!)
                                         ? Colors.green
                                         : Colors.red)),
-                            Text(metric.unit!,
+                            Text(metric.unit,
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: meetRequirement(stream.lastValue,

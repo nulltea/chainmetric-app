@@ -7,9 +7,9 @@ part "metric.g.dart";
 
 @JsonSerializable()
 class Metric {
-  String? name;
-  String? metric;
-  String? unit;
+  late final String name;
+  late final String metric;
+  late final String unit;
   @JsonKey(name: "icon")
   String? iconRaw;
 

@@ -15,9 +15,9 @@ class LocalDataRepo {
   static Map<String, Requirement>? defaultRequirements;
   static List<String>? userRoles;
 
-  static late Map<String?, AssetType> assetTypesMap;
-  static late Map<String?, Metric> metricsMap;
-  static late Map<String?, Organization> organizationsMap;
+  static late Map<String, AssetType> assetTypesMap;
+  static late Map<String, Metric> metricsMap;
+  static late Map<String, Organization> organizationsMap;
 
   static Future init() async {
     organizations = Organization.listFromJson(json

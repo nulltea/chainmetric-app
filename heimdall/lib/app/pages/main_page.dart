@@ -5,9 +5,9 @@ import 'package:chainmetric/app/widgets/common/bottom_app_bar.dart';
 import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
 import 'package:chainmetric/app/pages/assets/asset_form.dart';
 import 'package:chainmetric/app/pages/assets/assets_tab.dart';
-import 'package:chainmetric/app/pages/devices/form.dart';
-import 'package:chainmetric/app/pages/devices/tab.dart';
-import 'package:chainmetric/app/pages/home/tab.dart';
+import 'package:chainmetric/app/pages/devices/device_form.dart';
+import 'package:chainmetric/app/pages/devices/devices_tab.dart';
+import 'package:chainmetric/app/pages/home/dashboard_tab.dart';
 import 'package:chainmetric/app/pages/organization/organization_tab.dart';
 
 class MainPage extends StatefulWidget {

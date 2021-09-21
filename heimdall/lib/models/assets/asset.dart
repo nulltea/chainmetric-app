@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/models/common/location.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -41,7 +42,7 @@ class Asset {
 class AssetPresenter extends Asset {
   Requirements? requirements;
   Requirements getRequirements() {
-    return requirements ?? Requirements.forAsset(assetID: id);
+    return requirements ?? Requirements.forAsset(id, fromOrg: IdentitiesRepo.organization!);
   }
 
   AssetPresenter();
@@ -88,10 +89,10 @@ class AssetsResponse {
 
 @JsonSerializable()
 class AssetType {
-  late String name;
-  String? type;
+  late final String name;
+  late final String type;
   @JsonKey(name: "color_hex")
-  late String colorHex;
+  late final String colorHex;
   Color get color => colorFromHex(colorHex);
 
   AssetType();

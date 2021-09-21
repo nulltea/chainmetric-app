@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/platform/adapters/bluetooth.dart';
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
 import 'package:chainmetric/usecase/location/geosharing.dart';
@@ -133,6 +135,7 @@ class _DevicePairingState extends State<DevicePairing>
     if (_rect == null) {
       return Container();
     }
+
     return AnimatedPositioned(
       duration: completeAnimation,
       left: _rect!.left,
@@ -140,9 +143,9 @@ class _DevicePairingState extends State<DevicePairing>
       top: _rect!.top,
       bottom: MediaQuery.of(context).size.height - _rect!.bottom,
       child: DecoratedBox(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.teal,
+          color: Theme.of(context).primaryColor,
         ),
         child: Center(
           child: Stack(
@@ -155,19 +158,21 @@ class _DevicePairingState extends State<DevicePairing>
                       alignment: Alignment.topLeft,
                       child: IconButton(
                           icon: Icon(Icons.close,
-                              size: 35, color: Colors.white.withAlpha(200)),
+                              size: 35, color: Theme.of(context).backgroundColor),
                           onPressed: _dismiss)),
                 ),
               ),
               Visibility(
                 visible: _device != null,
-                child: const Positioned.fill(
+                child: Positioned.fill(
                   top: -300,
                   child: Center(
                     child:
-                        Text("Successfully paired with ${"Chainmetric IoT"}!",
-                            style: TextStyle(
-                              fontSize: 30,
+                        Text("Successfully paired with\n${"Chainmetric IoT"}!",
+                            style: AppTheme.title1.override(
+                              fontFamily: "IBM Plex Mono",
+                              color: AppTheme.appBarBG,
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                             textAlign: TextAlign.center),
@@ -176,16 +181,18 @@ class _DevicePairingState extends State<DevicePairing>
               ),
               Center(
                   child: Icon(Icons.memory,
-                      size: 50 + (_animationDevice.value as double))),
+                      size: 50 + (_animationDevice.value as double), color: AppTheme.appBarBG)),
               Visibility(
                 visible: _device != null,
-                child: const Positioned.fill(
+                child: Positioned.fill(
                   top: 300,
                   child: Center(
                     child: Text(
-                        "Now this device would be able to access GPS location from your phone",
-                        style: TextStyle(
-                          fontSize: 20,
+                        "Now this device would be able\nto access GPS location\nfrom your phone",
+                        style: AppTheme.title1.override(
+                          fontFamily: "IBM Plex Mono",
+                          color: AppTheme.appBarBG,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center),

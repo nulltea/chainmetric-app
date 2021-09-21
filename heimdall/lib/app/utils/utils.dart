@@ -59,9 +59,7 @@ void Function() _decorateWithDismiss(BuildContext context, Function action) =>
     };
 
 void dismissOverlay() {
-  try {
-    if (OverlayScreen().state == Screen.showing) OverlayScreen().pop();
-  } on Exception {}
+  if (OverlayScreen().state == Screen.showing) OverlayScreen().pop();
 }
 
 class CustomMaterialPageRoute<T> extends MaterialPageRoute<T> {

@@ -95,7 +95,7 @@ K _$enumDecode<K, V>(
 const _$DeviceCommandEnumMap = {
   DeviceCommand.pause: 'pause',
   DeviceCommand.resume: 'resume',
-  DeviceCommand.pairBluetooth: 'pairBluetooth',
+  DeviceCommand.pairBluetooth: 'ble_pair',
 };
 
 DeviceCommandLogEntry _$DeviceCommandLogEntryFromJson(

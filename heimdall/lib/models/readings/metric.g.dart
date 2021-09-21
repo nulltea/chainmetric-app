@@ -8,9 +8,9 @@ part of 'metric.dart';
 
 Metric _$MetricFromJson(Map<String, dynamic> json) {
   return Metric()
-    ..name = json['name'] as String?
-    ..metric = json['metric'] as String?
-    ..unit = json['unit'] as String?
+    ..name = json['name'] as String
+    ..metric = json['metric'] as String
+    ..unit = json['unit'] as String
     ..iconRaw = json['icon'] as String?;
 }
 
