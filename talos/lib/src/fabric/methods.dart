@@ -80,11 +80,12 @@ class Fabric {
   static Future<bool> trySubmitTransaction(String contract, String method,
       [String? args]) async {
     try {
-      return await _channel.invokeMethod<int>("transaction_submit", {
+      await _channel.invokeMethod("transaction_submit", {
         "contract": contract,
         "method": method,
         "args": args,
-      }) == 0;
+      });
+      return true;
     } on PlatformException {
       return false;
     }
