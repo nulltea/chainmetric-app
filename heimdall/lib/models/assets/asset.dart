@@ -21,7 +21,8 @@ class Asset {
   late Location location;
   List<String> tags = <String>[];
 
-  Asset({
+  Asset();
+  Asset.empty({
     this.id="",
     this.sku="TST001",
     this.name="Test",

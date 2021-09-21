@@ -15,7 +15,7 @@ class SubscriberService extends SubscriberServiceClient {
       : super(
       channel ??
           grpc.ClientChannel(
-              "identity.$organization.org.${GlobalConfiguration().getValue("grpc_domain")}",
+              "notifications.$organization.org.${GlobalConfiguration().getValue("grpc_domain")}",
               options: grpc.ChannelOptions(
                   credentials: grpc.ChannelCredentials.secure(
                       certificates: certificate))),

@@ -1,4 +1,5 @@
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
 import 'package:chainmetric/app/theme/theme.dart';
@@ -8,6 +9,7 @@ import 'package:chainmetric/app/widgets/common/modal_menu.dart';
 import 'package:chainmetric/app/pages/assets/asset_form.dart';
 import 'package:chainmetric/app/pages/readings/page.dart';
 import 'package:chainmetric/app/pages/requirements/form.dart';
+import 'package:chainmetric/usecase/notifications/notifications_manager.dart';
 import 'package:flutter/material.dart';
 
 class AssetCard extends StatelessWidget {
@@ -135,6 +137,13 @@ class AssetCard extends StatelessWidget {
                   context,
                   () => AssetsController.deleteAsset(asset.id)
                       .whenComplete(refreshParent!)))),
+      ModalMenuOption(
+          title: "Subscribe to notifications",
+          icon: Icons.notifications,
+          action: decorateWithLoading(
+              context,
+              () => NotificationsManager(IdentitiesRepo.organization!)
+                  .subscribeToRequirementsViolationOf(asset.id)))
     ]);
   }
 }

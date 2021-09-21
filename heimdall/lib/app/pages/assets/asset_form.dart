@@ -32,7 +32,7 @@ class _AssetFormState extends State<AssetForm> {
   @override
   void initState() {
     super.initState();
-    asset = widget.model ?? Asset();
+    asset = widget.model ?? Asset.empty();
   }
 
   @override
