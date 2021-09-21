@@ -10,7 +10,7 @@ Device _$DeviceFromJson(Map<String, dynamic> json) {
   return Device()
     ..id = json['id'] as String
     ..ip = json['ip'] as String
-    ..mac = json['mac'] as String
+    ..mac = json['mac'] as String?
     ..name = json['name'] as String?
     ..hostname = json['hostname'] as String
     ..profile = json['profile'] as String?

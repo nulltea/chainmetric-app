@@ -11,7 +11,7 @@ part "device.g.dart";
 class Device {
   late final String id;
   late String ip;
-  late String mac;
+  String? mac;
   String? name;
   late String hostname;
   String? profile;

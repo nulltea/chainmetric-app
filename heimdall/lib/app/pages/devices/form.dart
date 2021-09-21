@@ -202,7 +202,7 @@ class _DeviceFormState extends State<DeviceForm> {
                               .map<DropdownMenuItem<String>>(
                                   (org) => DropdownMenuItem<String>(
                                         value: org.mspID,
-                                        child: Text(org.name!),
+                                        child: Text(org.name),
                                       ))
                               .toList(),
                           validator: (String? value) {
@@ -318,44 +318,44 @@ class _DeviceFormState extends State<DeviceForm> {
     Timer? timer;
 
     controller.scannedDataStream.listen((scanData) {
-      if (scanData != null) {
-        Device dev;
-        try {
-          dev = _parseQRCode(scanData.code);
-          dev.name = dev.hostname;
-          dev.profile = "common";
-        } on QRScanException catch (e) {
+      Device dev;
+      try {
+        dev = _parseQRCode(scanData.code);
+        dev.name = dev.hostname;
+        dev.profile = "common";
+      } on QRScanException catch (e) {
+        setState(() {
+          scannerTitle = e.problem;
+          scannerSubtitle = e.cause;
+        });
+        if (timer != null) timer!.cancel();
+        timer = Timer(const Duration(seconds: 5), () {
           setState(() {
-            scannerTitle = e.problem;
-            scannerSubtitle = e.cause;
+            scannerTitle = defaultScannerTitle;
+            scannerSubtitle = defaultScannerSubtitle;
           });
-          if (timer != null) timer!.cancel();
-          timer = Timer(const Duration(seconds: 5), () {
-            setState(() {
-              scannerTitle = defaultScannerTitle;
-              scannerSubtitle = defaultScannerSubtitle;
-            });
-          });
-          return;
-        }
-        controller.dispose();
-        setState(() => device = dev);
+        });
+        return;
       }
+      controller.dispose();
+      setState(() => device = dev);
     });
   }
 
   Device _parseQRCode(String code) {
     final exp = RegExp(r"\$\{(.+?)\}");
     final match = exp.firstMatch(code);
-    if (match == null)
+    if (match == null) {
       throw QRScanException(cause: "Expected pattern does not match");
+    }
 
     final data = match.group(1)!;
     final parts = data.split(';');
-    if (parts.length != 3)
+    if (parts.length != 3) {
       throw QRScanException(cause: "Coded data is not valid");
+    }
 
-    final dev = Device();
+    final dev = Device.empty();
 
     dev.hostname = parts[0];
     dev.ip = parts[1];
@@ -368,13 +368,10 @@ class _DeviceFormState extends State<DeviceForm> {
   }
 
   Future<void> _submitDevice() async {
+    final js = device!.toJson();
     if (_formKey.currentState!.validate() && device != null) {
-      try {
-        if (await DevicesController.registerDevice(device!)) {
-          Navigator.pop(context);
-        }
-      } on Exception catch (e) {
-        displayError(context, e);
+      if (await DevicesController.registerDevice(device!)) {
+        Navigator.pop(context);
       }
     }
   }
@@ -394,7 +391,7 @@ class _DeviceFormState extends State<DeviceForm> {
           ..name = result.name;
       });
     } else {
-      displayError(context, Exception("Location wasn't picked, please try again"))
+      displayError(context, Exception("Location wasn't picked, please try again"));
     }
   }
 }
