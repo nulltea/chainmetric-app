@@ -64,7 +64,7 @@ class Fabric {
         "args": args,
       });
     } on PlatformException catch (e) {
-      print("PlatformException: ${e.message}");
+      _logger.e(e);
     }
     return null;
   }

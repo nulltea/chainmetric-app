@@ -10,7 +10,7 @@ class EventSocket {
   static final _channel = StreamsChannel(socketChannel);
 
   static Future<CancelListening> bind(SocketListener listener,
-      String chaincode, [dynamic args]) async {
+      String chaincode, [List<dynamic> args]) async {
     final subscription = _channel
         .receiveBroadcastStream(["bind", chaincode, json.encode(args)])
         .listen((eventArtifact) {
