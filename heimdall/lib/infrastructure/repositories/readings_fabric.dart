@@ -9,22 +9,20 @@ import 'package:streams_channel2/streams_channel2.dart';
 import 'package:talos/talos.dart';
 import 'package:tuple/tuple.dart';
 
-typedef ReadingsListener = void Function(MetricReadingPoint? point);
+typedef ReadingsListener = void Function(MetricReadingPoint point);
 typedef CancelReadingsListening = void Function();
 
 class ReadingsController {
 
   static Future<MetricReadings?> getReadings(String assetID) async {
     try {
-      final data = await Fabric.evaluateTransaction("readings", "for_asset", assetID);
+      final data = await Fabric.evaluateTransaction("readings", "ForAsset", assetID);
       if (data?.isEmpty ?? true) {
         return null;
       }
       final port = ReceivePort();
       Isolate.spawn(_unmarshalReadings, Tuple2(data!, port.sendPort));
       return await port.first as MetricReadings?;
-    } on PlatformException catch (e) {
-      logger.e(e);
     } on Exception catch (e) {
       logger.e("ReadingsController.getReadings: ${e.toString()}");
     }
@@ -35,17 +33,16 @@ class ReadingsController {
   static Future<MetricReadingsStream?> getStream(
       String assetID, String metric) async {
     try {
-      final data = await Fabric.evaluateTransaction("readings", "for_metric", assetID);
+      final data = await Fabric.evaluateTransaction("readings", "ForMetric",
+          [assetID, metric]);
       if (data?.isEmpty ?? true) {
         return null;
       }
       final port = ReceivePort();
       Isolate.spawn(_unmarshalStream, Tuple2(data!, port.sendPort));
       return await port.first as MetricReadingsStream?;
-    } on PlatformException catch (e) {
-      logger.e(e);
     } on Exception catch (e) {
-      logger.e("ReadingsController.getReadings: ${e.toString()}");
+      logger.e("ReadingsController.getStream: ${e.toString()}");
     }
 
     return null;
@@ -55,7 +52,7 @@ class ReadingsController {
       String assetID, String metric, ReadingsListener listener) async {
     final cancel = EventSocket.bind((eventArtifact) {
       listener(MetricReadingPoint.fromJson(json.decode(eventArtifact)));
-    }, "readings", <dynamic>[assetID, metric]);
+    }, "readings", [assetID, metric]);
 
     return cancel;
   }

@@ -13,9 +13,8 @@ MetricReadings _$MetricReadingsFromJson(Map<String, dynamic> json) {
       (k, e) => MapEntry(
           k,
           (e as List<dynamic>)
-              .map((e) => e == null
-                  ? null
-                  : MetricReadingPoint.fromJson(e as Map<String, dynamic>))
+              .map(
+                  (e) => MetricReadingPoint.fromJson(e as Map<String, dynamic>))
               .toList()),
     );
 }
@@ -24,7 +23,7 @@ Map<String, dynamic> _$MetricReadingsToJson(MetricReadings instance) =>
     <String, dynamic>{
       'asset_id': instance.assetID,
       'streams': instance.streamsRaw
-          ?.map((k, e) => MapEntry(k, e.map((e) => e?.toJson()).toList())),
+          ?.map((k, e) => MapEntry(k, e.map((e) => e.toJson()).toList())),
     };
 
 MetricReadingPoint _$MetricReadingPointFromJson(Map<String, dynamic> json) {

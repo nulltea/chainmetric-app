@@ -10,10 +10,12 @@ import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/shared/extensions.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/svg_icon.dart';
-import 'package:charts_common/src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect; // ignore: implementation_imports
+import 'package:charts_common/src/chart/common/canvas_shapes.dart'
+    show CanvasBarStack, CanvasRect; // ignore: implementation_imports
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports
-import 'package:charts_flutter/src/text_style.dart' as style; // ignore: implementation_imports
+import 'package:charts_flutter/src/text_style.dart'
+    as style; // ignore: implementation_imports
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
@@ -48,6 +50,7 @@ abstract class _ReadingsState extends State<ReadingsPage> {
 
   final viewportPoints = defaultViewportPoints;
   final refreshKey = GlobalKey<RefreshIndicatorState>();
+
   Map<String?, Requirement?> get requirements => widget.requirements!.metrics;
   List<Device>? devicesCache;
 
@@ -104,20 +107,20 @@ abstract class _ReadingsState extends State<ReadingsPage> {
   @protected
   bool isCritical(
           MetricReadingsStream stream, int index, Requirement requirement) =>
-      !meetRequirement(stream[index]!.value!, requirement) ||
+      !meetRequirement(stream[index].value!, requirement) ||
       (index != stream.length - 1 &&
-          !meetRequirement(stream[index + 1]!.value!, requirement));
+          !meetRequirement(stream[index + 1].value!, requirement));
 
   @protected
   charts.DateTimeExtents timeViewport(MetricReadingsStream stream) {
-    var start = stream.last!.timestamp
+    var start = stream.last.timestamp
         .subtract(widget.requirements!.periodDuration * viewportPoints);
 
-    if (start.isBefore(stream.first!.timestamp)) {
-      start = stream.first!.timestamp;
+    if (start.isBefore(stream.first.timestamp)) {
+      start = stream.first.timestamp;
     }
 
-    return charts.DateTimeExtents(start: start, end: stream.last!.timestamp);
+    return charts.DateTimeExtents(start: start, end: stream.last.timestamp);
   }
 
   @protected
@@ -261,7 +264,7 @@ class _ReadingsListViewState extends _ReadingsState {
                   : charts.MaterialPalette.cyan.shadeDefault,
           domainFn: (point, _) => point.timestamp,
           measureFn: (point, _) => point.value! <= 0 ? 0 : point.value,
-          data: stream as List<MetricReadingPoint>,
+          data: stream.toList(),
         )
       ];
 
@@ -396,7 +399,7 @@ class _ReadingsPageViewState extends _ReadingsState {
                     Text(
                         _isActiveStream(metric)
                             ? "Monitoring now"
-                            : "Last updated \n${stream.last!.timestamp.timeAgoSinceDate()}",
+                            : "Last updated \n${stream.last.timestamp.timeAgoSinceDate()}",
                         style: TextStyle(color: Theme.of(context).hintColor)),
                     if (_isActiveStream(metric)) ...{
                       const SizedBox(width: 5),
@@ -548,7 +551,7 @@ class _ReadingsPageViewState extends _ReadingsState {
   bool _isActiveStream(Metric metric) {
     if (readings.streams?.containsKey(metric) ?? false) return false;
 
-    final lastUpdated = readings.streams![metric]!.last!.timestamp;
+    final lastUpdated = readings.streams![metric]!.last.timestamp;
     return DateTime.now().difference(lastUpdated).inSeconds <
         max(widget.requirements!.period! * 3, 60);
   }

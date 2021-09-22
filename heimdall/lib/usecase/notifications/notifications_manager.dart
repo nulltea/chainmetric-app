@@ -20,7 +20,7 @@ class NotificationsManager {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       FirebaseMessaging.onMessage.listen((event) {
-
+        logger.e(event);
       });
     } else {
       print('User declined or has not accepted permission');
