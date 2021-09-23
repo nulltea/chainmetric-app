@@ -11,7 +11,9 @@ class Metric {
   late final String metric;
   late final String unit;
   @JsonKey(name: "icon")
-  String? iconRaw;
+  String? iconName;
+  @JsonKey(name: "icon_type")
+  String? iconType;
 
   Metric();
 
@@ -19,19 +21,18 @@ class Metric {
           {double size = 24,
           Color? color,
           Widget fallback = const SvgIcon("sensors")}) =>
-      iconRaw?.isNotEmpty ?? false
-          ? _iconPoint != null && _iconPoint != 0
-              ? Icon(
-                  IconData(_iconPoint!, fontFamily: "MaterialIcons"),
-                  size: size,
-                  color: color,
-                )
-              : SvgIcon(iconRaw, size: size, color: color)
+      iconName != null
+          ? iconType == "svg"
+              ? SvgIcon(iconName, size: size, color: color)
+              : Text(iconName!,
+                  style: TextStyle(
+                      fontFamily: iconType ?? "MaterialIcons",
+                      fontSize: size,
+                      color: color))
           : fallback;
 
-  int? get _iconPoint => iconRaw != null ? int.tryParse(iconRaw!) : 0;
-
   factory Metric.fromJson(Map<String, dynamic> json) => _$MetricFromJson(json);
+
   Map<String, dynamic> toJson() => _$MetricToJson(this);
 
   static List<Metric> listFromJson(List<dynamic> json) =>

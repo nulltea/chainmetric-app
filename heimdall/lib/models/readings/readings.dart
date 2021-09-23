@@ -18,11 +18,11 @@ class MetricReadings {
   MetricReadings();
 
   @JsonKey(ignore: true)
-  Map<Metric?, MetricReadingsStream?>? get streams =>
+  Map<Metric, MetricReadingsStream>? get streams =>
       _streams ??= streamsRaw?.map((key, value) => MapEntry(
-          LocalDataRepo.metricsMap[key],
+          LocalDataRepo.metricsMap[key]!,
           MetricReadingsStream.from(streamsRaw![key])));
-  Map<Metric?, MetricReadingsStream?>? _streams;
+  Map<Metric, MetricReadingsStream>? _streams;
 
   factory MetricReadings.fromJson(Map<String, dynamic> json) =>
       _$MetricReadingsFromJson(json);
