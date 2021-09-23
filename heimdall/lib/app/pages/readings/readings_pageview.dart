@@ -270,7 +270,7 @@ class _ReadingsPageViewState extends _ReadingsState {
       });
 
   bool _isActiveStream(Metric metric) {
-    if (readings.streams?.containsKey(metric) ?? false) return false;
+    if (readings.streams?.containsKey(metric) ?? false) return true;
 
     final lastUpdated = readings.streams![metric]!.last.timestamp;
     return DateTime.now().difference(lastUpdated).inSeconds <

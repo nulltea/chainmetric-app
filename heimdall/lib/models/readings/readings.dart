@@ -66,6 +66,11 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint> {
   }
 
   @override
+  void add(MetricReadingPoint element) {
+   _list?.add(element);
+  }
+
+  @override
   int get length => _list!.length;
 
   @override

@@ -110,7 +110,7 @@
     "name": "Noise level",
     "metric": "nse",
     "unit": " dBA",
-    "icon": "graphic_eq"
+    "icon": "volume_up"
   },
   {
     "name": "Vibration",
