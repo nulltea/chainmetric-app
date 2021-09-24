@@ -4,6 +4,7 @@ import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import plugins.Plugins
 
 class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandler {
@@ -25,7 +26,7 @@ class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandl
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        result.error("EventSocket::bind", e.message, null)
+                        events?.error("EventSocket::bind", e.message, null)
                     }
                 }
                 "subscribe" -> try {
@@ -40,7 +41,7 @@ class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandl
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        result.error("EventSocket::subscribe", e.message, null)
+                        events?.error("EventSocket::subscribe", e.message, null)
                     }
                 }
                 else -> throw IllegalStateException("Event '$method' unsupported")
