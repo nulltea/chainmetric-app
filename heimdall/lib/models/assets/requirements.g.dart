@@ -21,8 +21,8 @@ Map<String, dynamic> _$RequirementToJson(Requirement instance) =>
 Requirements _$RequirementsFromJson(Map<String, dynamic> json) {
   return Requirements()
     ..id = json['id'] as String
-    ..type = json['type'] as String?
-    ..assetID = json['asset_id'] as String?
+    ..assetID = json['asset_id'] as String
+    ..fromOrg = json['from_org'] as String
     ..period = json['period'] as int?
     ..metrics = (json['metrics'] as Map<String, dynamic>).map(
       (k, e) => MapEntry(k,
@@ -33,8 +33,8 @@ Requirements _$RequirementsFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$RequirementsToJson(Requirements instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'type': instance.type,
       'asset_id': instance.assetID,
+      'from_org': instance.fromOrg,
       'period': instance.period,
       'metrics': instance.metrics.map((k, e) => MapEntry(k, e?.toJson())),
     };

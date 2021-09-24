@@ -10,7 +10,7 @@ Device _$DeviceFromJson(Map<String, dynamic> json) {
   return Device()
     ..id = json['id'] as String
     ..ip = json['ip'] as String
-    ..mac = json['mac'] as String
+    ..mac = json['mac'] as String?
     ..name = json['name'] as String?
     ..hostname = json['hostname'] as String
     ..profile = json['profile'] as String?
@@ -95,7 +95,7 @@ K _$enumDecode<K, V>(
 const _$DeviceCommandEnumMap = {
   DeviceCommand.pause: 'pause',
   DeviceCommand.resume: 'resume',
-  DeviceCommand.pairBluetooth: 'pairBluetooth',
+  DeviceCommand.pairBluetooth: 'ble_pair',
 };
 
 DeviceCommandLogEntry _$DeviceCommandLogEntryFromJson(

@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                             .map<DropdownMenuItem<String>>(
                                 (org) => DropdownMenuItem<String>(
                                       value: org.mspID,
-                                      child: Text(org.name!),
+                                      child: Text(org.name),
                                     ))
                             .toList(),
                         validator: (value) {

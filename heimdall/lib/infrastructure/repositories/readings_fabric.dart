@@ -3,72 +3,58 @@ import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:chainmetric/models/readings/readings.dart';
+import 'package:chainmetric/shared/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:streams_channel2/streams_channel2.dart';
+import 'package:talos/talos.dart';
 import 'package:tuple/tuple.dart';
 
-const readingsChannel =
-    "chainmetric.app.blockchain-native-sdk/contracts/readings";
-const readingsEventsChannel =
-    "chainmetric.app.blockchain-native-sdk/events/readings";
-
-typedef ReadingsListener = void Function(MetricReadingPoint? point);
+typedef ReadingsListener = void Function(MetricReadingPoint point);
 typedef CancelReadingsListening = void Function();
 
 class ReadingsController {
-  static const _readingsContract = MethodChannel(readingsChannel);
-  static final _readingsEvents = StreamsChannel(readingsEventsChannel);
 
-  static Future<MetricReadings?> getReadings(String? assetID) async {
+  static Future<MetricReadings?> getReadings(String assetID) async {
     try {
-      final String data = await (_readingsContract.invokeMethod("for_asset", {
-        "asset": assetID,
-      }) as FutureOr<String>);
-      if (data.isEmpty) {
+      final data = await Fabric.evaluateTransaction("readings", "ForAsset", assetID);
+      if (data?.isEmpty ?? true) {
         return null;
       }
       final port = ReceivePort();
-      Isolate.spawn(_unmarshalReadings, Tuple2(data, port.sendPort));
+      Isolate.spawn(_unmarshalReadings, Tuple2(data!, port.sendPort));
       return await port.first as MetricReadings?;
-    } on PlatformException catch (e) {
-      print("PlatformException: ${e.message}");
     } on Exception catch (e) {
-      print("ReadingsController.getReadings: ${e.toString()}");
+      logger.e("ReadingsController.getReadings: ${e.toString()}");
     }
 
     return null;
   }
 
   static Future<MetricReadingsStream?> getStream(
-      String? assetID, String? metric) async {
+      String assetID, String metric) async {
     try {
-      final String data = await (_readingsContract
-              .invokeMethod("for_metric", {"asset": assetID, "metric": metric})
-          as FutureOr<String>);
-      if (data.isEmpty) {
+      final data = await Fabric.evaluateTransaction("readings", "ForMetric",
+          [assetID, metric]);
+      if (data?.isEmpty ?? true) {
         return null;
       }
       final port = ReceivePort();
-      Isolate.spawn(_unmarshalStream, Tuple2(data, port.sendPort));
+      Isolate.spawn(_unmarshalStream, Tuple2(data!, port.sendPort));
       return await port.first as MetricReadingsStream?;
-    } on PlatformException catch (e) {
-      print("PlatformException: ${e.message}");
     } on Exception catch (e) {
-      print("ReadingsController.getStream: ${e.toString()}");
+      logger.e("ReadingsController.getStream: ${e.toString()}");
     }
 
     return null;
   }
 
   static Future<CancelReadingsListening> subscribeToStream(
-      String? assetID, String? metric, ReadingsListener listener) async {
-    final subscription = _readingsEvents
-        .receiveBroadcastStream("posted.$assetID.$metric")
-        .listen((eventArtifact) {
+      String assetID, String metric, ReadingsListener listener) async {
+    final cancel = EventSocket.bind((eventArtifact) {
       listener(MetricReadingPoint.fromJson(json.decode(eventArtifact)));
-    }, cancelOnError: false);
+    }, "readings", [assetID, metric]);
 
-    return () => subscription.cancel();
+    return cancel;
   }
 
   static Future<void> _unmarshalReadings(Tuple2<String, SendPort> args) async {

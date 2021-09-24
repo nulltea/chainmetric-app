@@ -16,21 +16,25 @@ class VaultAuthenticator {
         "default_token": defaultToken,
       });
     } on PlatformException catch (e) {
-      _logger.e(e.toString());
+      throw Exception("go error: ${e.toString()}");
     }
   }
 
   Future<bool> fetchVaultIdentity(
-      String organization,
-      String secretPath,
-      String secretToken,
-      {String username = "appUser"}
-  ) async {
-    return await _channel.invokeMethod<int>("identity_fetch", {
-      "username": username,
-      "org": organization,
-      "path": secretPath,
-      "token": secretToken,
-    }) == 0;
+      String organization, String secretPath, String secretToken,
+      {String username = "appUser"}) async {
+    try {
+      return await _channel.invokeMethod<int>("identity_fetch", {
+            "username": username,
+            "org": organization,
+            "path": secretPath,
+            "token": secretToken,
+          }) ==
+          0;
+    } on PlatformException catch (e) {
+      _logger.e(e.toString());
+    }
+
+    return false;
   }
 }

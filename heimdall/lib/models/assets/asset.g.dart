@@ -109,7 +109,7 @@ Map<String, dynamic> _$AssetsResponseToJson(AssetsResponse instance) =>
 AssetType _$AssetTypeFromJson(Map<String, dynamic> json) {
   return AssetType()
     ..name = json['name'] as String
-    ..type = json['type'] as String?
+    ..type = json['type'] as String
     ..colorHex = json['color_hex'] as String;
 }
 

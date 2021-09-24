@@ -22,15 +22,16 @@ class Requirement {
 @JsonSerializable()
 class Requirements {
   late final String id;
-  String? type;
   @JsonKey(name: "asset_id")
-  String? assetID;
+  late final String assetID;
+  @JsonKey(name: "from_org")
+  late String fromOrg;
   int? period;
   Duration get periodDuration => Duration(seconds: period ?? 0);
   Map<String, Requirement?> metrics = <String, Requirement?>{};
 
   Requirements();
-  Requirements.forAsset({this.assetID});
+  Requirements.forAsset(this.assetID, {this.id="", this.period=120, this.fromOrg=""});
 
   factory Requirements.fromJson(Map<String, dynamic> json) =>
       _$RequirementsFromJson(json);

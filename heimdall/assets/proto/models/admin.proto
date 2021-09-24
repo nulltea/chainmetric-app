@@ -1,16 +1,16 @@
 syntax = "proto3";
 
-package chainmetric.identity.presenter;
+package chainmetric.identity;
 
-option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/presenter";
+option go_package = "github.com/timoth-y/chainmetric-network/orgservices/identity/api/presenter";
 
 import "validate/validate.proto";
 import "google/protobuf/timestamp.proto";
 
 message EnrollUserRequest {
-  string userID = 1 [(validate.rules).string = {min_len: 32, max_len: 32}];
+  string userID = 1                      [(validate.rules).string = {min_len: 32, max_len: 32}];
   string role = 2;
-  optional google.protobuf.Timestamp expireAt = 3 [(validate.rules).timestamp = {required: false}];
+  google.protobuf.Timestamp expireAt = 3 [(validate.rules).timestamp = {required: false}];
 }
 
 message EnrollUserResponse {

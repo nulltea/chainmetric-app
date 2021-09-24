@@ -3,114 +3,119 @@
     "name": "Temperature",
     "metric": "temp",
     "unit": "°C",
-    "icon": "0xe6b0"
+    "icon": "thermostat"
   },
   {
     "name": "Humidity",
     "metric": "hdt",
     "unit": "% RH",
-    "icon": "humidity"
+    "icon": "humidity",
+    "icon_type": "svg"
   },
   {
     "name": "Luminosity",
     "metric": "lux",
     "unit": " lux",
-    "icon": "0xe50d"
+    "icon": "wb_incandescent_outlined"
   },
   {
     "name": "Magnetism",
     "metric": "mgn",
     "unit": " Gauss",
-    "icon": "magnet"
+    "icon": "magnet",
+    "icon_type": "svg"
   },
   {
     "name": "Pressure",
     "metric": "bar",
     "unit": " PSI",
-    "icon": "0xe675"
+    "icon": "compress"
   },
   {
     "name": "Altitude",
     "metric": "alt",
     "unit":" m",
-    "icon": "0xe265"
+    "icon": "landscape"
   },
   {
     "name": "UV Index",
     "metric": "uv",
     "unit": " (I)",
-    "icon": "0xe611"
+    "icon": "flourescent_outlined"
   },
   {
     "name": "Visible Light",
     "metric": "vis",
     "unit": " lux",
-    "icon": "0xe50f"
+    "icon": "wb_sunny"
   },
   {
     "name": "IR Light",
     "metric": "ir",
     "unit": " lux",
-    "icon": "0xe50e"
+    "icon": "microwave_outlined"
   },
   {
     "name": "Proximity",
     "metric": "prx",
     "unit": " m",
-    "icon": "0xea54"
+    "icon": "straighten_sharp"
   },
   {
     "name": "Air quality (CO2)",
     "metric": "co2",
     "unit": " ppm",
-    "icon": "co2"
+    "icon": "co2",
+    "icon_type": "svg"
   },
   {
     "name": "Air quality (TVOCs)",
     "metric": "tvoc",
     "unit": " ppb",
-    "icon": "tvoc"
+    "icon": "tvoc",
+    "icon_type": "svg"
   },
   {
     "name": "Air quality (LPG)",
     "metric": "lpg",
     "unit": " ppm",
-    "icon": "tvoc"
+    "icon": "science_outlined"
   },
   {
     "name": "Acceleration (G)",
     "metric": "axg",
     "unit": " G",
-    "icon": "0xea0b"
+    "icon": "speed_sharp"
   },
   {
     "name": "Acceleration (M/S2)",
     "metric": "axms",
     "unit": " m/s^2",
-    "icon": "0xea0b"
+    "icon": "speed_sharp"
   },
   {
     "name": "Heart rate",
     "metric": "hrt",
     "unit": " bpm",
-    "icon": "0xe721"
+    "icon": "monitor_heart"
   },
   {
     "name": "Blood oxidation",
     "metric": "blo",
     "unit": "%",
-    "icon": "blood"
+    "icon": "blood",
+    "icon_type": "svg"
   },
   {
     "name": "Noise level",
     "metric": "nse",
     "unit": " dBA",
-    "icon": "0xead1"
+    "icon": "volume_up"
   },
   {
     "name": "Vibration",
     "metric": "vbr",
     "unit": " Hz",
-    "icon": "0xead1"
+    "icon": "vibration_sharp"
   }
 ]

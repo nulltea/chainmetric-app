@@ -13,21 +13,20 @@ class MetricReadings {
   @JsonKey(name: "asset_id")
   String? assetID;
   @JsonKey(name: "streams")
-  Map<String, List<MetricReadingPoint?>>? streamsRaw;
+  Map<String, List<MetricReadingPoint>>? streamsRaw;
 
   MetricReadings();
 
   @JsonKey(ignore: true)
-  Map<Metric?, MetricReadingsStream?>? get streams =>
-      LocalDataRepo.metricsMap != null
-          ? _streams ??= streamsRaw?.map((key, value) => MapEntry(
-              LocalDataRepo.metricsMap[key],
-              MetricReadingsStream.from(streamsRaw![key])))
-          : null;
-  Map<Metric?, MetricReadingsStream?>? _streams;
+  Map<Metric, MetricReadingsStream>? get streams =>
+      _streams ??= streamsRaw?.map((key, value) => MapEntry(
+          LocalDataRepo.metricsMap[key]!,
+          MetricReadingsStream.from(streamsRaw![key])));
+  Map<Metric, MetricReadingsStream>? _streams;
 
   factory MetricReadings.fromJson(Map<String, dynamic> json) =>
       _$MetricReadingsFromJson(json);
+
   Map<String, dynamic> toJson() => _$MetricReadingsToJson(this);
 }
 
@@ -38,6 +37,7 @@ class MetricReadingPoint {
   late String location;
   late DateTime timestamp;
   num? value;
+
   num get valueRounded => roundValue(value, 2);
 
   MetricReadingPoint();
@@ -50,35 +50,44 @@ class MetricReadingPoint {
 
   factory MetricReadingPoint.fromJson(Map<String, dynamic> json) =>
       _$MetricReadingPointFromJson(json);
+
   Map<String, dynamic> toJson() => _$MetricReadingPointToJson(this);
 
   static List<MetricReadingPoint> listFromJson(List<dynamic> json) =>
       json.map((e) => MetricReadingPoint.fromJson(e)).toList();
 }
 
-class MetricReadingsStream extends ListBase<MetricReadingPoint?> {
-  List<MetricReadingPoint?>? _list = [];
+class MetricReadingsStream extends ListBase<MetricReadingPoint> {
+  List<MetricReadingPoint>? _list = [];
+
   @override
   set length(int newLength) {
     _list!.length = newLength;
   }
 
   @override
+  void add(MetricReadingPoint element) {
+   _list?.add(element);
+  }
+
+  @override
   int get length => _list!.length;
+
   @override
-  MetricReadingPoint? operator [](int index) => _list![index];
+  MetricReadingPoint operator [](int index) => _list![index];
+
   @override
-  void operator []=(int index, MetricReadingPoint? value) {
+  void operator []=(int index, MetricReadingPoint value) {
     _list![index] = value;
   }
 
-  List<num> get _values => _list!.map((p) => p!.value ?? 0).toList();
+  List<num> get _values => _list!.map((p) => p.value ?? 0).toList();
 
   num get firstValue =>
-      isNotEmpty ? MetricReadingPoint.roundValue(first?.value, 2) : 0;
+      isNotEmpty ? MetricReadingPoint.roundValue(first.value, 2) : 0;
 
   num get lastValue =>
-      isNotEmpty ? MetricReadingPoint.roundValue(last?.value, 2) : 0;
+      isNotEmpty ? MetricReadingPoint.roundValue(last.value, 2) : 0;
 
   num get maxValue =>
       isNotEmpty ? MetricReadingPoint.roundValue(_values.reduce(max), 2) : 0;
@@ -101,14 +110,15 @@ class MetricReadingsStream extends ListBase<MetricReadingPoint?> {
   Duration criticalExposureFor(Requirement? requirement, Duration period) =>
       Duration(
           seconds: isNotEmpty
-              ? period *
+              ? period.inSeconds *
                   _values
                       .where((p) => !_meetRequirement(p, requirement!))
-                      .length as int
+                      .length
               : 0);
 
   MetricReadingsStream();
-  MetricReadingsStream.from(List<MetricReadingPoint?>? from) {
+
+  MetricReadingsStream.from(List<MetricReadingPoint>? from) {
     _list = from;
   }
 

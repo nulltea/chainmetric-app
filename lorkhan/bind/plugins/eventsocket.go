@@ -2,12 +2,12 @@ package plugins
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 	"github.com/timoth-y/chainmetric-app/lorkhan/bind/events"
 	"github.com/timoth-y/chainmetric-app/lorkhan/bind/fabric"
+	"github.com/timoth-y/chainmetric-app/lorkhan/internal/utils"
 )
 // EventSocket defines plugin for subscribing to events on Hyperledger network.
 type EventSocket struct {
@@ -25,16 +25,13 @@ func NewEventSocket(sdk *fabric.SDK, chaincode string) *EventSocket {
 
 // Bind makes 'BindToEventSocket' transaction to request events streaming subscription,
 // and subscribes to event, which name corresponds received event token.
-func (p *EventSocket) Bind(args string) (*events.EventChannel, error) {
-	var (
-		argsSlice []string
-	)
-
-	if err := json.Unmarshal([]byte(args), &argsSlice); err != nil {
+func (p *EventSocket) Bind(arguments string) (*events.EventChannel, error) {
+	args, err := utils.TryParseArgs(arguments)
+	if err != nil {
 		return nil, err
 	}
 
-	eventToken, err := p.contract.SubmitTransaction("BindToEventSocket", argsSlice...)
+	eventToken, err := p.contract.SubmitTransaction("BindToEventSocket", args...)
 	if err != nil {
 		return nil, fmt.Errorf("failed executing 'BindToEventSocket' transaction: %w", err)
 	}
@@ -67,8 +64,8 @@ func (p *EventSocket) Subscribe(event string) (*events.EventChannel, error) {
 
 		for {
 			select {
-			case event := <-notifier:
-				channel.HandleEvent(string(event.Payload))
+			case e := <-notifier:
+				channel.HandleEvent(string(e.Payload))
 			case <- ctx.Done():
 				return
 			}

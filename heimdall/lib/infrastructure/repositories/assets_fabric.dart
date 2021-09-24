@@ -1,20 +1,21 @@
 import 'dart:convert';
 
 import 'package:chainmetric/models/assets/asset.dart';
+import 'package:chainmetric/shared/logger.dart';
 import 'package:talos/talos.dart';
 
 class AssetsController {
   static Future<AssetsResponse?> getAssets(
       {AssetsQuery? query, int? limit, String? scrollID}) async {
     query ??= AssetsQuery(limit: limit, scrollID: scrollID);
-    final data = await Fabric.evaluateTransaction(
-        "assets", "Query", json.encode(query.toJson()));
     try {
+      final data = await Fabric.evaluateTransaction(
+          "assets", "Query", json.encode(query.toJson()));
       return data != null && data.isNotEmpty
           ? AssetsResponse.fromJson(json.decode(data))
           : AssetsResponse();
     } on Exception catch (e) {
-      print(e.toString());
+      logger.e(e);
     }
     return AssetsResponse();
   }

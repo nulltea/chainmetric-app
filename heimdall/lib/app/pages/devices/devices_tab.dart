@@ -8,8 +8,8 @@ import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
 import 'package:chainmetric/app/widgets/common/navigation_tab.dart';
 import 'package:chainmetric/app/widgets/common/svg_icon.dart';
-import 'package:chainmetric/app/pages/devices/form.dart';
-import 'package:chainmetric/app/pages/devices/pairing_page.dart';
+import 'package:chainmetric/app/pages/devices/device_form.dart';
+import 'package:chainmetric/app/pages/devices/bluetooth_pairing_page.dart';
 
 class DevicesTab extends NavigationTab {
   const DevicesTab({GlobalKey? key}) : super(key: key);

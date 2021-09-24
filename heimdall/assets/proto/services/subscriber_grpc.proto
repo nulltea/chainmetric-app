@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package chainmetric.notifications;
+option go_package = "github.com/timoth-y/chainmetric-network/orgservices/notifications/api/rpc";
+
+import "subscription.proto";
+import "status.proto";
+
+service SubscriberService {
+  rpc subscribe(SubscriptionRequest) returns (SubscriptionResponse);
+  rpc cancel(CancellationRequest) returns (shared.StatusResponse);
+}

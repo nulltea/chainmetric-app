@@ -1,4 +1,5 @@
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
+import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
 import 'package:chainmetric/app/theme/theme.dart';
@@ -6,8 +7,9 @@ import 'package:chainmetric/models/assets/asset.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/modal_menu.dart';
 import 'package:chainmetric/app/pages/assets/asset_form.dart';
-import 'package:chainmetric/app/pages/readings/page.dart';
-import 'package:chainmetric/app/pages/requirements/form.dart';
+import 'package:chainmetric/app/pages/readings/readings_page.dart';
+import 'package:chainmetric/app/pages/requirements/requirements_form.dart';
+import 'package:chainmetric/usecase/notifications/notifications_manager.dart';
 import 'package:flutter/material.dart';
 
 class AssetCard extends StatelessWidget {
@@ -48,7 +50,7 @@ class AssetCard extends StatelessWidget {
                   Icon(Icons.corporate_fare,
                       color: Theme.of(context).hintColor),
                   const SizedBox(width: 5),
-                  Text(LocalDataRepo.organizationsMap[asset.holder]!.name!,
+                  Text(LocalDataRepo.organizationsMap[asset.holder]!.name,
                       style: AppTheme.bodyText2.override(
                           color: Theme.of(context).hintColor,
                           fontWeight: FontWeight.w400))
@@ -110,11 +112,11 @@ class AssetCard extends StatelessWidget {
       ModalMenuOption(
           title: "Transfer asset",
           icon: Icons.local_shipping,
-          action: () => print("Transfer asset")),
+          action: () => throw UnimplementedError()),
       ModalMenuOption(
           title: "History",
           icon: Icons.history,
-          action: () => print("View history")),
+          action: () => throw UnimplementedError()),
       ModalMenuOption(
           title: "Watch asset",
           icon: Icons.visibility,
@@ -135,6 +137,13 @@ class AssetCard extends StatelessWidget {
                   context,
                   () => AssetsController.deleteAsset(asset.id)
                       .whenComplete(refreshParent!)))),
+      ModalMenuOption(
+          title: "Subscribe to notifications",
+          icon: Icons.notifications,
+          action: decorateWithLoading(
+              context,
+              () => NotificationsManager(IdentitiesRepo.organization!)
+                  .subscribeToRequirementsViolationOf(asset.id)))
     ]);
   }
 }

@@ -23,15 +23,15 @@ final $typed_data.Uint8List fabricCredentialsRequestDescriptor = $convert.base64
 const FabricCredentialsResponse$json = const {
   '1': 'FabricCredentialsResponse',
   '2': const [
-    const {'1': 'secret', '3': 1, '4': 1, '5': 11, '6': '.chainmetric.identity.presenter.VaultSecret', '10': 'secret'},
+    const {'1': 'secret', '3': 1, '4': 1, '5': 11, '6': '.chainmetric.identity.VaultSecret', '10': 'secret'},
     const {'1': 'apiAccessToken', '3': 2, '4': 1, '5': 9, '10': 'apiAccessToken'},
-    const {'1': 'user', '3': 3, '4': 1, '5': 11, '6': '.chainmetric.identity.presenter.User', '10': 'user'},
+    const {'1': 'user', '3': 3, '4': 1, '5': 11, '6': '.chainmetric.identity.User', '10': 'user'},
   ],
   '7': const {},
 };
 
 /// Descriptor for `FabricCredentialsResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List fabricCredentialsResponseDescriptor = $convert.base64Decode('ChlGYWJyaWNDcmVkZW50aWFsc1Jlc3BvbnNlEkMKBnNlY3JldBgBIAEoCzIrLmNoYWlubWV0cmljLmlkZW50aXR5LnByZXNlbnRlci5WYXVsdFNlY3JldFIGc2VjcmV0EiYKDmFwaUFjY2Vzc1Rva2VuGAIgASgJUg5hcGlBY2Nlc3NUb2tlbhI4CgR1c2VyGAMgASgLMiQuY2hhaW5tZXRyaWMuaWRlbnRpdHkucHJlc2VudGVyLlVzZXJSBHVzZXI6A4BDAQ==');
+final $typed_data.Uint8List fabricCredentialsResponseDescriptor = $convert.base64Decode('ChlGYWJyaWNDcmVkZW50aWFsc1Jlc3BvbnNlEjkKBnNlY3JldBgBIAEoCzIhLmNoYWlubWV0cmljLmlkZW50aXR5LlZhdWx0U2VjcmV0UgZzZWNyZXQSJgoOYXBpQWNjZXNzVG9rZW4YAiABKAlSDmFwaUFjY2Vzc1Rva2VuEi4KBHVzZXIYAyABKAsyGi5jaGFpbm1ldHJpYy5pZGVudGl0eS5Vc2VyUgR1c2VyOgOAQwE=');
 @$core.Deprecated('Use vaultSecretDescriptor instead')
 const VaultSecret$json = const {
   '1': 'VaultSecret',
@@ -60,10 +60,10 @@ const CertificateAuthResponse$json = const {
   '1': 'CertificateAuthResponse',
   '2': const [
     const {'1': 'apiAccessToken', '3': 1, '4': 1, '5': 9, '10': 'apiAccessToken'},
-    const {'1': 'user', '3': 2, '4': 1, '5': 11, '6': '.chainmetric.identity.presenter.User', '10': 'user'},
+    const {'1': 'user', '3': 2, '4': 1, '5': 11, '6': '.chainmetric.identity.User', '10': 'user'},
   ],
   '7': const {},
 };
 
 /// Descriptor for `CertificateAuthResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List certificateAuthResponseDescriptor = $convert.base64Decode('ChdDZXJ0aWZpY2F0ZUF1dGhSZXNwb25zZRImCg5hcGlBY2Nlc3NUb2tlbhgBIAEoCVIOYXBpQWNjZXNzVG9rZW4SOAoEdXNlchgCIAEoCzIkLmNoYWlubWV0cmljLmlkZW50aXR5LnByZXNlbnRlci5Vc2VyUgR1c2VyOgOAQwE=');
+final $typed_data.Uint8List certificateAuthResponseDescriptor = $convert.base64Decode('ChdDZXJ0aWZpY2F0ZUF1dGhSZXNwb25zZRImCg5hcGlBY2Nlc3NUb2tlbhgBIAEoCVIOYXBpQWNjZXNzVG9rZW4SLgoEdXNlchgCIAEoCzIaLmNoYWlubWV0cmljLmlkZW50aXR5LlVzZXJSBHVzZXI6A4BDAQ==');

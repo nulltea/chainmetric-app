@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -56,37 +58,50 @@ class Fabric {
   }
 
   static Future<String?> evaluateTransaction(String contract, String method,
-      [String? args]) async {
+      [dynamic args]) async {
     try {
       return await _channel.invokeMethod("transaction_evaluate", {
         "contract": contract,
         "method": method,
-        "args": args,
+        "args": json.encode(args),
       });
     } on PlatformException catch (e) {
-      print("PlatformException: ${e.message}");
+      throw Exception("go error: ${e.message}");
+    } on JsonUnsupportedObjectError {
+      throw Exception("Unsupported method argument types, they must be encodable");
     }
-    return null;
   }
 
   static Future<String?> submitTransaction(
-      String contract, String method, [String? args]
-  ) => _channel.invokeMethod<String>("transaction_submit", {
+      String contract, String method, [dynamic args]
+  ) {
+    try {
+    return _channel.invokeMethod<String>("transaction_submit", {
       "contract": contract,
       "method": method,
-      "args": args,
+      "args": json.encode(args),
     });
+    } on PlatformException catch (e) {
+      throw Exception("go error: ${e.toString()}");
+    } on JsonUnsupportedObjectError {
+      throw Exception("Unsupported method argument types, they must be encodable");
+    }
+  }
 
   static Future<bool> trySubmitTransaction(String contract, String method,
-      [String? args]) async {
+      [dynamic args]) async {
     try {
-      return await _channel.invokeMethod<int>("transaction_submit", {
+      await _channel.invokeMethod("transaction_submit", {
         "contract": contract,
         "method": method,
-        "args": args,
-      }) == 0;
-    } on PlatformException {
+        "args": json.encode(args),
+      });
+      return true;
+    } on PlatformException catch (e) {
+      _logger.w(e);
       return false;
+    } on JsonUnsupportedObjectError {
+      throw Exception("Unsupported method argument types, they must be encodable");
     }
   }
 }

@@ -3,8 +3,6 @@ import 'package:global_configuration/global_configuration.dart';
 import 'package:chainmetric/infrastructure/services/admin_grpc.pbgrpc.dart';
 import 'package:chainmetric/infrastructure/services/middlewares/jwt_grpc.dart';
 
-
-
 class AdminService extends AdminServiceClient {
   final String organization;
 

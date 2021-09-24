@@ -9,6 +9,7 @@ import 'package:chainmetric/platform/adapters/bluetooth.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/platform/repositories/paired_devices_shared.dart';
+import 'package:chainmetric/usecase/notifications/notifications_manager.dart';
 import 'package:chainmetric/usecase/privileges/resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -17,6 +18,8 @@ import 'package:loading_animations/loading_animations.dart';
 import 'package:overlay_screen/overlay_screen.dart';
 import 'package:talos/talos.dart';
 import 'package:yaml/yaml.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   runApp(App());
@@ -45,6 +48,7 @@ class _AppState extends State<App> {
       theme: AppTheme.themeData,
       darkTheme: AppTheme.themeData,
       home: _viewApp(),
+      navigatorKey: navigatorKey,
     );
   }
 
@@ -78,6 +82,7 @@ class _AppState extends State<App> {
     await LocalDataRepo.init();
     await Privileges.init();
     await Fabric.initWallet();
+    await NotificationsManager.registerDriver(navigatorKey);
 
     final identity = IdentitiesRepo.current;
 

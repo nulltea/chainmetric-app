@@ -1,15 +1,15 @@
 syntax = "proto3";
 
-package chainmetric.identity.service;
-option go_package = "github.com/timoth-y/chainmetric-contracts/src/identity/api/rpc";
+package chainmetric.identity;
+option go_package = "github.com/timoth-y/chainmetric-network/orgservices/identity/api/rpc";
 
 import "user.proto";
-import "common.proto";
+import "status.proto";
 import "google/protobuf/empty.proto";
 
 service UserService {
-  rpc register(presenter.RegistrationRequest) returns (presenter.RegistrationResponse);
-  rpc getState(google.protobuf.Empty) returns (presenter.User);
-  rpc pingAccountStatus(google.protobuf.Empty) returns (presenter.UserStatusResponse);
-  rpc changePassword(presenter.ChangePasswordRequest) returns (presenter.StatusResponse);
+  rpc register(RegistrationRequest) returns (RegistrationResponse);
+  rpc getState(google.protobuf.Empty) returns (User);
+  rpc pingAccountStatus(google.protobuf.Empty) returns (UserStatusResponse);
+  rpc changePassword(ChangePasswordRequest) returns (shared.StatusResponse);
 }

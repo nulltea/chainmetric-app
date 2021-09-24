@@ -4,6 +4,7 @@ import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import plugins.Plugins
 
 class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandler {
@@ -13,7 +14,7 @@ class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandl
         CoroutineScope(Dispatchers.IO).launch {
             val args = (event as List<*>)
             when (val method = args[0]) {
-                "bind" -> {
+                "bind" -> try {
                     val chaincode = args[1] as String
                     val argsJson = args[2] as String
                     val channel = Plugins.newEventSocket(sdk, chaincode).bind(argsJson)
@@ -23,8 +24,12 @@ class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandl
                             events?.success(artifact)
                         }
                     }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        events?.error("EventSocket::bind", e.message, null)
+                    }
                 }
-                "subscribe" -> {
+                "subscribe" -> try {
                     val chaincode = args[1] as String
                     val eventName = args[1] as String
                     val channel = Plugins.newEventSocket(sdk, chaincode).subscribe(eventName)
@@ -33,6 +38,10 @@ class EventSocketHandler(private val sdk: fabric.SDK) : EventChannel.StreamHandl
                         artifact -> CoroutineScope(Dispatchers.Main).launch {
                             events?.success(artifact)
                         }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        events?.error("EventSocket::subscribe", e.message, null)
                     }
                 }
                 else -> throw IllegalStateException("Event '$method' unsupported")
