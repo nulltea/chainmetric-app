@@ -19,6 +19,8 @@ import 'package:overlay_screen/overlay_screen.dart';
 import 'package:talos/talos.dart';
 import 'package:yaml/yaml.dart';
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(App());
 }
@@ -46,6 +48,7 @@ class _AppState extends State<App> {
       theme: AppTheme.themeData,
       darkTheme: AppTheme.themeData,
       home: _viewApp(),
+      navigatorKey: navigatorKey,
     );
   }
 
@@ -79,7 +82,7 @@ class _AppState extends State<App> {
     await LocalDataRepo.init();
     await Privileges.init();
     await Fabric.initWallet();
-    await NotificationsManager.registerDriver();
+    await NotificationsManager.registerDriver(navigatorKey);
 
     final identity = IdentitiesRepo.current;
 
