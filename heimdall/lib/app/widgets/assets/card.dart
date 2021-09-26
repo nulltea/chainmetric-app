@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chainmetric/infrastructure/repositories/assets_fabric.dart';
 import 'package:chainmetric/platform/repositories/identities_shared.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
@@ -35,7 +36,7 @@ class AssetCard extends StatelessWidget {
             const SizedBox(width: 10),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const SizedBox(height: 8),
-              Text(asset.name, style: AppTheme.title3),
+              AutoSizeText(asset.name, style: AppTheme.title3),
               Text(asset.sku,
                   style: AppTheme.subtitle2.override(
                       fontFamily: "Roboto Mono",
@@ -138,7 +139,7 @@ class AssetCard extends StatelessWidget {
                   () => AssetsController.deleteAsset(asset.id)
                       .whenComplete(refreshParent!)))),
       ModalMenuOption(
-          title: "Subscribe to notifications",
+          title: "Notification settings",
           icon: Icons.notifications,
           action: decorateWithLoading(
               context,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/models/device/device.dart';
@@ -42,7 +43,7 @@ class _DeviceFormState extends State<DeviceForm> {
   @override
   void initState() {
     super.initState();
-    device = widget.model ;
+    device = widget.model;
   }
 
   @override
@@ -69,7 +70,11 @@ class _DeviceFormState extends State<DeviceForm> {
   Widget _buildForm(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Register device"),
+        title: Text("Register device",
+            style: AppTheme.title2
+                .override(fontFamily: "IBM Plex Mono", fontSize: 24)),
+        centerTitle: false,
+        elevation: 4,
       ),
       body: Form(
         key: _formKey,
@@ -144,50 +149,44 @@ class _DeviceFormState extends State<DeviceForm> {
                           ),
                           child: Column(
                             children: [
-                              MultiSelectBottomSheetField(
-                                initialValue: device!.supports,
-                                title: const Text("Supports metrics"),
-                                buttonText:
-                                    const Text("Select supported metrics"),
-                                listType: MultiSelectListType.CHIP,
-                                colorator: (dynamic v) => Colors.teal.shade800,
-                                selectedColor: Colors.teal,
-                                selectedItemsTextStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                                buttonIcon: const Icon(Icons.arrow_drop_down),
-                                items: LocalDataRepo.metrics!
-                                    .map((metric) => MultiSelectItem(
-                                          metric.metric,
-                                          metric.name,
-                                        ))
-                                    .toList(),
-                                onSelectionChanged: (List<String?> value) {
-                                  setState(() => device?.supports =
-                                      value.map((e) => e!).toList());
-                                },
-                                onConfirm: (List<String?> value) {
-                                  setState(() => device?.supports =
-                                      value.map((e) => e!).toList());
-                                },
-                              ),
-                              MultiSelectChipDisplay(
-                                chipColor: Colors.teal,
-                                textStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                                items: device!.supports
-                                    .map((metric) => MultiSelectItem(
-                                          metric,
-                                          LocalDataRepo.metricsMap[metric]?.name ??
-                                              "",
-                                        ))
-                                    .toList(),
-                                onTap: (dynamic value) {
-                                  setState(
-                                      () => device!.supports.remove(value));
-                                },
-                              )
+                              MultiSelectBottomSheetField<String?>(
+                                  initialValue: device!.supports.toList(),
+                                  title: const Text("Supports metrics"),
+                                  buttonText:
+                                      Text("Select supported metrics",
+                                          style: AppTheme.subtitle1.override(fontFamily: "Roboto", color: AppTheme.labelColor)),
+                                  listType: MultiSelectListType.CHIP,
+                                  colorator: (dynamic v) =>
+                                      Theme.of(context).primaryColor,
+                                  selectedColor: Theme.of(context).primaryColor,
+                                  selectedItemsTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  backgroundColor: AppTheme.appBarBG,
+                                  chipDisplay: MultiSelectChipDisplay(
+                                    colorator: (dynamic v) =>
+                                        Theme.of(context).primaryColor,
+                                    textStyle: TextStyle(
+                                        fontFamily: "Roboto",
+                                        color:
+                                            Theme.of(context).backgroundColor,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  buttonIcon: const Icon(Icons.add),
+                                  items: LocalDataRepo.metrics!
+                                      .map((metric) => MultiSelectItem(
+                                            metric.metric,
+                                            metric.name,
+                                          ))
+                                      .toList(),
+                                  onSelectionChanged: (List<String?> value) {
+                                    setState(() => device?.supports =
+                                        value.map((e) => e!).toList());
+                                  },
+                                  onConfirm: (List<String?> value) {
+                                    setState(() => device?.supports =
+                                        value.map((e) => e!).toList());
+                                  })
                             ],
                           ),
                         ),
@@ -390,7 +389,8 @@ class _DeviceFormState extends State<DeviceForm> {
           ..name = result.name;
       });
     } else {
-      displayError(context, Exception("Location wasn't picked, please try again"));
+      displayError(
+          context, Exception("Location wasn't picked, please try again"));
     }
   }
 }

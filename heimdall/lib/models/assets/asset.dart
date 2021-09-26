@@ -25,10 +25,10 @@ class Asset {
   Asset();
   Asset.empty({
     this.id="",
-    this.sku="TST001",
-    this.name="Test",
+    this.sku="",
+    this.name="",
     this.type="tech",
-    this.info="test",
+    this.info="",
     this.cost = 1.0,
     this.amount=1,
     this.state=""

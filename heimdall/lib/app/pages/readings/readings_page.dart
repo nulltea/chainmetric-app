@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/infrastructure/repositories/devices_fabric.dart';
 import 'package:chainmetric/infrastructure/repositories/readings_fabric.dart';
 import 'package:chainmetric/models/assets/asset.dart';
@@ -10,10 +11,12 @@ import 'package:chainmetric/models/assets/requirements.dart';
 import 'package:chainmetric/shared/extensions.dart';
 import 'package:chainmetric/app/utils/utils.dart';
 import 'package:chainmetric/app/widgets/common/svg_icon.dart';
-import 'package:charts_common/src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect; // ignore: implementation_imports
+import 'package:charts_common/src/chart/common/canvas_shapes.dart'
+    show CanvasBarStack, CanvasRect; // ignore: implementation_imports
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/src/text_element.dart'; // ignore: implementation_imports
-import 'package:charts_flutter/src/text_style.dart' as style; // ignore: implementation_imports
+import 'package:charts_flutter/src/text_style.dart'
+    as style; // ignore: implementation_imports
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
@@ -90,9 +93,9 @@ abstract class _ReadingsState extends State<ReadingsPage> {
         id: metric.metric,
         displayName: metric.name,
         colorFn: (point, i) =>
-        isCritical(stream, i!, requirements[metric.metric]!)
-            ? charts.MaterialPalette.red.shadeDefault
-            : charts.MaterialPalette.cyan.shadeDefault,
+            isCritical(stream, i!, requirements[metric.metric]!)
+                ? charts.MaterialPalette.red.shadeDefault
+                : charts.MaterialPalette.cyan.shadeDefault,
         domainFn: (point, _) => point.timestamp,
         measureFn: (point, _) => point.value,
         data: stream.toList(),
@@ -106,10 +109,10 @@ abstract class _ReadingsState extends State<ReadingsPage> {
 
   @protected
   bool isCritical(
-      MetricReadingsStream stream, int index, Requirement requirement) =>
+          MetricReadingsStream stream, int index, Requirement requirement) =>
       !meetRequirement(stream[index].value!, requirement) ||
-          (index != stream.length - 1 &&
-              !meetRequirement(stream[index + 1].value!, requirement));
+      (index != stream.length - 1 &&
+          !meetRequirement(stream[index + 1].value!, requirement));
 
   @protected
   charts.DateTimeExtents timeViewport(MetricReadingsStream stream) {
@@ -137,7 +140,11 @@ class _ReadingsListViewState extends _ReadingsState {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-        title: const Text("Metric readings"),
+        title: Text("Metric readings",
+            style: AppTheme.title2
+                .override(fontFamily: "IBM Plex Mono", fontSize: 24)),
+        centerTitle: false,
+        elevation: 4,
       ),
       body: RefreshIndicator(
         key: refreshKey,
@@ -146,10 +153,10 @@ class _ReadingsListViewState extends _ReadingsState {
       ));
 
   Widget _chartsListView(BuildContext context) => ListView.builder(
-    itemCount: readings.streams?.length ?? 0,
-    padding: const EdgeInsets.symmetric(vertical: 12),
-    itemBuilder: _listBuilder,
-  );
+        itemCount: readings.streams?.length ?? 0,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        itemBuilder: _listBuilder,
+      );
 
   Widget _listBuilder(BuildContext context, int index) {
     final record = readings.streams!.entries.elementAt(index);
@@ -165,50 +172,51 @@ class _ReadingsListViewState extends _ReadingsState {
   }
 
   Widget _chartCard(Metric metric, MetricReadingsStream stream) => Card(
-    elevation: 1,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
-    ),
-    clipBehavior: Clip.hardEdge,
-    child: SizedBox(
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Stack(
-          children: [
-            Positioned(left: 8, child: metric.icon()),
-            Positioned.fill(
-              left: 40,
-              child: Text(metric.name,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
-            ),
-            Positioned(
-              right: 8,
-              child: Align(
-                alignment: Alignment.topRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text("${stream.lastValue}",
-                        style: const TextStyle(fontSize: 15)),
-                    Text(metric.unit,
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Theme.of(context).hintColor)),
-                  ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(height: 80, child: _buildChart(metric, stream)),
-            ),
-          ],
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
-      ),
-    ),
-  );
+        clipBehavior: Clip.hardEdge,
+        child: SizedBox(
+          height: 100,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Stack(
+              children: [
+                Positioned(left: 8, child: metric.icon()),
+                Positioned.fill(
+                  left: 40,
+                  child: Text(metric.name,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w600)),
+                ),
+                Positioned(
+                  right: 8,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text("${stream.lastValue}",
+                            style: const TextStyle(fontSize: 15)),
+                        Text(metric.unit,
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Theme.of(context).hintColor)),
+                      ],
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      SizedBox(height: 80, child: _buildChart(metric, stream)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 
   Widget _buildChart(Metric metric, MetricReadingsStream stream) =>
       charts.TimeSeriesChart(
@@ -242,9 +250,9 @@ class _ReadingsListViewState extends _ReadingsState {
           charts.LinePointHighlighter(
             defaultRadiusPx: 0,
             showHorizontalFollowLine:
-            charts.LinePointHighlighterFollowLineType.none,
+                charts.LinePointHighlighterFollowLineType.none,
             showVerticalFollowLine:
-            charts.LinePointHighlighterFollowLineType.none,
+                charts.LinePointHighlighterFollowLineType.none,
           )
         ],
         selectionModels: [
@@ -257,15 +265,15 @@ class _ReadingsListViewState extends _ReadingsState {
 
   @override
   List<charts.Series<MetricReadingPoint, DateTime>> fromReadingsStream(
-      Metric metric, MetricReadingsStream stream) =>
+          Metric metric, MetricReadingsStream stream) =>
       [
         charts.Series<MetricReadingPoint, DateTime>(
           id: metric.metric,
           displayName: metric.name,
           colorFn: (point, i) =>
-          isCritical(stream, i!, requirements[metric.metric]!)
-              ? charts.MaterialPalette.red.shadeDefault
-              : charts.MaterialPalette.cyan.shadeDefault,
+              isCritical(stream, i!, requirements[metric.metric]!)
+                  ? charts.MaterialPalette.red.shadeDefault
+                  : charts.MaterialPalette.cyan.shadeDefault,
           domainFn: (point, _) => point.timestamp,
           measureFn: (point, _) => point.value! <= 0 ? 0 : point.value,
           data: stream.toList(),

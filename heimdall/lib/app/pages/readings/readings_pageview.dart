@@ -17,7 +17,8 @@ class _ReadingsPageViewState extends _ReadingsState {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: Text(_currentPageTitle()!),
+      title: Text(_currentPageTitle()!, style: AppTheme.title2
+          .override(fontFamily: "IBM Plex Mono", fontSize: 20)),
       centerTitle: true,
       toolbarHeight: 50,
       backgroundColor: Theme.of(context).backgroundColor,

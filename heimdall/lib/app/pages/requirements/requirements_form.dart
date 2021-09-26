@@ -1,3 +1,4 @@
+import 'package:chainmetric/app/theme/theme.dart';
 import 'package:chainmetric/platform/repositories/localdata_json.dart';
 import 'package:chainmetric/infrastructure/repositories/requirements_fabric.dart';
 import 'package:chainmetric/models/readings/metric.dart';
@@ -39,7 +40,10 @@ class _RequirementsFormState extends State<RequirementsForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Assign requirements"),
+        title: Text("Assign requirements", style: AppTheme.title2
+            .override(fontFamily: "IBM Plex Mono", fontSize: 24)),
+      centerTitle: false,
+      elevation: 4,
       ),
       body: Form(
         key: _formKey,
@@ -72,7 +76,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                       MultiSelectBottomSheetField<String?>(
                           initialValue:
                               requirements.metrics.keys.toList(),
-                          title: const Text("Metrics"),
+                          title: Text("Metrics", style: AppTheme.subtitle1),
                           buttonText: const Text("Select metrics"),
                           listType: MultiSelectListType.CHIP,
                           colorator: (dynamic v) =>
@@ -81,6 +85,7 @@ class _RequirementsFormState extends State<RequirementsForm> {
                           selectedItemsTextStyle: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
+                          backgroundColor: AppTheme.appBarBG,
                           chipDisplay: MultiSelectChipDisplay(
                             colorator: (dynamic v) =>
                                 Theme.of(context).primaryColor,
