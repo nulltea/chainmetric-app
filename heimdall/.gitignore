@@ -52,3 +52,6 @@ app.*.map.json
 assets/config.yaml
 assets/certs
 assets/connection.yaml
+
+android/app/google-service.json
+
