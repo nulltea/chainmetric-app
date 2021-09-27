@@ -81,7 +81,7 @@ Despite the fact that Hyperledger Fabric requires x509 cryptographic credentials
 
 Application allows to have multiple identities (including ones from different organizations) and switch between them on fly.
 
-![](https://github.com/timoth-y/chainmetric-app/blob/main/docs/identity_management.png?raw=true)
+![](https://github.com/timoth-y/chainmetric-app/blob/master/docs/identity_management.png?raw=true)
 
 
 ## Requirements
