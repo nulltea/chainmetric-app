@@ -1,6 +1,6 @@
-# heimdall
+# Chainmetric: Heimdall Cross-Platform App
 
-Mobile client application for the IoT enabled blockchain supply chain controlled by sensor requirements system
+Mobile client application for the IoT enabled blockchain supply chain controlled by sensor requirements system.
 
 ## Getting Started
 

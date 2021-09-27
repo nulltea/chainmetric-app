@@ -22,7 +22,9 @@ However, Flutter is still a young technology and its dedicated programming langu
 
 So, the available options here are to skip Flutter in favor of native development, try to use JS-based frameworks like React Native, or even implement own SDK on Dart, which actually is not that complicated, since foremost it uses common gRPC protocols communication.
 
-Thankfully, there is one more option that happens to be ideal for this project, which implies binding Golang-written SDK using [`gomobile`][gomobile] utility to mobile native languages, which this case are Kotlin for Android, and Swift for iOS, and then use call this native functionality from Dart codebase using [Method Channel][method channel]. Even though this approach seems too complicated at the first glance, it is actually pretty straightforward and works just fine.
+Thankfully, there is one more option that happens to be ideal for this project, which implies binding Golang-written SDK using [`gomobile`][gomobile] utility to mobile native languages, which in this case are Kotlin for Android, and Swift for iOS, and then use call this native functionality from Dart codebase using [Method Channel][method channel]. Even though this approach seems too complicated at the first glance, it is actually pretty straightforward and works just fine.
+
+See details in [Lorkhan](https://github.com/timoth-y/chainmetric-app/tree/master/lorkhan) readme.
 
 ## Features
 
@@ -33,7 +35,7 @@ Application allows supply chain participants to manage their assets: register th
 Requirements for conditions in which such assets must be stored and transported during supply operations
 are also can be assigned, changed, and revoked without leaving app.
 
-![assets screens]
+![](https://github.com/timoth-y/chainmetric-app/blob/master/docs/asset_management.png?raw=true)
 
 ### IoT devices management
 
@@ -41,7 +43,7 @@ IoT devices are essential for Chainmetric solution, they provide continuous flow
 
 Application provides extensive functionality to manage such devices, register them, monitor their activity, transfer ownership, control and send remote commands.
 
-![devices screens]
+![devices screens](https://github.com/timoth-y/chainmetric-app/blob/master/docs/device_management.png?raw=true)
 
 ### Bluetooth pairing
 
@@ -68,10 +70,18 @@ The implementation of such feature requires the combination of Flutter's [Event 
 
 [![diagram]][this repo]
 
-[assets screens]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/asset_management.png?raw=true
-[devices screens]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/device_management.png?raw=true
-[bluetooth screens]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/bluetooth_pairing.png?raw=true
+
 [diagram]: https://github.com/timoth-y/chainmetric-app/blob/master/docs/diagram.png?raw=true
+
+### Identity management
+
+Application provides a convenient way of managing identities, user authentication and authorization.
+
+Despite the fact that Hyperledger Fabric requires x509 cryptographic credentials for accessing it, application still can be signed in via basic auth credentials. See details at [chainmetric-network/orgservices/identity](https://github.com/timoth-y/chainmetric-network/tree/main/orgservices/identity).
+
+Application allows to have multiple identities (including ones from different organizations) and switch between them on fly.
+
+![](https://github.com/timoth-y/chainmetric-app/blob/github/update_readme/docs/identity_management.png?raw=true)
 
 
 ## Requirements
@@ -90,9 +100,9 @@ The implementation of such feature requires the combination of Flutter's [Event 
 - [x] GPS location tethering [(#2)](https://github.com/timoth-y/chainmetric-app/pull/2)
 - [ ] Asset view page
 - [ ] Device view page
-- [ ] User profile tab
+- [x] User profile tab [(#11)](https://github.com/timoth-y/chainmetric-app/pull/11)
 - [ ] Home dashboard tab
-- [ ] Metric requirements violation notifications
+- [x] Metric requirements violation notifications [(#9)](https://github.com/timoth-y/chainmetric-app/pull/9)
 
 ## Wrap up
 
