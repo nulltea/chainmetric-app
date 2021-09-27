@@ -1,7 +1,7 @@
 include .env
 export
 
-generate:
+json-gen:
 	flutter pub run build_runner build --delete-conflicting-outputs
 
 proto-sync-network:
@@ -12,7 +12,7 @@ proto-sync-network:
 	find . -type f -name '*.proto' \
 		-exec sed -i "s/orgservices\/.*\/\(api\/presenter\|proto\)\///g" {} +
 
-proto-grpc-gen:
+proto-gen:
 	protoc --dart_out=grpc:lib/models/generated google/protobuf/timestamp.proto
 	protoc --dart_out=grpc:lib/models/generated google/protobuf/empty.proto
 
@@ -56,6 +56,6 @@ proto-grpc-gen:
 		./lib/infrastructure/services/*.pbjson.dart
 
 fabric-gen:
-	fabnctl gen connection -f ../../network/network-config.yaml -n heimdall-applicatiion \
-		-c supply-channel -o chipa-inu ../../network
+	fabnctl gen connection -f ${NETWORK_PROJECT_PATH}/network-config.yaml -n heimdall-applicatiion \
+		-c supply-channel -o chipa-inu ${NETWORK_PROJECT_PATH}
 	mv connection.yaml assets/connection.yaml
